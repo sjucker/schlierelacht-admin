@@ -13,6 +13,12 @@
         <vaadin.version>25.0.5</vaadin.version>
         <line-awesome.version>2.1.0</line-awesome.version>
         <flyway.version>12.0.1</flyway.version>
+
+        <sonar-maven-plugin.version>5.3.0.6276</sonar-maven-plugin.version>
+
+        <sonar.organization>sjucker</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.projectKey>sjucker_schlierelacht-admin</sonar.projectKey>
     </properties>
 
     <parent>
@@ -77,6 +83,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>${sonar-maven-plugin.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -97,6 +109,12 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
