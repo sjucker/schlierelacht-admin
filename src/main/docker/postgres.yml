@@ -1,0 +1,9 @@
+services:
+  schlierelacht-admin-db:
+    image: postgres:17.6
+    environment:
+      - POSTGRES_USER=schlierelacht
+      - POSTGRES_PASSWORD=schlierelacht
+      - POSTGRES_DB=schlierelacht
+    ports:
+      - "5432:5432"
