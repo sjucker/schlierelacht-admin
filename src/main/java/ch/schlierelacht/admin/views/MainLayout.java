@@ -2,6 +2,7 @@ package ch.schlierelacht.admin.views;
 
 import ch.schlierelacht.admin.views.gastro.GastroView;
 import ch.schlierelacht.admin.views.settings.SettingsView;
+import ch.schlierelacht.admin.views.upload.ImageUploadView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
@@ -124,6 +125,7 @@ public class MainLayout extends AppLayout {
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{
                 new MenuItemInfo("My View", LineAwesomeIcon.PENCIL_RULER_SOLID.create(), GastroView.class),
+                new MenuItemInfo("Upload", LineAwesomeIcon.UPLOAD_SOLID.create(), ImageUploadView.class),
                 new MenuItemInfo("Einstellungen", COG_SOLID.create(), SettingsView.class),
         };
     }

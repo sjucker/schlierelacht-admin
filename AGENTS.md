@@ -7,7 +7,7 @@ This file provides guidance when working with code in this repository.
 This is a Vaadin application built with:
 - Java
 - Spring Boot
-- Spring Data JPA with H2 database
+- jOOQ and a PostgreSQL database
 - Maven build system
 
 ## Development Commands
@@ -78,6 +78,6 @@ When creating a new feature:
 
 ## Database
 
-- H2 in-memory database for development
-- JPA entities use `@GeneratedValue(strategy = GenerationType.SEQUENCE)`
-- Entity equality based on ID (see Task.equals/hashCode pattern)
+- PostgreSQL database
+- jOOQ code generation from database schema
+- Flyway migrations for database schema changes
