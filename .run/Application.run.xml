@@ -2,7 +2,7 @@
   <configuration default="false" name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <option name="ACTIVE_PROFILES" value="local" />
     <module name="schlierelacht-admin" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="ch.schlierelacht.Application" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ch.schlierelacht.admin.Application" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

@@ -11,3 +11,17 @@
 * Generate the jOOQ-code by running the following command (make sure Docker is running):  
   `mvn clean test-compile -Djooq-codegen-skip=false`
   Or use the run configuration `generate jOOQ code`.
+
+## Build
+
+* `mvn clean package`
+* `mvn dependency:resolve-sources`
+
+## Updates
+
+* Update Maven Parent
+  * `mvn -U versions:display-parent-updates`
+  * `mvn -U versions:update-parent`
+* Update Versions in Properties
+  * `mvn -U versions:display-property-updates`
+  * `mvn -U versions:update-properties`

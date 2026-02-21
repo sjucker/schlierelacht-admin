@@ -1,4 +1,4 @@
-package ch.schlierelacht.security;
+package ch.schlierelacht.admin.security;
 
 import ch.schlierelacht.admin.jooq.tables.daos.LoginDao;
 import lombok.RequiredArgsConstructor;

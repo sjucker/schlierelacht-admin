@@ -1,4 +1,4 @@
-package ch.schlierelacht.views.login;
+package ch.schlierelacht.admin.views.login;
 
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;

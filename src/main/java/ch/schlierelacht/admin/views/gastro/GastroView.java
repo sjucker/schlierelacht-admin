@@ -1,4 +1,4 @@
-package ch.schlierelacht.views.gastro;
+package ch.schlierelacht.admin.views.gastro;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;

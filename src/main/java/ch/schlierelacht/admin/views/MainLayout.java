@@ -1,6 +1,6 @@
-package ch.schlierelacht.views;
+package ch.schlierelacht.admin.views;
 
-import ch.schlierelacht.views.gastro.GastroView;
+import ch.schlierelacht.admin.views.gastro.GastroView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
