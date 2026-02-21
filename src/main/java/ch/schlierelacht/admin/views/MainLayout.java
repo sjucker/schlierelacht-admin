@@ -1,6 +1,7 @@
 package ch.schlierelacht.admin.views;
 
 import ch.schlierelacht.admin.views.gastro.GastroView;
+import ch.schlierelacht.admin.views.location.LocationView;
 import ch.schlierelacht.admin.views.settings.SettingsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -37,6 +38,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.PENCIL_RULER_SOLID;
 
 @Slf4j
 @Layout
@@ -123,7 +126,8 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{
-                new MenuItemInfo("My View", LineAwesomeIcon.PENCIL_RULER_SOLID.create(), GastroView.class),
+                new MenuItemInfo("My View", PENCIL_RULER_SOLID.create(), GastroView.class),
+                new MenuItemInfo("Standorte", MAP_MARKER_SOLID.create(), LocationView.class),
                 new MenuItemInfo("Einstellungen", COG_SOLID.create(), SettingsView.class),
         };
     }

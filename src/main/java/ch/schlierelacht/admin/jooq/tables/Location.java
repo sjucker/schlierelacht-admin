@@ -77,12 +77,12 @@ public class Location extends TableImpl<LocationRecord> {
     /**
      * The column <code>public.location.latitude</code>.
      */
-    public final TableField<LocationRecord, BigDecimal> LATITUDE = createField(DSL.name("latitude"), SQLDataType.NUMERIC(16, 12).nullable(false), this, "");
+    public final TableField<LocationRecord, BigDecimal> LATITUDE = createField(DSL.name("latitude"), SQLDataType.NUMERIC(18, 14).nullable(false), this, "");
 
     /**
      * The column <code>public.location.longitude</code>.
      */
-    public final TableField<LocationRecord, BigDecimal> LONGITUDE = createField(DSL.name("longitude"), SQLDataType.NUMERIC(16, 12).nullable(false), this, "");
+    public final TableField<LocationRecord, BigDecimal> LONGITUDE = createField(DSL.name("longitude"), SQLDataType.NUMERIC(18, 14).nullable(false), this, "");
 
     /**
      * The column <code>public.location.sort_order</code>.
