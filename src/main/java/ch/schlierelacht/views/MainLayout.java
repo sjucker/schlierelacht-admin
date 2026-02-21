@@ -31,6 +31,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
@@ -40,6 +41,7 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class MainLayout extends AppLayout {
 
     private final AuthenticationContext authContext;
+    private final BuildProperties buildProperties;
 
     public static class MenuItemInfo extends ListItem {
 
@@ -70,8 +72,10 @@ public class MainLayout extends AppLayout {
 
     }
 
-    public MainLayout(AuthenticationContext authContext) {
+    public MainLayout(AuthenticationContext authContext,
+                      BuildProperties buildProperties) {
         this.authContext = authContext;
+        this.buildProperties = buildProperties;
         addToNavbar(createHeaderContent());
     }
 
@@ -85,6 +89,10 @@ public class MainLayout extends AppLayout {
         H1 appName = new H1("Schlierefäscht - Admin");
         appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
         layout.add(appName);
+
+        var version = new Span(buildProperties.getVersion());
+        version.addClassNames(FontSize.XXSMALL);
+        layout.add(version);
 
         authContext.getAuthenticatedUser(UserDetails.class)
                    .ifPresent(_ -> {
