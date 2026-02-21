@@ -1,5 +1,8 @@
 # Schlierelacht Admin
 
+[![Java CI with Maven](https://github.com/sjucker/schlierelacht-admin/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/sjucker/schlierelacht-admin/actions/workflows/maven.yml)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=sjucker_schlierelacht-admin)](https://sonarcloud.io/summary/new_code?id=sjucker_schlierelacht-admin)
+
 ## Development
 
 * Start DB in Docker container:  
