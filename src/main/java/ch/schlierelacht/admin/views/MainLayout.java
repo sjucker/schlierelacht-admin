@@ -1,6 +1,7 @@
 package ch.schlierelacht.admin.views;
 
 import ch.schlierelacht.admin.views.gastro.GastroView;
+import ch.schlierelacht.admin.views.settings.SettingsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
@@ -34,6 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.vaadin.lineawesome.LineAwesomeIcon;
+
+import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
 
 @Slf4j
 @Layout
@@ -121,6 +124,7 @@ public class MainLayout extends AppLayout {
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{
                 new MenuItemInfo("My View", LineAwesomeIcon.PENCIL_RULER_SOLID.create(), GastroView.class),
+                new MenuItemInfo("Einstellungen", COG_SOLID.create(), SettingsView.class),
         };
     }
 }
