@@ -4,7 +4,9 @@
 package ch.schlierelacht.admin.jooq;
 
 
+import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
+import ch.schlierelacht.admin.jooq.tables.records.LocationRecord;
 import ch.schlierelacht.admin.jooq.tables.records.LoginRecord;
 
 import org.jooq.TableField;
@@ -24,5 +26,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<LocationRecord> PK_LOCATION = Internal.createUniqueKey(Location.LOCATION, DSL.name("pk_location"), new TableField[] { Location.LOCATION.ID }, true);
+    public static final UniqueKey<LocationRecord> UQ_LOCATION_EXTERNAL_ID = Internal.createUniqueKey(Location.LOCATION, DSL.name("uq_location_external_id"), new TableField[] { Location.LOCATION.EXTERNAL_ID }, true);
     public static final UniqueKey<LoginRecord> LOGIN_PK = Internal.createUniqueKey(Login.LOGIN, DSL.name("login_pk"), new TableField[] { Login.LOGIN.EMAIL }, true);
 }

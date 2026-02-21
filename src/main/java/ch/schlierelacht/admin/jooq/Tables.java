@@ -4,6 +4,7 @@
 package ch.schlierelacht.admin.jooq;
 
 
+import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 
 
@@ -12,6 +13,11 @@ import ch.schlierelacht.admin.jooq.tables.Login;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Tables {
+
+    /**
+     * The table <code>public.location</code>.
+     */
+    public static final Location LOCATION = Location.LOCATION;
 
     /**
      * The table <code>public.login</code>.

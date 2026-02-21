@@ -4,6 +4,7 @@
 package ch.schlierelacht.admin.jooq;
 
 
+import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 
 import java.util.Arrays;
@@ -28,6 +29,11 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
+     * The table <code>public.location</code>.
+     */
+    public final Location LOCATION = Location.LOCATION;
+
+    /**
      * The table <code>public.login</code>.
      */
     public final Login LOGIN = Login.LOGIN;
@@ -48,6 +54,7 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            Location.LOCATION,
             Login.LOGIN
         );
     }
