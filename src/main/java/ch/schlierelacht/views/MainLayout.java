@@ -3,6 +3,7 @@ package ch.schlierelacht.views;
 import ch.schlierelacht.views.gastro.GastroView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Header;
@@ -12,6 +13,8 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
@@ -27,10 +30,17 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
+@Slf4j
 @Layout
+@AnonymousAllowed
 public class MainLayout extends AppLayout {
+
+    private final AuthenticationContext authContext;
+
     public static class MenuItemInfo extends ListItem {
 
         private final Class<? extends Component> view;
@@ -60,7 +70,8 @@ public class MainLayout extends AppLayout {
 
     }
 
-    public MainLayout() {
+    public MainLayout(AuthenticationContext authContext) {
+        this.authContext = authContext;
         addToNavbar(createHeaderContent());
     }
 
@@ -71,9 +82,16 @@ public class MainLayout extends AppLayout {
         Div layout = new Div();
         layout.addClassNames(Display.FLEX, AlignItems.CENTER, Padding.Horizontal.LARGE);
 
-        H1 appName = new H1("My App");
+        H1 appName = new H1("Schlierefäscht - Admin");
         appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
         layout.add(appName);
+
+        authContext.getAuthenticatedUser(UserDetails.class)
+                   .ifPresent(_ -> {
+                       var logout = new Button("Logout", _ -> authContext.logout());
+                       logout.addClassNames(Margin.Left.MEDIUM);
+                       layout.add(logout);
+                   });
 
         Nav nav = new Nav();
         nav.addClassNames(Display.FLEX, Overflow.AUTO, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
@@ -93,9 +111,8 @@ public class MainLayout extends AppLayout {
     }
 
     private MenuItemInfo[] createMenuItems() {
-        return new MenuItemInfo[]{ //
-                new MenuItemInfo("My View", LineAwesomeIcon.PENCIL_RULER_SOLID.create(), GastroView.class), //
-
+        return new MenuItemInfo[]{
+                new MenuItemInfo("My View", LineAwesomeIcon.PENCIL_RULER_SOLID.create(), GastroView.class),
         };
     }
 }
