@@ -83,7 +83,7 @@ public class Programm extends TableImpl<ProgrammRecord> {
     /**
      * The column <code>public.programm.from_time</code>.
      */
-    public final TableField<ProgrammRecord, LocalTime> FROM_TIME = createField(DSL.name("from_time"), SQLDataType.LOCALTIME(6).nullable(false), this, "");
+    public final TableField<ProgrammRecord, LocalTime> FROM_TIME = createField(DSL.name("from_time"), SQLDataType.LOCALTIME(6), this, "");
 
     /**
      * The column <code>public.programm.to_date</code>.

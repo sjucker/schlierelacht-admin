@@ -6,6 +6,7 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
 import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
 import static com.vaadin.flow.component.icon.VaadinIcon.EDIT;
 import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SUCCESS;
+import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_WARNING;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -153,7 +154,6 @@ public class ProgrammView extends VerticalLayout {
                   .bind(Programm::getFromDate, Programm::setFromDate);
 
             binder.forField(fromTime)
-                  .asRequired()
                   .bind(Programm::getFromTime, Programm::setFromTime);
 
             binder.forField(toDate)
@@ -194,6 +194,8 @@ public class ProgrammView extends VerticalLayout {
                     programmDao.update(programm);
                 }
                 close();
+            } else {
+                showNotification("Alle erforderlichen Felder ausfüllen", LUMO_WARNING);
             }
         }
 
