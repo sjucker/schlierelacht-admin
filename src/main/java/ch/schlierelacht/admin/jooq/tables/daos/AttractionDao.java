@@ -177,4 +177,33 @@ public class AttractionDao extends AbstractSpringDAOImpl<AttractionRecord, ch.sc
     public List<ch.schlierelacht.admin.jooq.tables.pojos.Attraction> fetchByYoutube(String... values) {
         return fetch(Attraction.ATTRACTION.YOUTUBE, values);
     }
+
+    /**
+     * Fetch records that have <code>external_id BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Attraction> fetchRangeOfExternalId(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Attraction.ATTRACTION.EXTERNAL_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>external_id IN (values)</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Attraction> fetchByExternalId(String... values) {
+        return fetch(Attraction.ATTRACTION.EXTERNAL_ID, values);
+    }
+
+    /**
+     * Fetch a unique record that has <code>external_id = value</code>
+     */
+    public ch.schlierelacht.admin.jooq.tables.pojos.Attraction fetchOneByExternalId(String value) {
+        return fetchOne(Attraction.ATTRACTION.EXTERNAL_ID, value);
+    }
+
+    /**
+     * Fetch a unique record that has <code>external_id = value</code>
+     */
+    public Optional<ch.schlierelacht.admin.jooq.tables.pojos.Attraction> fetchOptionalByExternalId(String value) {
+        return fetchOptional(Attraction.ATTRACTION.EXTERNAL_ID, value);
+    }
 }

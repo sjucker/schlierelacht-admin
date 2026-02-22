@@ -50,6 +50,7 @@ import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
 import static com.vaadin.flow.component.icon.VaadinIcon.EDIT;
 import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_ERROR;
 import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SUCCESS;
+import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_WARNING;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
@@ -139,9 +140,9 @@ public class ArtistView extends VerticalLayout {
             var instagram = new TextField("Instagram");
             var facebook = new TextField("Facebook");
             var youtube = new TextField("Youtube");
+            var externalId = new TextField("External ID (z.B. 'dj-mario'");
 
-            form.add(name, website, instagram, facebook, youtube, description);
-            form.setColspan(name, 2);
+            form.add(name, externalId, website, instagram, facebook, youtube, description);
             form.setColspan(description, 2);
             form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
                                     new FormLayout.ResponsiveStep("500px", 2));
@@ -152,6 +153,7 @@ public class ArtistView extends VerticalLayout {
             binder.forField(instagram).bind(Attraction::getInstagram, Attraction::setInstagram);
             binder.forField(facebook).bind(Attraction::getFacebook, Attraction::setFacebook);
             binder.forField(youtube).bind(Attraction::getYoutube, Attraction::setYoutube);
+            binder.forField(externalId).bind(Attraction::getExternalId, Attraction::setExternalId);
 
             mainImageDescription.setRequired(true);
             mainImageDescription.setWidthFull();
@@ -249,15 +251,19 @@ public class ArtistView extends VerticalLayout {
         }
 
         private boolean saveArtist() {
-            if (!binder.validate().isOk()) return false;
+            if (!binder.validate().isOk()) {
+                showNotification("Alle erforderliche Felder ausfüllen.", LUMO_WARNING);
+                return false;
+            }
 
             var artist = binder.getBean();
-            boolean isNew = artist.getId() == null;
+            boolean creating = artist.getId() == null;
 
-            if (isNew && mainImageData == null) {
+            if (creating && mainImageData == null) {
                 showNotification("Hauptbild ist erforderlich", LUMO_ERROR);
                 return false;
-            } else if (isBlank(mainImageDescription.getValue())) {
+            }
+            if (creating && isBlank(mainImageDescription.getValue())) {
                 showNotification("Beschreibung für Hauptbild ist erforderlich", LUMO_ERROR);
                 return false;
             }
@@ -270,7 +276,7 @@ public class ArtistView extends VerticalLayout {
                 }
             }
 
-            if (isNew) {
+            if (creating) {
                 var record = dslContext.newRecord(ATTRACTION, artist);
                 record.insert();
                 artist.setId(record.getId());

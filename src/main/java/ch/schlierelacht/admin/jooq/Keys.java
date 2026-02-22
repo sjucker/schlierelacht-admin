@@ -36,6 +36,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<AttractionRecord> PK_ARTIST = Internal.createUniqueKey(Attraction.ATTRACTION, DSL.name("pk_artist"), new TableField[] { Attraction.ATTRACTION.ID }, true);
+    public static final UniqueKey<AttractionRecord> UQ_ATTRACTION = Internal.createUniqueKey(Attraction.ATTRACTION, DSL.name("uq_attraction"), new TableField[] { Attraction.ATTRACTION.EXTERNAL_ID }, true);
     public static final UniqueKey<ImageRecord> PK_IMAGE = Internal.createUniqueKey(Image.IMAGE, DSL.name("pk_image"), new TableField[] { Image.IMAGE.ID }, true);
     public static final UniqueKey<ImageRecord> UQ_IMAGE = Internal.createUniqueKey(Image.IMAGE, DSL.name("uq_image"), new TableField[] { Image.IMAGE.CLOUDFLARE_ID }, true);
     public static final UniqueKey<LocationRecord> PK_LOCATION = Internal.createUniqueKey(Location.LOCATION, DSL.name("pk_location"), new TableField[] { Location.LOCATION.ID }, true);

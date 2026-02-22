@@ -131,6 +131,20 @@ public class AttractionRecord extends UpdatableRecordImpl<AttractionRecord> {
         return (String) get(7);
     }
 
+    /**
+     * Setter for <code>public.attraction.external_id</code>.
+     */
+    public void setExternalId(String value) {
+        set(8, value);
+    }
+
+    /**
+     * Getter for <code>public.attraction.external_id</code>.
+     */
+    public String getExternalId() {
+        return (String) get(8);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -154,7 +168,7 @@ public class AttractionRecord extends UpdatableRecordImpl<AttractionRecord> {
     /**
      * Create a detached, initialised AttractionRecord
      */
-    public AttractionRecord(Long id, AttractionType type, String name, String description, String website, String instagram, String facebook, String youtube) {
+    public AttractionRecord(Long id, AttractionType type, String name, String description, String website, String instagram, String facebook, String youtube, String externalId) {
         super(Attraction.ATTRACTION);
 
         setId(id);
@@ -165,6 +179,7 @@ public class AttractionRecord extends UpdatableRecordImpl<AttractionRecord> {
         setInstagram(instagram);
         setFacebook(facebook);
         setYoutube(youtube);
+        setExternalId(externalId);
         resetChangedOnNotNull();
     }
 
@@ -183,6 +198,7 @@ public class AttractionRecord extends UpdatableRecordImpl<AttractionRecord> {
             setInstagram(value.getInstagram());
             setFacebook(value.getFacebook());
             setYoutube(value.getYoutube());
+            setExternalId(value.getExternalId());
             resetChangedOnNotNull();
         }
     }

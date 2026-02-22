@@ -11,7 +11,9 @@ import ch.schlierelacht.admin.jooq.tables.AttractionImage.AttractionImagePath;
 import ch.schlierelacht.admin.jooq.tables.Programm.ProgrammPath;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionRecord;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
@@ -97,6 +99,11 @@ public class Attraction extends TableImpl<AttractionRecord> {
      */
     public final TableField<AttractionRecord, String> YOUTUBE = createField(DSL.name("youtube"), SQLDataType.VARCHAR(255), this, "");
 
+    /**
+     * The column <code>public.attraction.external_id</code>.
+     */
+    public final TableField<AttractionRecord, String> EXTERNAL_ID = createField(DSL.name("external_id"), SQLDataType.VARCHAR(255).nullable(false).defaultValue(DSL.field(DSL.raw("''::character varying"), SQLDataType.VARCHAR)), this, "");
+
     private Attraction(Name alias, Table<AttractionRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }
@@ -172,6 +179,11 @@ public class Attraction extends TableImpl<AttractionRecord> {
     @Override
     public UniqueKey<AttractionRecord> getPrimaryKey() {
         return Keys.PK_ARTIST;
+    }
+
+    @Override
+    public List<UniqueKey<AttractionRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.UQ_ATTRACTION);
     }
 
     private transient AttractionImagePath _attractionImage;

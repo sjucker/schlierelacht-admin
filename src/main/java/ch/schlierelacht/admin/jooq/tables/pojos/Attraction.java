@@ -25,6 +25,7 @@ public class Attraction implements Serializable {
     private String instagram;
     private String facebook;
     private String youtube;
+    private String externalId;
 
     public Attraction() {}
 
@@ -37,6 +38,7 @@ public class Attraction implements Serializable {
         this.instagram = value.instagram;
         this.facebook = value.facebook;
         this.youtube = value.youtube;
+        this.externalId = value.externalId;
     }
 
     public Attraction(
@@ -47,7 +49,8 @@ public class Attraction implements Serializable {
         String website,
         String instagram,
         String facebook,
-        String youtube
+        String youtube,
+        String externalId
     ) {
         this.id = id;
         this.type = type;
@@ -57,6 +60,7 @@ public class Attraction implements Serializable {
         this.instagram = instagram;
         this.facebook = facebook;
         this.youtube = youtube;
+        this.externalId = externalId;
     }
 
     /**
@@ -171,6 +175,20 @@ public class Attraction implements Serializable {
         this.youtube = youtube;
     }
 
+    /**
+     * Getter for <code>public.attraction.external_id</code>.
+     */
+    public String getExternalId() {
+        return this.externalId;
+    }
+
+    /**
+     * Setter for <code>public.attraction.external_id</code>.
+     */
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -228,6 +246,12 @@ public class Attraction implements Serializable {
         }
         else if (!this.youtube.equals(other.youtube))
             return false;
+        if (this.externalId == null) {
+            if (other.externalId != null)
+                return false;
+        }
+        else if (!this.externalId.equals(other.externalId))
+            return false;
         return true;
     }
 
@@ -243,6 +267,7 @@ public class Attraction implements Serializable {
         result = prime * result + ((this.instagram == null) ? 0 : this.instagram.hashCode());
         result = prime * result + ((this.facebook == null) ? 0 : this.facebook.hashCode());
         result = prime * result + ((this.youtube == null) ? 0 : this.youtube.hashCode());
+        result = prime * result + ((this.externalId == null) ? 0 : this.externalId.hashCode());
         return result;
     }
 
@@ -258,6 +283,7 @@ public class Attraction implements Serializable {
         sb.append(", ").append(instagram);
         sb.append(", ").append(facebook);
         sb.append(", ").append(youtube);
+        sb.append(", ").append(externalId);
 
         sb.append(")");
         return sb.toString();
