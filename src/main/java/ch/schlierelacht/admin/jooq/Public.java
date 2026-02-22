@@ -4,6 +4,9 @@
 package ch.schlierelacht.admin.jooq;
 
 
+import ch.schlierelacht.admin.jooq.tables.Attraction;
+import ch.schlierelacht.admin.jooq.tables.AttractionImage;
+import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 
@@ -27,6 +30,21 @@ public class Public extends SchemaImpl {
      * The reference instance of <code>public</code>
      */
     public static final Public PUBLIC = new Public();
+
+    /**
+     * The table <code>public.attraction</code>.
+     */
+    public final Attraction ATTRACTION = Attraction.ATTRACTION;
+
+    /**
+     * The table <code>public.attraction_image</code>.
+     */
+    public final AttractionImage ATTRACTION_IMAGE = AttractionImage.ATTRACTION_IMAGE;
+
+    /**
+     * The table <code>public.image</code>.
+     */
+    public final Image IMAGE = Image.IMAGE;
 
     /**
      * The table <code>public.location</code>.
@@ -54,6 +72,9 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            Attraction.ATTRACTION,
+            AttractionImage.ATTRACTION_IMAGE,
+            Image.IMAGE,
             Location.LOCATION,
             Login.LOGIN
         );

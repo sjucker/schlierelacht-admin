@@ -3,7 +3,9 @@ package ch.schlierelacht.admin.views.location;
 import ch.schlierelacht.admin.dto.LocationType;
 import ch.schlierelacht.admin.jooq.tables.daos.LocationDao;
 import ch.schlierelacht.admin.jooq.tables.pojos.Location;
+import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.MainLayout;
+import ch.schlierelacht.admin.views.util.CloudflareImage;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -20,10 +22,11 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.util.StringUtils;
 
 import java.util.Comparator;
 
-import static ch.schlierelacht.admin.mapper.EnumMapper.INSTANCE;
+import static ch.schlierelacht.admin.dto.LocationType.fromDb;
 import static ch.schlierelacht.admin.util.MapUtil.getGoogleMapsCoordinates;
 import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_ERROR;
@@ -39,11 +42,13 @@ import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SU
 public class LocationView extends VerticalLayout {
 
     private final LocationDao locationDao;
+    private final CloudflareService cloudflareService;
     private final Grid<Location> grid;
     private final LocationDialog dialog;
 
-    public LocationView(LocationDao locationDao) {
+    public LocationView(LocationDao locationDao, CloudflareService cloudflareService) {
         this.locationDao = locationDao;
+        this.cloudflareService = cloudflareService;
         this.dialog = new LocationDialog(() -> {
             refreshGrid();
             showNotification("Speichern erfolreich", LUMO_SUCCESS);
@@ -62,7 +67,7 @@ public class LocationView extends VerticalLayout {
         var g = new Grid<Location>();
         g.addComponentColumn(l -> new Button(EDIT.create(), _ -> dialog.open(l))).setWidth("80px").setTextAlign(CENTER).setFlexGrow(0);
         g.addColumn(Location::getName).setHeader("Name").setSortable(true);
-        g.addColumn(l -> INSTANCE.fromDb(l.getType()).getDescription()).setHeader("Typ").setSortable(true);
+        g.addColumn(l -> fromDb(l.getType()).getDescription()).setHeader("Typ").setSortable(true);
         g.addColumn(Location::getExternalId).setHeader("External ID");
         g.addColumn(Location::getMapId).setHeader("Map ID");
         g.addColumn(Location::getSortOrder).setHeader("Sortierung");
@@ -110,7 +115,12 @@ public class LocationView extends VerticalLayout {
             var cloudflareId = new TextField("Cloudflare ID");
             var mapId = new TextField("Map ID");
 
-            form.add(name, type, externalId, sortOrder, latitude, longitude, cloudflareId, mapId);
+            var imagePreview = new VerticalLayout();
+            imagePreview.setPadding(false);
+            imagePreview.setSpacing(false);
+
+            form.add(name, type, externalId, sortOrder, latitude, longitude, cloudflareId, mapId, imagePreview);
+            form.setColspan(imagePreview, 2);
             form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
                                     new FormLayout.ResponsiveStep("500px", 2));
 
@@ -122,8 +132,8 @@ public class LocationView extends VerticalLayout {
 
             binder.forField(type)
                   .asRequired()
-                  .bind(l -> l.getType() != null ? INSTANCE.fromDb(l.getType()) : null,
-                        (l, v) -> l.setType(v != null ? INSTANCE.toDb(v) : null));
+                  .bind(l -> l.getType() != null ? fromDb(l.getType()) : null,
+                        (l, v) -> l.setType(v != null ? v.toDb() : null));
 
             binder.forField(externalId)
                   .asRequired()
@@ -143,6 +153,15 @@ public class LocationView extends VerticalLayout {
 
             binder.forField(cloudflareId)
                   .bind(Location::getCloudflareId, Location::setCloudflareId);
+            
+            cloudflareId.addValueChangeListener(e -> {
+                imagePreview.removeAll();
+                if (StringUtils.hasText(e.getValue())) {
+                    var img = new CloudflareImage(cloudflareService, e.getValue(), "Vorschau");
+                    img.setWidth("200px");
+                    imagePreview.add(img);
+                }
+            });
             binder.forField(mapId)
                   .bind(Location::getMapId, Location::setMapId);
 

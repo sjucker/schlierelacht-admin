@@ -40,14 +40,23 @@ public class CloudflareService {
      */
     public Optional<String> upload(MultipartFile file, String id, String creator) {
         try {
-            log.info("uploading image ({}) to Cloudflare", file.getOriginalFilename());
+            return upload(file.getBytes(), file.getOriginalFilename(), file.getContentType(), file.getSize(), id, creator);
+        } catch (IOException e) {
+            log.error("Upload to Cloudflare failed", e);
+            return Optional.empty();
+        }
+    }
+
+    public Optional<String> upload(byte[] file, String originalFilename, String contentType, long size, String id, String creator) {
+        try {
+            log.info("uploading image ({}) to Cloudflare", originalFilename);
             var builder = new MultipartBodyBuilder();
-            builder.part("file", file.getBytes());
+            builder.part("file", file);
             builder.part("metadata", Map.of(
                     "identifier", id,
-                    "originalFilename", defaultIfBlank(file.getOriginalFilename(), "?"),
-                    "contentType", defaultIfBlank(file.getContentType(), "?"),
-                    "size", file.getSize()
+                    "originalFilename", defaultIfBlank(originalFilename, "?"),
+                    "contentType", defaultIfBlank(contentType, "?"),
+                    "size", size
             ));
             builder.part("creator", creator);
 
@@ -60,7 +69,7 @@ public class CloudflareService {
                                     .blockOptional();
 
             return response.map(r -> r.result.id());
-        } catch (WebClientException | IOException e) {
+        } catch (WebClientException e) {
             log.error("Upload to Cloudflare failed", e);
             return Optional.empty();
         }
@@ -81,6 +90,10 @@ public class CloudflareService {
         } catch (WebClientException e) {
             log.error("Delete from Cloudflare failed", e);
         }
+    }
+
+    public String getImageDeliveryUrl(String cloudflareId) {
+        return "%s/%s/public".formatted(applicationProperties.getCloudflareImagedeliveryUrl(), cloudflareId);
     }
 
     private record Response(List<Object> errors, Boolean success, List<Object> messages, Result result) {

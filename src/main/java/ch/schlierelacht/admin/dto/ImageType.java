@@ -6,22 +6,19 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum LocationType implements HasDescription {
-    STAGE("Bühne"),
-    FOOD_STAND("Essensstand"),
-    BAR("Bar"),
-    TENT("Festzelt"),
-    ATTRACTION("Attraktion");
+public enum ImageType implements HasDescription {
+    MAIN("Hauptbild"),
+    ADDITIONAL("Zusatzbild");
 
     private final String description;
 
     private static final EnumMapper ENUM_MAPPER = EnumMapper.INSTANCE;
 
-    public static LocationType fromDb(ch.schlierelacht.admin.jooq.enums.LocationType dbEnum) {
+    public static ImageType fromDb(ch.schlierelacht.admin.jooq.enums.ImageType dbEnum) {
         return ENUM_MAPPER.fromDb(dbEnum);
     }
 
-    public ch.schlierelacht.admin.jooq.enums.LocationType toDb() {
+    public ch.schlierelacht.admin.jooq.enums.ImageType toDb() {
         return ENUM_MAPPER.toDb(this);
     }
 }

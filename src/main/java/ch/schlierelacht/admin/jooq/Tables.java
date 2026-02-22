@@ -4,6 +4,9 @@
 package ch.schlierelacht.admin.jooq;
 
 
+import ch.schlierelacht.admin.jooq.tables.Attraction;
+import ch.schlierelacht.admin.jooq.tables.AttractionImage;
+import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 
@@ -13,6 +16,21 @@ import ch.schlierelacht.admin.jooq.tables.Login;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Tables {
+
+    /**
+     * The table <code>public.attraction</code>.
+     */
+    public static final Attraction ATTRACTION = Attraction.ATTRACTION;
+
+    /**
+     * The table <code>public.attraction_image</code>.
+     */
+    public static final AttractionImage ATTRACTION_IMAGE = AttractionImage.ATTRACTION_IMAGE;
+
+    /**
+     * The table <code>public.image</code>.
+     */
+    public static final Image IMAGE = Image.IMAGE;
 
     /**
      * The table <code>public.location</code>.

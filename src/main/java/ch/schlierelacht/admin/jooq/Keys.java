@@ -4,11 +4,18 @@
 package ch.schlierelacht.admin.jooq;
 
 
+import ch.schlierelacht.admin.jooq.tables.Attraction;
+import ch.schlierelacht.admin.jooq.tables.AttractionImage;
+import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
+import ch.schlierelacht.admin.jooq.tables.records.AttractionImageRecord;
+import ch.schlierelacht.admin.jooq.tables.records.AttractionRecord;
+import ch.schlierelacht.admin.jooq.tables.records.ImageRecord;
 import ch.schlierelacht.admin.jooq.tables.records.LocationRecord;
 import ch.schlierelacht.admin.jooq.tables.records.LoginRecord;
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
@@ -26,7 +33,17 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<AttractionRecord> PK_ARTIST = Internal.createUniqueKey(Attraction.ATTRACTION, DSL.name("pk_artist"), new TableField[] { Attraction.ATTRACTION.ID }, true);
+    public static final UniqueKey<ImageRecord> PK_IMAGE = Internal.createUniqueKey(Image.IMAGE, DSL.name("pk_image"), new TableField[] { Image.IMAGE.ID }, true);
+    public static final UniqueKey<ImageRecord> UQ_IMAGE = Internal.createUniqueKey(Image.IMAGE, DSL.name("uq_image"), new TableField[] { Image.IMAGE.CLOUDFLARE_ID }, true);
     public static final UniqueKey<LocationRecord> PK_LOCATION = Internal.createUniqueKey(Location.LOCATION, DSL.name("pk_location"), new TableField[] { Location.LOCATION.ID }, true);
     public static final UniqueKey<LocationRecord> UQ_LOCATION_EXTERNAL_ID = Internal.createUniqueKey(Location.LOCATION, DSL.name("uq_location_external_id"), new TableField[] { Location.LOCATION.EXTERNAL_ID }, true);
     public static final UniqueKey<LoginRecord> LOGIN_PK = Internal.createUniqueKey(Login.LOGIN, DSL.name("login_pk"), new TableField[] { Login.LOGIN.EMAIL }, true);
+
+    // -------------------------------------------------------------------------
+    // FOREIGN KEY definitions
+    // -------------------------------------------------------------------------
+
+    public static final ForeignKey<AttractionImageRecord, AttractionRecord> ATTRACTION_IMAGE__FK_ATTRACTION_IMAGE_ATTRACTION = Internal.createForeignKey(AttractionImage.ATTRACTION_IMAGE, DSL.name("fk_attraction_image_attraction"), new TableField[] { AttractionImage.ATTRACTION_IMAGE.ATTRACTION_ID }, Keys.PK_ARTIST, new TableField[] { Attraction.ATTRACTION.ID }, true);
+    public static final ForeignKey<AttractionImageRecord, ImageRecord> ATTRACTION_IMAGE__FK_ATTRACTION_IMAGE_IMAGE = Internal.createForeignKey(AttractionImage.ATTRACTION_IMAGE, DSL.name("fk_attraction_image_image"), new TableField[] { AttractionImage.ATTRACTION_IMAGE.IMAGE_ID }, Keys.PK_IMAGE, new TableField[] { Image.IMAGE.ID }, true);
 }
