@@ -1,9 +1,16 @@
 package ch.schlierelacht.admin.views;
 
-import ch.schlierelacht.admin.views.artist.ArtistView;
-import ch.schlierelacht.admin.views.gastro.GastroView;
-import ch.schlierelacht.admin.views.location.LocationView;
-import ch.schlierelacht.admin.views.settings.SettingsView;
+import static org.vaadin.lineawesome.LineAwesomeIcon.CALENDAR_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.PENCIL_RULER_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.USER_SOLID;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
@@ -33,15 +40,12 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.info.BuildProperties;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.vaadin.lineawesome.LineAwesomeIcon;
 
-import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
-import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
-import static org.vaadin.lineawesome.LineAwesomeIcon.PENCIL_RULER_SOLID;
-import static org.vaadin.lineawesome.LineAwesomeIcon.USER_SOLID;
+import ch.schlierelacht.admin.views.artist.ArtistView;
+import ch.schlierelacht.admin.views.gastro.GastroView;
+import ch.schlierelacht.admin.views.location.LocationView;
+import ch.schlierelacht.admin.views.programm.ProgrammView;
+import ch.schlierelacht.admin.views.settings.SettingsView;
 
 @Slf4j
 @Layout
@@ -77,7 +81,6 @@ public class MainLayout extends AppLayout {
         public Class<?> getView() {
             return view;
         }
-
     }
 
     public MainLayout(AuthenticationContext authContext,
@@ -119,7 +122,6 @@ public class MainLayout extends AppLayout {
 
         for (MenuItemInfo menuItem : createMenuItems()) {
             list.add(menuItem);
-
         }
 
         header.add(layout, nav);
@@ -131,7 +133,8 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("My View", PENCIL_RULER_SOLID.create(), GastroView.class),
                 new MenuItemInfo("Standorte", MAP_MARKER_SOLID.create(), LocationView.class),
                 new MenuItemInfo("Künstler", USER_SOLID.create(), ArtistView.class),
+                new MenuItemInfo("Programm", CALENDAR_SOLID.create(), ProgrammView.class),
                 new MenuItemInfo("Einstellungen", COG_SOLID.create(), SettingsView.class),
-        };
+                };
     }
 }
