@@ -9,11 +9,13 @@ import ch.schlierelacht.admin.jooq.tables.AttractionImage;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
+import ch.schlierelacht.admin.jooq.tables.Programm;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionImageRecord;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionRecord;
 import ch.schlierelacht.admin.jooq.tables.records.ImageRecord;
 import ch.schlierelacht.admin.jooq.tables.records.LocationRecord;
 import ch.schlierelacht.admin.jooq.tables.records.LoginRecord;
+import ch.schlierelacht.admin.jooq.tables.records.ProgrammRecord;
 
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
@@ -39,6 +41,7 @@ public class Keys {
     public static final UniqueKey<LocationRecord> PK_LOCATION = Internal.createUniqueKey(Location.LOCATION, DSL.name("pk_location"), new TableField[] { Location.LOCATION.ID }, true);
     public static final UniqueKey<LocationRecord> UQ_LOCATION_EXTERNAL_ID = Internal.createUniqueKey(Location.LOCATION, DSL.name("uq_location_external_id"), new TableField[] { Location.LOCATION.EXTERNAL_ID }, true);
     public static final UniqueKey<LoginRecord> LOGIN_PK = Internal.createUniqueKey(Login.LOGIN, DSL.name("login_pk"), new TableField[] { Login.LOGIN.EMAIL }, true);
+    public static final UniqueKey<ProgrammRecord> PK_PROGRAMM = Internal.createUniqueKey(Programm.PROGRAMM, DSL.name("pk_programm"), new TableField[] { Programm.PROGRAMM.ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -46,4 +49,6 @@ public class Keys {
 
     public static final ForeignKey<AttractionImageRecord, AttractionRecord> ATTRACTION_IMAGE__FK_ATTRACTION_IMAGE_ATTRACTION = Internal.createForeignKey(AttractionImage.ATTRACTION_IMAGE, DSL.name("fk_attraction_image_attraction"), new TableField[] { AttractionImage.ATTRACTION_IMAGE.ATTRACTION_ID }, Keys.PK_ARTIST, new TableField[] { Attraction.ATTRACTION.ID }, true);
     public static final ForeignKey<AttractionImageRecord, ImageRecord> ATTRACTION_IMAGE__FK_ATTRACTION_IMAGE_IMAGE = Internal.createForeignKey(AttractionImage.ATTRACTION_IMAGE, DSL.name("fk_attraction_image_image"), new TableField[] { AttractionImage.ATTRACTION_IMAGE.IMAGE_ID }, Keys.PK_IMAGE, new TableField[] { Image.IMAGE.ID }, true);
+    public static final ForeignKey<ProgrammRecord, AttractionRecord> PROGRAMM__FK_PROGRAMM_ATTRACTION = Internal.createForeignKey(Programm.PROGRAMM, DSL.name("fk_programm_attraction"), new TableField[] { Programm.PROGRAMM.ATTRACTION_ID }, Keys.PK_ARTIST, new TableField[] { Attraction.ATTRACTION.ID }, true);
+    public static final ForeignKey<ProgrammRecord, LocationRecord> PROGRAMM__FK_PROGRAMM_LOCATION = Internal.createForeignKey(Programm.PROGRAMM, DSL.name("fk_programm_location"), new TableField[] { Programm.PROGRAMM.LOCATION_ID }, Keys.PK_LOCATION, new TableField[] { Location.LOCATION.ID }, true);
 }

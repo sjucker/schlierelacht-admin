@@ -9,6 +9,7 @@ import ch.schlierelacht.admin.jooq.tables.AttractionImage;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
+import ch.schlierelacht.admin.jooq.tables.Programm;
 
 
 /**
@@ -41,4 +42,9 @@ public class Tables {
      * The table <code>public.login</code>.
      */
     public static final Login LOGIN = Login.LOGIN;
+
+    /**
+     * The table <code>public.programm</code>.
+     */
+    public static final Programm PROGRAMM = Programm.PROGRAMM;
 }

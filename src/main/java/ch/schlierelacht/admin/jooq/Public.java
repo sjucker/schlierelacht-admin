@@ -9,6 +9,7 @@ import ch.schlierelacht.admin.jooq.tables.AttractionImage;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
+import ch.schlierelacht.admin.jooq.tables.Programm;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,6 +58,11 @@ public class Public extends SchemaImpl {
     public final Login LOGIN = Login.LOGIN;
 
     /**
+     * The table <code>public.programm</code>.
+     */
+    public final Programm PROGRAMM = Programm.PROGRAMM;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -76,7 +82,8 @@ public class Public extends SchemaImpl {
             AttractionImage.ATTRACTION_IMAGE,
             Image.IMAGE,
             Location.LOCATION,
-            Login.LOGIN
+            Login.LOGIN,
+            Programm.PROGRAMM
         );
     }
 }

@@ -7,6 +7,7 @@ package ch.schlierelacht.admin.jooq.tables;
 import ch.schlierelacht.admin.jooq.Keys;
 import ch.schlierelacht.admin.jooq.Public;
 import ch.schlierelacht.admin.jooq.enums.LocationType;
+import ch.schlierelacht.admin.jooq.tables.Programm.ProgrammPath;
 import ch.schlierelacht.admin.jooq.tables.records.LocationRecord;
 
 import java.math.BigDecimal;
@@ -16,10 +17,14 @@ import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -128,6 +133,39 @@ public class Location extends TableImpl<LocationRecord> {
         this(DSL.name("location"), null);
     }
 
+    public <O extends Record> Location(Table<O> path, ForeignKey<O, LocationRecord> childPath, InverseForeignKey<O, LocationRecord> parentPath) {
+        super(path, childPath, parentPath, LOCATION);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class LocationPath extends Location implements Path<LocationRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> LocationPath(Table<O> path, ForeignKey<O, LocationRecord> childPath, InverseForeignKey<O, LocationRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private LocationPath(Name alias, Table<LocationRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public LocationPath as(String alias) {
+            return new LocationPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public LocationPath as(Name alias) {
+            return new LocationPath(alias, this);
+        }
+
+        @Override
+        public LocationPath as(Table<?> alias) {
+            return new LocationPath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
@@ -146,6 +184,19 @@ public class Location extends TableImpl<LocationRecord> {
     @Override
     public List<UniqueKey<LocationRecord>> getUniqueKeys() {
         return Arrays.asList(Keys.UQ_LOCATION_EXTERNAL_ID);
+    }
+
+    private transient ProgrammPath _programm;
+
+    /**
+     * Get the implicit to-many join path to the <code>public.programm</code>
+     * table
+     */
+    public ProgrammPath programm() {
+        if (_programm == null)
+            _programm = new ProgrammPath(this, null, Keys.PROGRAMM__FK_PROGRAMM_LOCATION.getInverseKey());
+
+        return _programm;
     }
 
     @Override
