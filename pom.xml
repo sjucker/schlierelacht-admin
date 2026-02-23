@@ -18,6 +18,7 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 
         <sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
+        <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
         <testcontainers-jooq-codegen-maven-plugin.version>0.0.4</testcontainers-jooq-codegen-maven-plugin.version>
 
         <jooq-codegen-skip>true</jooq-codegen-skip>
@@ -258,6 +259,30 @@
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>cz.habarta.typescript-generator</groupId>
+                <artifactId>typescript-generator-maven-plugin</artifactId>
+                <version>${typescript-generator-maven-plugin.version}</version>
+                <configuration>
+                    <jsonLibrary>jackson2</jsonLibrary>
+                    <classPatterns>
+                        <pattern>ch.schlierelacht.admin.**DTO</pattern>
+                    </classPatterns>
+                    <outputFile>../schlierelacht-website/shared/types/rest.ts</outputFile>
+                    <outputKind>module</outputKind>
+                    <outputFileType>implementationFile</outputFileType>
+                    <mapDate>asString</mapDate>
+                    <mapEnum>asEnum</mapEnum>
+                    <optionalProperties>useSpecifiedAnnotations</optionalProperties>
+                    <requiredAnnotations>jakarta.validation.constraints.NotNull</requiredAnnotations>
+                    <primitivePropertiesRequired>true</primitivePropertiesRequired>
+                    <nonConstEnums>true</nonConstEnums>
+                    <noFileComment>true</noFileComment>
+                    <noTslintDisable>true</noTslintDisable>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
