@@ -250,18 +250,50 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 tags.setValue(new HashSet<>(existingTags));
 
                 // Show existing images
-                var images = dslContext.select(IMAGE.CLOUDFLARE_ID, ATTRACTION_IMAGE.TYPE, IMAGE.DESCRIPTION)
+                var images = dslContext.select(IMAGE.ID, IMAGE.CLOUDFLARE_ID, ATTRACTION_IMAGE.TYPE, IMAGE.DESCRIPTION)
                                        .from(IMAGE)
                                        .join(ATTRACTION_IMAGE).on(IMAGE.ID.eq(ATTRACTION_IMAGE.IMAGE_ID))
                                        .where(ATTRACTION_IMAGE.ATTRACTION_ID.eq(attraction.getId()))
                                        .fetch();
                 images.forEach(r -> {
+                    var imageId = r.get(IMAGE.ID);
                     var cloudflareId = r.get(IMAGE.CLOUDFLARE_ID);
                     var type = ImageType.fromDb(r.get(ATTRACTION_IMAGE.TYPE)).orElseThrow();
                     var imgDesc = r.get(IMAGE.DESCRIPTION);
+
                     var img = new CloudflareImage(cloudflareService, cloudflareId, imgDesc);
                     img.setWidth("200px");
-                    imageInfoLayout.add(new HorizontalLayout(new Span(type.getDescription() + " (" + imgDesc + "):"), img));
+
+                    var label = new Span(type.getDescription() + " (" + imgDesc + "):");
+                    var row = new HorizontalLayout();
+                    row.setAlignItems(Alignment.CENTER);
+                    row.setSpacing(true);
+
+                    var deleteBtn = new Button("Löschen");
+                    deleteBtn.addClickListener(_ -> {
+                        // Delete relation and image, and from Cloudflare
+                        try {
+                            dslContext.deleteFrom(ATTRACTION_IMAGE)
+                                      .where(ATTRACTION_IMAGE.ATTRACTION_ID.eq(binder.getBean().getId())
+                                                                           .and(ATTRACTION_IMAGE.IMAGE_ID.eq(imageId)))
+                                      .execute();
+
+                            dslContext.deleteFrom(IMAGE)
+                                      .where(IMAGE.ID.eq(imageId))
+                                      .execute();
+
+                            cloudflareService.delete(cloudflareId);
+
+                            imageInfoLayout.remove(row);
+                        } catch (Exception ex) {
+                            log.error("Error deleting image {} for attraction {}", imageId, binder.getBean().getId(), ex);
+                            showNotification("Bild konnte nicht gelöscht werden", LUMO_ERROR);
+                        }
+                    });
+                    deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
+                    row.add(label, img, deleteBtn);
+                    imageInfoLayout.add(row);
                 });
             }
             super.open();
