@@ -3,13 +3,16 @@ package ch.schlierelacht.admin.views.artist;
 import ch.schlierelacht.admin.dto.AttractionType;
 import ch.schlierelacht.admin.dto.ImageType;
 import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
+import ch.schlierelacht.admin.jooq.tables.daos.TagDao;
 import ch.schlierelacht.admin.jooq.tables.pojos.Attraction;
 import ch.schlierelacht.admin.jooq.tables.pojos.Image;
+import ch.schlierelacht.admin.jooq.tables.pojos.Tag;
 import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.MainLayout;
 import ch.schlierelacht.admin.views.util.CloudflareImage;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -36,6 +39,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,7 +47,9 @@ import static ch.schlierelacht.admin.dto.ImageType.ADDITIONAL;
 import static ch.schlierelacht.admin.dto.ImageType.MAIN;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
+import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_TAG;
 import static ch.schlierelacht.admin.jooq.tables.Image.IMAGE;
+import static ch.schlierelacht.admin.jooq.tables.Tag.TAG;
 import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
 import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
@@ -60,14 +66,15 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class ArtistView extends VerticalLayout {
 
     private final AttractionDao attractionDao;
+    private final TagDao tagDao;
     private final CloudflareService cloudflareService;
     private final DSLContext dslContext;
-
     private final Grid<Attraction> grid;
     private final ArtistDialog dialog;
 
-    public ArtistView(AttractionDao attractionDao, CloudflareService cloudflareService, DSLContext dslContext) {
+    public ArtistView(AttractionDao attractionDao, TagDao tagDao, CloudflareService cloudflareService, DSLContext dslContext) {
         this.attractionDao = attractionDao;
+        this.tagDao = tagDao;
         this.cloudflareService = cloudflareService;
         this.dslContext = dslContext;
 
@@ -116,6 +123,7 @@ public class ArtistView extends VerticalLayout {
 
     private class ArtistDialog extends Dialog {
         private final Binder<Attraction> binder = new Binder<>(Attraction.class);
+        private final MultiSelectComboBox<Tag> tags = new MultiSelectComboBox<>("Tags");
         private final VerticalLayout imageInfoLayout = new VerticalLayout();
         private final TextField mainImageDescription = new TextField("Beschreibung Hauptbild");
         private final VerticalLayout additionalImagesLayout = new VerticalLayout();
@@ -142,8 +150,13 @@ public class ArtistView extends VerticalLayout {
             var youtube = new TextField("Youtube");
             var externalId = new TextField("External ID (z.B. 'dj-mario'");
 
-            form.add(name, externalId, website, instagram, facebook, youtube, description);
+            tags.setItems(tagDao.fetchByType(AttractionType.ARTIST.toDb()));
+            tags.setItemLabelGenerator(Tag::getName);
+            tags.setWidthFull();
+
+            form.add(name, externalId, website, instagram, facebook, youtube, tags, description);
             form.setColspan(description, 2);
+            form.setColspan(tags, 2);
             form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
                                     new FormLayout.ResponsiveStep("500px", 2));
 
@@ -232,6 +245,14 @@ public class ArtistView extends VerticalLayout {
             mainImageDescription.setVisible(false);
 
             if (artist.getId() != null) {
+                // Show existing tags
+                var existingTags = dslContext.select(TAG.asterisk())
+                                             .from(TAG)
+                                             .join(ATTRACTION_TAG).on(TAG.ID.eq(ATTRACTION_TAG.TAG_ID))
+                                             .where(ATTRACTION_TAG.ATTRACTION_ID.eq(artist.getId()))
+                                             .fetchInto(Tag.class);
+                tags.setValue(new HashSet<>(existingTags));
+
                 // Show existing images
                 var images = dslContext.select(IMAGE.CLOUDFLARE_ID, ATTRACTION_IMAGE.TYPE, IMAGE.DESCRIPTION)
                                        .from(IMAGE)
@@ -292,6 +313,18 @@ public class ArtistView extends VerticalLayout {
                 var desc = additionalImagesDescription.get(additionalImage.getKey()).getValue();
                 uploadAndLinkImage(artist.getId(), additionalImage.getValue(), additionalImage.getKey(),
                                    additionalImagesMetadata.get(additionalImage.getKey()).contentType(), ADDITIONAL, desc);
+            }
+
+            // Save tags
+            dslContext.deleteFrom(ATTRACTION_TAG)
+                      .where(ATTRACTION_TAG.ATTRACTION_ID.eq(artist.getId()))
+                      .execute();
+
+            for (Tag selectedTag : tags.getValue()) {
+                dslContext.insertInto(ATTRACTION_TAG)
+                          .set(ATTRACTION_TAG.ATTRACTION_ID, artist.getId())
+                          .set(ATTRACTION_TAG.TAG_ID, selectedTag.getId())
+                          .execute();
             }
 
             close();
