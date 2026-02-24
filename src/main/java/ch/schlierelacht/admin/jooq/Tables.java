@@ -6,10 +6,12 @@ package ch.schlierelacht.admin.jooq;
 
 import ch.schlierelacht.admin.jooq.tables.Attraction;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
+import ch.schlierelacht.admin.jooq.tables.AttractionTag;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 import ch.schlierelacht.admin.jooq.tables.Programm;
+import ch.schlierelacht.admin.jooq.tables.Tag;
 
 
 /**
@@ -27,6 +29,11 @@ public class Tables {
      * The table <code>public.attraction_image</code>.
      */
     public static final AttractionImage ATTRACTION_IMAGE = AttractionImage.ATTRACTION_IMAGE;
+
+    /**
+     * The table <code>public.attraction_tag</code>.
+     */
+    public static final AttractionTag ATTRACTION_TAG = AttractionTag.ATTRACTION_TAG;
 
     /**
      * The table <code>public.image</code>.
@@ -47,4 +54,9 @@ public class Tables {
      * The table <code>public.programm</code>.
      */
     public static final Programm PROGRAMM = Programm.PROGRAMM;
+
+    /**
+     * The table <code>public.tag</code>.
+     */
+    public static final Tag TAG = Tag.TAG;
 }

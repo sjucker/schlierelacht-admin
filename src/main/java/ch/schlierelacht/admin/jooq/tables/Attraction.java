@@ -8,7 +8,9 @@ import ch.schlierelacht.admin.jooq.Keys;
 import ch.schlierelacht.admin.jooq.Public;
 import ch.schlierelacht.admin.jooq.enums.AttractionType;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage.AttractionImagePath;
+import ch.schlierelacht.admin.jooq.tables.AttractionTag.AttractionTagPath;
 import ch.schlierelacht.admin.jooq.tables.Programm.ProgrammPath;
+import ch.schlierelacht.admin.jooq.tables.Tag.TagPath;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionRecord;
 
 import java.util.Arrays;
@@ -199,6 +201,19 @@ public class Attraction extends TableImpl<AttractionRecord> {
         return _attractionImage;
     }
 
+    private transient AttractionTagPath _attractionTag;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.attraction_tag</code> table
+     */
+    public AttractionTagPath attractionTag() {
+        if (_attractionTag == null)
+            _attractionTag = new AttractionTagPath(this, null, Keys.ATTRACTION_TAG__FK_ATTRACTION_TAG_ATTRACTION.getInverseKey());
+
+        return _attractionTag;
+    }
+
     private transient ProgrammPath _programm;
 
     /**
@@ -210,6 +225,14 @@ public class Attraction extends TableImpl<AttractionRecord> {
             _programm = new ProgrammPath(this, null, Keys.PROGRAMM__FK_PROGRAMM_ATTRACTION.getInverseKey());
 
         return _programm;
+    }
+
+    /**
+     * Get the implicit many-to-many join path to the <code>public.tag</code>
+     * table
+     */
+    public TagPath tag() {
+        return attractionTag().tag();
     }
 
     @Override

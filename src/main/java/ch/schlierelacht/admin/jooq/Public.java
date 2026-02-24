@@ -6,10 +6,12 @@ package ch.schlierelacht.admin.jooq;
 
 import ch.schlierelacht.admin.jooq.tables.Attraction;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
+import ch.schlierelacht.admin.jooq.tables.AttractionTag;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 import ch.schlierelacht.admin.jooq.tables.Programm;
+import ch.schlierelacht.admin.jooq.tables.Tag;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +45,11 @@ public class Public extends SchemaImpl {
     public final AttractionImage ATTRACTION_IMAGE = AttractionImage.ATTRACTION_IMAGE;
 
     /**
+     * The table <code>public.attraction_tag</code>.
+     */
+    public final AttractionTag ATTRACTION_TAG = AttractionTag.ATTRACTION_TAG;
+
+    /**
      * The table <code>public.image</code>.
      */
     public final Image IMAGE = Image.IMAGE;
@@ -63,6 +70,11 @@ public class Public extends SchemaImpl {
     public final Programm PROGRAMM = Programm.PROGRAMM;
 
     /**
+     * The table <code>public.tag</code>.
+     */
+    public final Tag TAG = Tag.TAG;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -80,10 +92,12 @@ public class Public extends SchemaImpl {
         return Arrays.asList(
             Attraction.ATTRACTION,
             AttractionImage.ATTRACTION_IMAGE,
+            AttractionTag.ATTRACTION_TAG,
             Image.IMAGE,
             Location.LOCATION,
             Login.LOGIN,
-            Programm.PROGRAMM
+            Programm.PROGRAMM,
+            Tag.TAG
         );
     }
 }
