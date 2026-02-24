@@ -1,8 +1,8 @@
 package ch.schlierelacht.admin.dto;
 
-import java.util.List;
-
 import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 public record ArtistDTO(@NotNull String externalId,
                         @NotNull String name,
@@ -12,5 +12,6 @@ public record ArtistDTO(@NotNull String externalId,
                         String facebook,
                         String youtube,
                         @NotNull List<ImageDTO> images,
+                        @NotNull List<TagDTO> tags,
                         @NotNull List<ProgrammEntryDTO> programm) {
 }

@@ -6,6 +6,7 @@ import ch.schlierelacht.admin.dto.ImageType;
 import ch.schlierelacht.admin.dto.LocationDTO;
 import ch.schlierelacht.admin.dto.LocationType;
 import ch.schlierelacht.admin.dto.ProgrammEntryDTO;
+import ch.schlierelacht.admin.dto.TagDTO;
 import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,11 @@ import java.util.Optional;
 import static ch.schlierelacht.admin.dto.AttractionType.ARTIST;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
+import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_TAG;
 import static ch.schlierelacht.admin.jooq.Tables.IMAGE;
 import static ch.schlierelacht.admin.jooq.Tables.LOCATION;
 import static ch.schlierelacht.admin.jooq.Tables.PROGRAMM;
+import static ch.schlierelacht.admin.jooq.Tables.TAG;
 import static ch.schlierelacht.admin.util.MapUtil.getGoogleMapsCoordinates;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
@@ -72,7 +75,12 @@ public class ArtistService {
                                                  IMAGE.DESCRIPTION)
                                                   .from(ATTRACTION_IMAGE)
                                                   .join(IMAGE).on(ATTRACTION_IMAGE.IMAGE_ID.eq(IMAGE.ID))
-                                                  .where(ATTRACTION_IMAGE.ATTRACTION_ID.eq(ATTRACTION.ID))))
+                                                  .where(ATTRACTION_IMAGE.ATTRACTION_ID.eq(ATTRACTION.ID))),
+                                 multiset(select(TAG.ID,
+                                                 TAG.NAME)
+                                                  .from(ATTRACTION_TAG)
+                                                  .join(TAG).on(ATTRACTION_TAG.TAG_ID.eq(TAG.ID))
+                                                  .where(ATTRACTION_TAG.ATTRACTION_ID.eq(ATTRACTION.ID))))
                          .from(ATTRACTION)
                          .where(ATTRACTION.TYPE.eq(ARTIST.toDb()),
                                 whereCondition)
@@ -89,6 +97,10 @@ public class ArtistService {
                                    .map(v -> new ImageDTO(v.get(IMAGE.CLOUDFLARE_ID),
                                                           v.get(IMAGE.DESCRIPTION),
                                                           ImageType.fromDb(v.get(ATTRACTION_IMAGE.TYPE)).orElseThrow()))
+                                   .toList(),
+                                 it.value11().stream()
+                                   .map(v -> new TagDTO(v.get(TAG.ID),
+                                                        v.get(TAG.NAME)))
                                    .toList(),
                                  it.value9().stream()
                                    .map(v -> new ProgrammEntryDTO(
