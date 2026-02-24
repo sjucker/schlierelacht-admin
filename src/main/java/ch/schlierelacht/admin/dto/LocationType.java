@@ -4,6 +4,8 @@ import ch.schlierelacht.admin.mapper.EnumMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 @Getter
 @RequiredArgsConstructor
 public enum LocationType implements HasDescription {
@@ -17,8 +19,8 @@ public enum LocationType implements HasDescription {
 
     private static final EnumMapper ENUM_MAPPER = EnumMapper.INSTANCE;
 
-    public static LocationType fromDb(ch.schlierelacht.admin.jooq.enums.LocationType dbEnum) {
-        return ENUM_MAPPER.fromDb(dbEnum);
+    public static Optional<LocationType> fromDb(ch.schlierelacht.admin.jooq.enums.LocationType dbEnum) {
+        return Optional.ofNullable(ENUM_MAPPER.fromDb(dbEnum));
     }
 
     public ch.schlierelacht.admin.jooq.enums.LocationType toDb() {

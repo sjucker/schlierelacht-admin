@@ -67,7 +67,7 @@ public class LocationView extends VerticalLayout {
         var g = new Grid<Location>();
         g.addComponentColumn(l -> new Button(EDIT.create(), _ -> dialog.open(l))).setWidth("80px").setTextAlign(CENTER).setFlexGrow(0);
         g.addColumn(Location::getName).setHeader("Name").setSortable(true);
-        g.addColumn(l -> fromDb(l.getType()).getDescription()).setHeader("Typ").setSortable(true);
+        g.addColumn(l -> fromDb(l.getType()).map(LocationType::getDescription).orElse("")).setHeader("Typ").setSortable(true);
         g.addColumn(Location::getExternalId).setHeader("External ID");
         g.addColumn(Location::getMapId).setHeader("Map ID");
         g.addColumn(Location::getSortOrder).setHeader("Sortierung");
@@ -132,7 +132,7 @@ public class LocationView extends VerticalLayout {
 
             binder.forField(type)
                   .asRequired()
-                  .bind(l -> l.getType() != null ? fromDb(l.getType()) : null,
+                  .bind(l -> fromDb(l.getType()).orElse(null),
                         (l, v) -> l.setType(v != null ? v.toDb() : null));
 
             binder.forField(externalId)
@@ -153,7 +153,7 @@ public class LocationView extends VerticalLayout {
 
             binder.forField(cloudflareId)
                   .bind(Location::getCloudflareId, Location::setCloudflareId);
-            
+
             cloudflareId.addValueChangeListener(e -> {
                 imagePreview.removeAll();
                 if (StringUtils.hasText(e.getValue())) {

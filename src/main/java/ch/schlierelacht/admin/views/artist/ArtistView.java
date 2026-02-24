@@ -1,32 +1,13 @@
 package ch.schlierelacht.admin.views.artist;
 
-import static ch.schlierelacht.admin.dto.ImageType.ADDITIONAL;
-import static ch.schlierelacht.admin.dto.ImageType.MAIN;
-import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
-import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
-import static ch.schlierelacht.admin.jooq.tables.Image.IMAGE;
-import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
-import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
-import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
-import static com.vaadin.flow.component.icon.VaadinIcon.EDIT;
-import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_ERROR;
-import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SUCCESS;
-import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_WARNING;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.imageio.ImageIO;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.jooq.DSLContext;
-
+import ch.schlierelacht.admin.dto.AttractionType;
+import ch.schlierelacht.admin.dto.ImageType;
+import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
+import ch.schlierelacht.admin.jooq.tables.pojos.Attraction;
+import ch.schlierelacht.admin.jooq.tables.pojos.Image;
+import ch.schlierelacht.admin.service.CloudflareService;
+import ch.schlierelacht.admin.views.MainLayout;
+import ch.schlierelacht.admin.views.util.CloudflareImage;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -46,16 +27,31 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.streams.UploadHandler;
 import com.vaadin.flow.server.streams.UploadMetadata;
-
-import ch.schlierelacht.admin.dto.AttractionType;
-import ch.schlierelacht.admin.dto.ImageType;
-import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
-import ch.schlierelacht.admin.jooq.tables.pojos.Attraction;
-import ch.schlierelacht.admin.jooq.tables.pojos.Image;
-import ch.schlierelacht.admin.service.CloudflareService;
-import ch.schlierelacht.admin.views.MainLayout;
-import ch.schlierelacht.admin.views.util.CloudflareImage;
 import jakarta.annotation.security.PermitAll;
+import lombok.extern.slf4j.Slf4j;
+import org.jooq.DSLContext;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static ch.schlierelacht.admin.dto.ImageType.ADDITIONAL;
+import static ch.schlierelacht.admin.dto.ImageType.MAIN;
+import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
+import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
+import static ch.schlierelacht.admin.jooq.tables.Image.IMAGE;
+import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
+import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
+import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
+import static com.vaadin.flow.component.icon.VaadinIcon.EDIT;
+import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_ERROR;
+import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SUCCESS;
+import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_WARNING;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
 @PageTitle("Künstler")
@@ -244,7 +240,7 @@ public class ArtistView extends VerticalLayout {
                                        .fetch();
                 images.forEach(r -> {
                     var cloudflareId = r.get(IMAGE.CLOUDFLARE_ID);
-                    var type = ImageType.fromDb(r.get(ATTRACTION_IMAGE.TYPE));
+                    var type = ImageType.fromDb(r.get(ATTRACTION_IMAGE.TYPE)).orElseThrow();
                     var imgDesc = r.get(IMAGE.DESCRIPTION);
                     var img = new CloudflareImage(cloudflareService, cloudflareId, imgDesc);
                     img.setWidth("100px");

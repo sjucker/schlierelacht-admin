@@ -1,19 +1,27 @@
 package ch.schlierelacht.admin.dto;
 
 import ch.schlierelacht.admin.mapper.EnumMapper;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-public enum AttractionType {
-    ARTIST,
-    FOOD,
-    EXHIBITION,
-    DISCUSSION,
-    EVENT,
-    RIDE;
+import java.util.Optional;
+
+@Getter
+@RequiredArgsConstructor
+public enum AttractionType implements HasDescription {
+    ARTIST("Künstler"),
+    FOOD("Essen"),
+    EXHIBITION("Ausstellung"),
+    DISCUSSION("Diskussion"),
+    EVENT("Anlass"),
+    RIDE("Bahn");
 
     private static final EnumMapper ENUM_MAPPER = EnumMapper.INSTANCE;
 
-    public static AttractionType fromDb(ch.schlierelacht.admin.jooq.enums.AttractionType dbEnum) {
-        return ENUM_MAPPER.fromDb(dbEnum);
+    private final String description;
+
+    public static Optional<AttractionType> fromDb(ch.schlierelacht.admin.jooq.enums.AttractionType dbEnum) {
+        return Optional.ofNullable(ENUM_MAPPER.fromDb(dbEnum));
     }
 
     public ch.schlierelacht.admin.jooq.enums.AttractionType toDb() {

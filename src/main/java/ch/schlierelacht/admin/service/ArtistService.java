@@ -1,5 +1,22 @@
 package ch.schlierelacht.admin.service;
 
+import ch.schlierelacht.admin.dto.ArtistDTO;
+import ch.schlierelacht.admin.dto.ImageDTO;
+import ch.schlierelacht.admin.dto.ImageType;
+import ch.schlierelacht.admin.dto.LocationDTO;
+import ch.schlierelacht.admin.dto.LocationType;
+import ch.schlierelacht.admin.dto.ProgrammEntryDTO;
+import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
 import static ch.schlierelacht.admin.dto.AttractionType.ARTIST;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
@@ -9,25 +26,6 @@ import static ch.schlierelacht.admin.jooq.Tables.PROGRAMM;
 import static ch.schlierelacht.admin.util.MapUtil.getGoogleMapsCoordinates;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
-
-import java.util.List;
-import java.util.Optional;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.jooq.Condition;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
-import org.springframework.stereotype.Service;
-
-import ch.schlierelacht.admin.dto.ArtistDTO;
-import ch.schlierelacht.admin.dto.ImageDTO;
-import ch.schlierelacht.admin.dto.ImageType;
-import ch.schlierelacht.admin.dto.LocationDTO;
-import ch.schlierelacht.admin.dto.LocationType;
-import ch.schlierelacht.admin.dto.ProgrammEntryDTO;
-import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
 
 @Slf4j
 @Service
@@ -90,12 +88,12 @@ public class ArtistService {
                                  it.value10().stream()
                                    .map(v -> new ImageDTO(v.get(IMAGE.CLOUDFLARE_ID),
                                                           v.get(IMAGE.DESCRIPTION),
-                                                          ImageType.fromDb(v.get(ATTRACTION_IMAGE.TYPE))))
+                                                          ImageType.fromDb(v.get(ATTRACTION_IMAGE.TYPE)).orElseThrow()))
                                    .toList(),
                                  it.value9().stream()
                                    .map(v -> new ProgrammEntryDTO(
                                            new LocationDTO(v.get(LOCATION.EXTERNAL_ID),
-                                                           LocationType.fromDb(v.get(LOCATION.TYPE)),
+                                                           LocationType.fromDb(v.get(LOCATION.TYPE)).orElseThrow(),
                                                            v.get(LOCATION.NAME),
                                                            v.get(LOCATION.LATITUDE),
                                                            v.get(LOCATION.LONGITUDE),

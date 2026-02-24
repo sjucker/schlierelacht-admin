@@ -4,6 +4,8 @@ import ch.schlierelacht.admin.mapper.EnumMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 @Getter
 @RequiredArgsConstructor
 public enum ImageType implements HasDescription {
@@ -14,8 +16,8 @@ public enum ImageType implements HasDescription {
 
     private static final EnumMapper ENUM_MAPPER = EnumMapper.INSTANCE;
 
-    public static ImageType fromDb(ch.schlierelacht.admin.jooq.enums.ImageType dbEnum) {
-        return ENUM_MAPPER.fromDb(dbEnum);
+    public static Optional<ImageType> fromDb(ch.schlierelacht.admin.jooq.enums.ImageType dbEnum) {
+        return Optional.ofNullable(ENUM_MAPPER.fromDb(dbEnum));
     }
 
     public ch.schlierelacht.admin.jooq.enums.ImageType toDb() {
