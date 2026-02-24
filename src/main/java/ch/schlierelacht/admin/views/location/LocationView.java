@@ -107,7 +107,7 @@ public class LocationView extends VerticalLayout {
             type.setItems(LocationType.values());
             type.setItemLabelGenerator(LocationType::getDescription);
 
-            var externalId = new TextField("External ID (z.B. 'live-im-park-buehne'");
+            var externalId = new TextField("External ID (z.B. 'live-im-park-buehne')");
             var name = new TextField("Name");
             var latitude = new BigDecimalField("Breitengrad");
             var longitude = new BigDecimalField("Längengrad");

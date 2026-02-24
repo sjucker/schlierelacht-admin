@@ -42,7 +42,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import static org.vaadin.lineawesome.LineAwesomeIcon.CALENDAR_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
-import static org.vaadin.lineawesome.LineAwesomeIcon.PENCIL_RULER_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.PIZZA_SLICE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.TAGS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.USER_SOLID;
 
@@ -129,8 +129,8 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{
-                new MenuItemInfo("My View", PENCIL_RULER_SOLID.create(), GastroView.class),
                 new MenuItemInfo("Standorte", MAP_MARKER_SOLID.create(), LocationView.class),
+                new MenuItemInfo("Gastronomie", PIZZA_SLICE_SOLID.create(), GastroView.class),
                 new MenuItemInfo("Künstler", USER_SOLID.create(), ArtistView.class),
                 new MenuItemInfo("Programm", CALENDAR_SOLID.create(), ProgrammView.class),
                 new MenuItemInfo("Tags", TAGS_SOLID.create(), TagView.class),

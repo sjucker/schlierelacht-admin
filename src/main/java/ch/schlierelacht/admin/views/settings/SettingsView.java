@@ -7,11 +7,9 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
-import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
 import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_ERROR;
@@ -19,7 +17,6 @@ import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SU
 
 @PageTitle("Settings")
 @Route(value = "settings", layout = MainLayout.class)
-@Menu(order = 10, icon = LineAwesomeIconUrl.COG_SOLID)
 @PermitAll
 public class SettingsView extends VerticalLayout {
 
