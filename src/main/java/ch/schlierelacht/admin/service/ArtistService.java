@@ -1,23 +1,5 @@
 package ch.schlierelacht.admin.service;
 
-import ch.schlierelacht.admin.dto.ArtistDTO;
-import ch.schlierelacht.admin.dto.ImageDTO;
-import ch.schlierelacht.admin.dto.ImageType;
-import ch.schlierelacht.admin.dto.LocationDTO;
-import ch.schlierelacht.admin.dto.LocationType;
-import ch.schlierelacht.admin.dto.ProgrammEntryDTO;
-import ch.schlierelacht.admin.dto.TagDTO;
-import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jooq.Condition;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-
 import static ch.schlierelacht.admin.dto.AttractionType.ARTIST;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
@@ -27,8 +9,30 @@ import static ch.schlierelacht.admin.jooq.Tables.LOCATION;
 import static ch.schlierelacht.admin.jooq.Tables.PROGRAMM;
 import static ch.schlierelacht.admin.jooq.Tables.TAG;
 import static ch.schlierelacht.admin.util.MapUtil.getGoogleMapsCoordinates;
+import static org.jooq.impl.DSL.exists;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.selectOne;
+
+import java.util.List;
+import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
+import org.springframework.stereotype.Service;
+
+import ch.schlierelacht.admin.dto.ArtistDTO;
+import ch.schlierelacht.admin.dto.ImageDTO;
+import ch.schlierelacht.admin.dto.ImageType;
+import ch.schlierelacht.admin.dto.LocationDTO;
+import ch.schlierelacht.admin.dto.LocationType;
+import ch.schlierelacht.admin.dto.ProgrammEntryDTO;
+import ch.schlierelacht.admin.dto.TagDTO;
+import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
 
 @Slf4j
 @Service
@@ -39,6 +43,12 @@ public class ArtistService {
 
     public List<ArtistDTO> findAll() {
         return find(DSL.trueCondition());
+    }
+
+    public List<ArtistDTO> findByTagId(Long tagId) {
+        return find(exists(selectOne().from(ATTRACTION_TAG)
+                                      .where(ATTRACTION_TAG.ATTRACTION_ID.eq(ATTRACTION.ID),
+                                             ATTRACTION_TAG.TAG_ID.eq(tagId))));
     }
 
     public Optional<ArtistDTO> findByExternalId(String externalId) {

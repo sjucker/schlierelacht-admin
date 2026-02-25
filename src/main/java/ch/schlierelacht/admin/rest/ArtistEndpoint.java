@@ -35,4 +35,11 @@ public class ArtistEndpoint {
 
         return ResponseEntity.of(artistService.findByExternalId(externalId));
     }
+
+    @GetMapping("/tag/{tagId}")
+    public ResponseEntity<List<ArtistDTO>> getArtistsByTag(@PathVariable Long tagId) {
+        log.info("GET /api/artist/tag/{}", tagId);
+
+        return ResponseEntity.ok(artistService.findByTagId(tagId));
+    }
 }
