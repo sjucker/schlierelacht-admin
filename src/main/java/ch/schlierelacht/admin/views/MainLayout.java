@@ -1,6 +1,5 @@
 package ch.schlierelacht.admin.views;
 
-import ch.schlierelacht.admin.util.DateUtil;
 import ch.schlierelacht.admin.views.artist.ArtistView;
 import ch.schlierelacht.admin.views.gastro.GastroView;
 import ch.schlierelacht.admin.views.location.LocationView;
@@ -17,6 +16,7 @@ import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Nav;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -102,8 +102,8 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
         layout.add(appName);
 
-        var version = new Span("%s %s".formatted(buildProperties.getVersion(),
-                                                 formatInstant(buildProperties.getTime())));
+        var version = new Span(buildProperties.getVersion());
+        Tooltip.forComponent(version).setText(formatInstant(buildProperties.getTime()));
         version.addClassNames(FontSize.XXSMALL);
         layout.add(version);
 
