@@ -1,18 +1,12 @@
 package ch.schlierelacht.admin.views.programm;
 
-import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
-import static com.vaadin.flow.component.button.ButtonVariant.LUMO_ERROR;
-import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
-import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
-import static com.vaadin.flow.component.icon.VaadinIcon.EDIT;
-import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SUCCESS;
-import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_WARNING;
-
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
+import ch.schlierelacht.admin.jooq.tables.daos.LocationDao;
+import ch.schlierelacht.admin.jooq.tables.daos.ProgrammDao;
+import ch.schlierelacht.admin.jooq.tables.pojos.Attraction;
+import ch.schlierelacht.admin.jooq.tables.pojos.Location;
+import ch.schlierelacht.admin.jooq.tables.pojos.Programm;
+import ch.schlierelacht.admin.views.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -26,15 +20,21 @@ import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-
-import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
-import ch.schlierelacht.admin.jooq.tables.daos.LocationDao;
-import ch.schlierelacht.admin.jooq.tables.daos.ProgrammDao;
-import ch.schlierelacht.admin.jooq.tables.pojos.Attraction;
-import ch.schlierelacht.admin.jooq.tables.pojos.Location;
-import ch.schlierelacht.admin.jooq.tables.pojos.Programm;
-import ch.schlierelacht.admin.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
+
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
+import static com.vaadin.flow.component.ModalityMode.STRICT;
+import static com.vaadin.flow.component.button.ButtonVariant.LUMO_ERROR;
+import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
+import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
+import static com.vaadin.flow.component.icon.VaadinIcon.EDIT;
+import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SUCCESS;
+import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_WARNING;
 
 @PageTitle("Programm")
 @Route(value = "programm", layout = MainLayout.class)
@@ -116,6 +116,7 @@ public class ProgrammView extends VerticalLayout {
         private final Binder<Programm> binder = new Binder<>(Programm.class);
 
         public ProgrammDialog(Runnable onSuccessCallback) {
+            setModality(STRICT);
             setHeaderTitle("Programm-Eintrag bearbeiten");
 
             var form = new FormLayout();

@@ -29,6 +29,7 @@ import java.util.Comparator;
 import static ch.schlierelacht.admin.dto.LocationType.fromDb;
 import static ch.schlierelacht.admin.util.MapUtil.getGoogleMapsCoordinates;
 import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
+import static com.vaadin.flow.component.ModalityMode.STRICT;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_ERROR;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
 import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
@@ -99,6 +100,7 @@ public class LocationView extends VerticalLayout {
         private final Binder<Location> binder = new Binder<>(Location.class);
 
         public LocationDialog(Runnable onSuccessCallback) {
+            setModality(STRICT);
             setHeaderTitle("Standort bearbeiten");
 
             var form = new FormLayout();

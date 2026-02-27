@@ -48,6 +48,7 @@ import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_TAG;
 import static ch.schlierelacht.admin.jooq.tables.Image.IMAGE;
 import static ch.schlierelacht.admin.jooq.tables.Tag.TAG;
 import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
+import static com.vaadin.flow.component.ModalityMode.STRICT;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
 import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
 import static com.vaadin.flow.component.icon.VaadinIcon.EDIT;
@@ -130,6 +131,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         private byte[] mainImageData;
 
         public AttractionDialog(Runnable onSuccessCallback) {
+            setModality(STRICT);
             setHeaderTitle("%s bearbeiten".formatted(getAttractionType().getDescription()));
             setWidth("800px");
 

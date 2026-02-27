@@ -21,6 +21,7 @@ import jakarta.annotation.security.PermitAll;
 import java.util.Comparator;
 
 import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
+import static com.vaadin.flow.component.ModalityMode.STRICT;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_ERROR;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
 import static com.vaadin.flow.component.grid.ColumnTextAlign.CENTER;
@@ -83,6 +84,7 @@ public class TagView extends VerticalLayout {
         private final Binder<Tag> binder = new Binder<>(Tag.class);
 
         public TagDialog(Runnable onSuccessCallback) {
+            setModality(STRICT);
             setHeaderTitle("Tag bearbeiten");
 
             var form = new FormLayout();
