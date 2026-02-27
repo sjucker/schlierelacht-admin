@@ -109,10 +109,15 @@ public class TagView extends VerticalLayout {
                   .bind(t -> AttractionType.fromDb(t.getType()).orElse(null),
                         (t, v) -> t.setType(v != null ? v.toDb() : null));
 
-            var save = new Button("Speichern", _ -> {
-                save();
-                onSuccessCallback.run();
+            var save = new Button("Speichern");
+            save.addClickListener(_ -> {
+                if (save()) {
+                    onSuccessCallback.run();
+                } else {
+                    save.setEnabled(true);
+                }
             });
+            save.setDisableOnClick(true);
             save.addThemeVariants(LUMO_PRIMARY);
 
             var delete = new Button("Löschen", _ -> {
@@ -132,7 +137,7 @@ public class TagView extends VerticalLayout {
             super.open();
         }
 
-        private void save() {
+        private boolean save() {
             if (binder.validate().isOk()) {
                 var tag = binder.getBean();
                 if (tag.getId() == null) {
@@ -141,7 +146,9 @@ public class TagView extends VerticalLayout {
                     tagDao.update(tag);
                 }
                 close();
+                return true;
             }
+            return false;
         }
 
         private void delete() {

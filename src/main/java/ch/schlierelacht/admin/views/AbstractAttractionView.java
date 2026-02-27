@@ -215,11 +215,15 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 new Hr(),
                 new H3("Weitere Bilder"), additionalUpload, additionalImagesLayout, imageInfoLayout);
 
-            var save = new Button("Speichern", _ -> {
+            var save = new Button("Speichern");
+            save.addClickListener(_ -> {
                 if (saveAttraction()) {
                     onSuccessCallback.run();
+                } else {
+                    save.setEnabled(true);
                 }
             });
+            save.setDisableOnClick(true);
             save.addThemeVariants(LUMO_PRIMARY);
 
             var delete = new Button("Löschen", _ -> {

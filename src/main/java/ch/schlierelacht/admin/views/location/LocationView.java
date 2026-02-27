@@ -167,10 +167,15 @@ public class LocationView extends VerticalLayout {
             binder.forField(mapId)
                   .bind(Location::getMapId, Location::setMapId);
 
-            var save = new Button("Speichern", _ -> {
-                save();
-                onSuccessCallback.run();
+            var save = new Button("Speichern");
+            save.addClickListener(_ -> {
+                if (save()) {
+                    onSuccessCallback.run();
+                } else {
+                    save.setEnabled(true);
+                }
             });
+            save.setDisableOnClick(true);
             save.addThemeVariants(LUMO_PRIMARY);
 
             var delete = new Button("Löschen", _ -> {
@@ -190,7 +195,7 @@ public class LocationView extends VerticalLayout {
             super.open();
         }
 
-        private void save() {
+        private boolean save() {
             if (binder.validate().isOk()) {
                 var location = binder.getBean();
                 if (location.getId() == null) {
@@ -199,7 +204,9 @@ public class LocationView extends VerticalLayout {
                     locationDao.update(location);
                 }
                 close();
+                return true;
             }
+            return false;
         }
 
         private void delete() {
