@@ -1,5 +1,6 @@
 package ch.schlierelacht.admin.views;
 
+import ch.schlierelacht.admin.util.DateUtil;
 import ch.schlierelacht.admin.views.artist.ArtistView;
 import ch.schlierelacht.admin.views.gastro.GastroView;
 import ch.schlierelacht.admin.views.location.LocationView;
@@ -39,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import static ch.schlierelacht.admin.util.DateUtil.formatInstant;
 import static org.vaadin.lineawesome.LineAwesomeIcon.CALENDAR_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
@@ -101,7 +103,7 @@ public class MainLayout extends AppLayout {
         layout.add(appName);
 
         var version = new Span("%s %s".formatted(buildProperties.getVersion(),
-                                                 buildProperties.getTime()));
+                                                 formatInstant(buildProperties.getTime())));
         version.addClassNames(FontSize.XXSMALL);
         layout.add(version);
 
