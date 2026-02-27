@@ -175,6 +175,8 @@ public class ProgrammView extends VerticalLayout {
             save.setDisableOnClick(true);
             save.addThemeVariants(LUMO_PRIMARY);
 
+            binder.addStatusChangeListener(_ -> save.setEnabled(binder.isValid()));
+
             var delete = new Button("Löschen", _ -> {
                 delete();
                 onSuccessCallback.run();
