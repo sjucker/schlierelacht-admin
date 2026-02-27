@@ -117,6 +117,7 @@ public class ProgrammView extends VerticalLayout {
 
         public ProgrammDialog(Runnable onSuccessCallback) {
             setModality(STRICT);
+            setCloseOnOutsideClick(false);
             setHeaderTitle("Programm-Eintrag bearbeiten");
 
             var form = new FormLayout();

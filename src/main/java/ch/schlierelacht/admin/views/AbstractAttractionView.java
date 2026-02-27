@@ -132,6 +132,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
 
         public AttractionDialog(Runnable onSuccessCallback) {
             setModality(STRICT);
+            setCloseOnOutsideClick(false);
             setHeaderTitle("%s bearbeiten".formatted(getAttractionType().getDescription()));
             setWidth("800px");
 
