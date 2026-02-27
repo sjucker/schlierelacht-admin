@@ -100,7 +100,8 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
         layout.add(appName);
 
-        var version = new Span(buildProperties.getVersion());
+        var version = new Span("%s %s".formatted(buildProperties.getVersion(),
+                                                 buildProperties.getTime()));
         version.addClassNames(FontSize.XXSMALL);
         layout.add(version);
 
