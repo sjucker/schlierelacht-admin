@@ -11,6 +11,7 @@ import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 import ch.schlierelacht.admin.jooq.tables.Programm;
+import ch.schlierelacht.admin.jooq.tables.Sponsoring;
 import ch.schlierelacht.admin.jooq.tables.Tag;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionImageRecord;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionRecord;
@@ -19,6 +20,7 @@ import ch.schlierelacht.admin.jooq.tables.records.ImageRecord;
 import ch.schlierelacht.admin.jooq.tables.records.LocationRecord;
 import ch.schlierelacht.admin.jooq.tables.records.LoginRecord;
 import ch.schlierelacht.admin.jooq.tables.records.ProgrammRecord;
+import ch.schlierelacht.admin.jooq.tables.records.SponsoringRecord;
 import ch.schlierelacht.admin.jooq.tables.records.TagRecord;
 
 import org.jooq.ForeignKey;
@@ -48,6 +50,7 @@ public class Keys {
     public static final UniqueKey<LocationRecord> UQ_LOCATION_EXTERNAL_ID = Internal.createUniqueKey(Location.LOCATION, DSL.name("uq_location_external_id"), new TableField[] { Location.LOCATION.EXTERNAL_ID }, true);
     public static final UniqueKey<LoginRecord> LOGIN_PK = Internal.createUniqueKey(Login.LOGIN, DSL.name("login_pk"), new TableField[] { Login.LOGIN.EMAIL }, true);
     public static final UniqueKey<ProgrammRecord> PK_PROGRAMM = Internal.createUniqueKey(Programm.PROGRAMM, DSL.name("pk_programm"), new TableField[] { Programm.PROGRAMM.ID }, true);
+    public static final UniqueKey<SponsoringRecord> PK_SPONSORING = Internal.createUniqueKey(Sponsoring.SPONSORING, DSL.name("pk_sponsoring"), new TableField[] { Sponsoring.SPONSORING.ID }, true);
     public static final UniqueKey<TagRecord> PK_TAG = Internal.createUniqueKey(Tag.TAG, DSL.name("pk_tag"), new TableField[] { Tag.TAG.ID }, true);
 
     // -------------------------------------------------------------------------

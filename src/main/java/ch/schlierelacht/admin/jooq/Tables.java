@@ -11,6 +11,7 @@ import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 import ch.schlierelacht.admin.jooq.tables.Programm;
+import ch.schlierelacht.admin.jooq.tables.Sponsoring;
 import ch.schlierelacht.admin.jooq.tables.Tag;
 
 
@@ -54,6 +55,11 @@ public class Tables {
      * The table <code>public.programm</code>.
      */
     public static final Programm PROGRAMM = Programm.PROGRAMM;
+
+    /**
+     * The table <code>public.sponsoring</code>.
+     */
+    public static final Sponsoring SPONSORING = Sponsoring.SPONSORING;
 
     /**
      * The table <code>public.tag</code>.

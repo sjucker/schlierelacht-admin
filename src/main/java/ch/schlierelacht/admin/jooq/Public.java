@@ -11,6 +11,7 @@ import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 import ch.schlierelacht.admin.jooq.tables.Programm;
+import ch.schlierelacht.admin.jooq.tables.Sponsoring;
 import ch.schlierelacht.admin.jooq.tables.Tag;
 
 import java.util.Arrays;
@@ -70,6 +71,11 @@ public class Public extends SchemaImpl {
     public final Programm PROGRAMM = Programm.PROGRAMM;
 
     /**
+     * The table <code>public.sponsoring</code>.
+     */
+    public final Sponsoring SPONSORING = Sponsoring.SPONSORING;
+
+    /**
      * The table <code>public.tag</code>.
      */
     public final Tag TAG = Tag.TAG;
@@ -97,6 +103,7 @@ public class Public extends SchemaImpl {
             Location.LOCATION,
             Login.LOGIN,
             Programm.PROGRAMM,
+            Sponsoring.SPONSORING,
             Tag.TAG
         );
     }
