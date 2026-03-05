@@ -3,6 +3,7 @@ package ch.schlierelacht.admin.mapper;
 import ch.schlierelacht.admin.dto.AttractionType;
 import ch.schlierelacht.admin.dto.ImageType;
 import ch.schlierelacht.admin.dto.LocationType;
+import ch.schlierelacht.admin.dto.SponsoringType;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -21,4 +22,8 @@ public interface EnumMapper {
     AttractionType fromDb(ch.schlierelacht.admin.jooq.enums.AttractionType attractionType);
 
     ch.schlierelacht.admin.jooq.enums.AttractionType toDb(AttractionType attractionType);
+
+    SponsoringType fromDb(ch.schlierelacht.admin.jooq.enums.SponsoringType sponsoringType);
+
+    ch.schlierelacht.admin.jooq.enums.SponsoringType toDb(SponsoringType sponsoringType);
 }
