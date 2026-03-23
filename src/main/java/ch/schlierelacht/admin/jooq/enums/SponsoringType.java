@@ -29,7 +29,9 @@ public enum SponsoringType implements EnumType {
 
     BRONZE("BRONZE"),
 
-    GOENNER("GOENNER");
+    GOENNER("GOENNER"),
+
+    PARTNER("PARTNER");
 
     private final String literal;
 

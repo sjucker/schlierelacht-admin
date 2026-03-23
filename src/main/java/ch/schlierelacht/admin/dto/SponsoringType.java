@@ -15,7 +15,8 @@ public enum SponsoringType implements HasDescription {
     GOLD("Goldsponsoren"),
     SILBER("Silbersponsoren"),
     BRONZE("Bronzesponsoren"),
-    GOENNER("Gönner");
+    GOENNER("Gönner"),
+    PARTNER("Partner");
 
     private final String description;
 
