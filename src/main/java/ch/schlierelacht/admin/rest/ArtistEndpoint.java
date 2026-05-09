@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.schlierelacht.admin.dto.ArtistDTO;
+import ch.schlierelacht.admin.dto.AttractionDTO;
 import ch.schlierelacht.admin.service.ArtistService;
 
 @Slf4j
@@ -23,21 +23,21 @@ public class ArtistEndpoint {
     private final ArtistService artistService;
 
     @GetMapping
-    public ResponseEntity<List<ArtistDTO>> getArtists() {
+    public ResponseEntity<List<AttractionDTO>> getArtists() {
         log.info("GET /api/artist");
 
         return ResponseEntity.ok(artistService.findAll());
     }
 
     @GetMapping("/{externalId}")
-    public ResponseEntity<ArtistDTO> getArtist(@PathVariable String externalId) {
+    public ResponseEntity<AttractionDTO> getArtist(@PathVariable String externalId) {
         log.info("GET /api/artist/{}", externalId);
 
         return ResponseEntity.of(artistService.findByExternalId(externalId));
     }
 
     @GetMapping("/tag/{tagId}")
-    public ResponseEntity<List<ArtistDTO>> getArtistsByTag(@PathVariable Long tagId) {
+    public ResponseEntity<List<AttractionDTO>> getArtistsByTag(@PathVariable Long tagId) {
         log.info("GET /api/artist/tag/{}", tagId);
 
         return ResponseEntity.ok(artistService.findByTagId(tagId));
