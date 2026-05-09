@@ -102,6 +102,7 @@ public class LocationView extends VerticalLayout {
         public LocationDialog(Runnable onSuccessCallback) {
             setModality(STRICT);
             setCloseOnOutsideClick(false);
+            setCloseOnEsc(false);
             setHeaderTitle("Standort bearbeiten");
 
             var form = new FormLayout();

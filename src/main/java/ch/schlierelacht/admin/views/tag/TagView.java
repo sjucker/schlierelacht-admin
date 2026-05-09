@@ -86,6 +86,7 @@ public class TagView extends VerticalLayout {
         public TagDialog(Runnable onSuccessCallback) {
             setModality(STRICT);
             setCloseOnOutsideClick(false);
+            setCloseOnEsc(false);
             setHeaderTitle("Tag bearbeiten");
 
             var form = new FormLayout();

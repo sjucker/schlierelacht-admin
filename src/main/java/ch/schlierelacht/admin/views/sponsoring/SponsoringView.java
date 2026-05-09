@@ -94,6 +94,7 @@ public class SponsoringView extends VerticalLayout {
         public SponsoringDialog(Runnable onSuccessCallback) {
             setModality(STRICT);
             setCloseOnOutsideClick(false);
+            setCloseOnEsc(false);
             setHeaderTitle("Sponsoring Eintrag bearbeiten");
 
             var form = new FormLayout();
