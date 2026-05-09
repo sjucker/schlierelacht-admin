@@ -7,6 +7,7 @@ import ch.schlierelacht.admin.jooq.tables.pojos.Attraction;
 import ch.schlierelacht.admin.jooq.tables.pojos.Location;
 import ch.schlierelacht.admin.jooq.tables.pojos.Programm;
 import ch.schlierelacht.admin.views.MainLayout;
+import ch.schlierelacht.admin.views.util.DatePickerUtil;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -24,6 +25,7 @@ import jakarta.annotation.security.PermitAll;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -135,6 +137,16 @@ public class ProgrammView extends VerticalLayout {
             var fromTime = new TimePicker("Von Zeit");
             var toDate = new DatePicker("Bis Datum");
             var toTime = new TimePicker("Bis Zeit");
+
+            var swissLocale = Locale.forLanguageTag("de-CH");
+            fromDate.setLocale(swissLocale);
+            toDate.setLocale(swissLocale);
+            fromTime.setLocale(swissLocale);
+            toTime.setLocale(swissLocale);
+
+            var datePickerI18n = DatePickerUtil.getGermanI18n();
+            fromDate.setI18n(datePickerI18n);
+            toDate.setI18n(datePickerI18n);
 
             form.add(attraction, location, fromDate, fromTime, toDate, toTime);
             form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
