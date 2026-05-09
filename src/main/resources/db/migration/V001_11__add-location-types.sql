@@ -1,0 +1,2 @@
+ALTER TYPE location_type ADD VALUE 'SANITARY';
+ALTER TYPE location_type ADD VALUE 'INFO';

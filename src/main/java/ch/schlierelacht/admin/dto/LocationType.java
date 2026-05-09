@@ -13,7 +13,9 @@ public enum LocationType implements HasDescription {
     FOOD_STAND("Essensstand"),
     BAR("Bar"),
     TENT("Festzelt"),
-    ATTRACTION("Attraktion");
+    ATTRACTION("Attraktion"),
+    SANITARY("Sanitäre Anlagen"),
+    INFO("Info-Stand");
 
     private final String description;
 

@@ -25,7 +25,11 @@ public enum LocationType implements EnumType {
 
     TENT("TENT"),
 
-    ATTRACTION("ATTRACTION");
+    ATTRACTION("ATTRACTION"),
+
+    SANITARY("SANITARY"),
+
+    INFO("INFO");
 
     private final String literal;
 
