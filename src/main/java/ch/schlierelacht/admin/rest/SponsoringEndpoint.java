@@ -1,6 +1,7 @@
 package ch.schlierelacht.admin.rest;
 
 import ch.schlierelacht.admin.dto.SponsoringDTO;
+import ch.schlierelacht.admin.dto.SponsoringType;
 import ch.schlierelacht.admin.service.SponsoringService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,5 +25,12 @@ public class SponsoringEndpoint {
         log.info("GET /api/sponsoring");
 
         return ResponseEntity.ok(sponsoringService.findAll());
+    }
+
+    @GetMapping(value = "/type")
+    public ResponseEntity<List<SponsoringType>> getSponsoringTypes() {
+        log.info("GET /api/sponsoring/type");
+
+        return ResponseEntity.ok(List.of(SponsoringType.values()));
     }
 }
