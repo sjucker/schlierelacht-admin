@@ -15,6 +15,7 @@ import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
@@ -25,9 +26,12 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.server.streams.UploadHandler;
 import com.vaadin.flow.server.streams.UploadMetadata;
 import lombok.extern.slf4j.Slf4j;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.jooq.DSLContext;
 import org.jspecify.annotations.NonNull;
 
@@ -127,6 +131,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         private final Map<String, TextField> additionalImagesDescription = new HashMap<>();
         private final Map<String, UploadMetadata> additionalImagesMetadata = new HashMap<>();
         private final Map<String, byte[]> additionalImagesData = new HashMap<>();
+        private final Div preview = new Div();
         private UploadMetadata mainImageMetadata;
         private byte[] mainImageData;
 
@@ -143,6 +148,16 @@ public abstract class AbstractAttractionView extends VerticalLayout {
 
             var description = new TextArea("Beschreibung");
             description.setMinRows(8);
+            description.setWidthFull();
+            description.setValueChangeMode(ValueChangeMode.EAGER);
+
+            preview.setWidthFull();
+            description.addValueChangeListener(event -> updatePreview(event.getValue()));
+
+            var previewLabel = new Span("Markdown Vorschau:");
+            var previewLayout = new VerticalLayout(previewLabel, preview);
+            previewLayout.setPadding(false);
+            previewLayout.setSpacing(false);
 
             var website = new TextField("Website");
             var instagram = new TextField("Instagram");
@@ -154,9 +169,10 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             tags.setItemLabelGenerator(Tag::getName);
             tags.setWidthFull();
 
-            form.add(name, externalId, website, instagram, facebook, youtube, tags, description);
+            form.add(name, externalId, website, instagram, facebook, youtube, tags, description, previewLayout);
             form.setColspan(description, 2);
             form.setColspan(tags, 2);
+            form.setColspan(previewLayout, 2);
             form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
                                     new FormLayout.ResponsiveStep("500px", 2));
 
@@ -213,6 +229,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             });
 
             add(form,
+                new Hr(),
                 new H3("Hauptbild"), mainUpload, mainImageDescription,
                 new Hr(),
                 new H3("Weitere Bilder"), additionalUpload, additionalImagesLayout, imageInfoLayout);
@@ -240,8 +257,20 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             getFooter().add(delete, cancel, save);
         }
 
+        private void updatePreview(String md) {
+            if (isBlank(md)) {
+                preview.getElement().setProperty("innerHTML", "");
+            } else {
+                var parser = Parser.builder().build();
+                var document = parser.parse(md);
+                var renderer = HtmlRenderer.builder().build();
+                preview.getElement().setProperty("innerHTML", renderer.render(document));
+            }
+        }
+
         public void open(Attraction attraction) {
             binder.setBean(attraction);
+            updatePreview(attraction.getDescription());
             imageInfoLayout.removeAll();
             additionalImagesLayout.removeAll();
             additionalImagesDescription.clear();
@@ -364,6 +393,12 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                           .set(ATTRACTION_TAG.TAG_ID, selectedTag.getId())
                           .execute();
             }
+
+            mainImageData = null;
+            mainImageMetadata = null;
+            additionalImagesData.clear();
+            additionalImagesMetadata.clear();
+            additionalImagesDescription.clear();
 
             close();
             return true;
