@@ -25,10 +25,10 @@ import jakarta.annotation.security.PermitAll;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ch.schlierelacht.admin.views.util.DatePickerUtil.SWISS_LOCALE;
 import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
 import static com.vaadin.flow.component.ModalityMode.STRICT;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_ERROR;
@@ -138,11 +138,10 @@ public class ProgrammView extends VerticalLayout {
             var toDate = new DatePicker("Bis Datum");
             var toTime = new TimePicker("Bis Zeit");
 
-            var swissLocale = Locale.forLanguageTag("de-CH");
-            fromDate.setLocale(swissLocale);
-            toDate.setLocale(swissLocale);
-            fromTime.setLocale(swissLocale);
-            toTime.setLocale(swissLocale);
+            fromDate.setLocale(SWISS_LOCALE);
+            toDate.setLocale(SWISS_LOCALE);
+            fromTime.setLocale(SWISS_LOCALE);
+            toTime.setLocale(SWISS_LOCALE);
 
             var datePickerI18n = DatePickerUtil.getGermanI18n();
             fromDate.setI18n(datePickerI18n);

@@ -3,6 +3,7 @@ package ch.schlierelacht.admin.views;
 import ch.schlierelacht.admin.views.artist.ArtistView;
 import ch.schlierelacht.admin.views.gastro.GastroView;
 import ch.schlierelacht.admin.views.location.LocationView;
+import ch.schlierelacht.admin.views.news.NewsView;
 import ch.schlierelacht.admin.views.programm.ProgrammView;
 import ch.schlierelacht.admin.views.settings.SettingsView;
 import ch.schlierelacht.admin.views.sponsoring.SponsoringView;
@@ -44,10 +45,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import static ch.schlierelacht.admin.util.DateUtil.formatInstant;
 import static org.vaadin.lineawesome.LineAwesomeIcon.CALENDAR_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
-import static org.vaadin.lineawesome.LineAwesomeIcon.HANDSHAKE;
+import static org.vaadin.lineawesome.LineAwesomeIcon.HANDSHAKE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
-import static org.vaadin.lineawesome.LineAwesomeIcon.MONEY_BILL_ALT;
-import static org.vaadin.lineawesome.LineAwesomeIcon.MONEY_BILL_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.NEWSPAPER_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.PIZZA_SLICE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.TAGS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.USER_SOLID;
@@ -140,7 +140,8 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Gastronomie", PIZZA_SLICE_SOLID.create(), GastroView.class),
                 new MenuItemInfo("Künstler", USER_SOLID.create(), ArtistView.class),
                 new MenuItemInfo("Programm", CALENDAR_SOLID.create(), ProgrammView.class),
-                new MenuItemInfo("Sponsoring", HANDSHAKE.create(), SponsoringView.class),
+                new MenuItemInfo("News", NEWSPAPER_SOLID.create(), NewsView.class),
+                new MenuItemInfo("Sponsoring", HANDSHAKE_SOLID.create(), SponsoringView.class),
                 new MenuItemInfo("Tags", TAGS_SOLID.create(), TagView.class),
                 new MenuItemInfo("Einstellungen", COG_SOLID.create(), SettingsView.class),
         };

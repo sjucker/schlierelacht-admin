@@ -3,8 +3,11 @@ package ch.schlierelacht.admin.views.util;
 import com.vaadin.flow.component.datepicker.DatePicker.DatePickerI18n;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 public class DatePickerUtil {
+
+    public static final Locale SWISS_LOCALE = Locale.forLanguageTag("de-CH");
 
     public static DatePickerI18n getGermanI18n() {
         var datePickerI18n = new DatePickerI18n();
