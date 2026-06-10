@@ -7,6 +7,7 @@ package ch.schlierelacht.admin.jooq;
 import ch.schlierelacht.admin.jooq.tables.Attraction;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
 import ch.schlierelacht.admin.jooq.tables.AttractionTag;
+import ch.schlierelacht.admin.jooq.tables.Download;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
@@ -50,6 +51,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.attraction_tag</code>.
      */
     public final AttractionTag ATTRACTION_TAG = AttractionTag.ATTRACTION_TAG;
+
+    /**
+     * The table <code>public.download</code>.
+     */
+    public final Download DOWNLOAD = Download.DOWNLOAD;
 
     /**
      * The table <code>public.image</code>.
@@ -105,6 +111,7 @@ public class Public extends SchemaImpl {
             Attraction.ATTRACTION,
             AttractionImage.ATTRACTION_IMAGE,
             AttractionTag.ATTRACTION_TAG,
+            Download.DOWNLOAD,
             Image.IMAGE,
             Location.LOCATION,
             Login.LOGIN,

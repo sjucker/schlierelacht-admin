@@ -7,6 +7,7 @@ package ch.schlierelacht.admin.jooq;
 import ch.schlierelacht.admin.jooq.tables.Attraction;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
 import ch.schlierelacht.admin.jooq.tables.AttractionTag;
+import ch.schlierelacht.admin.jooq.tables.Download;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
@@ -36,6 +37,11 @@ public class Tables {
      * The table <code>public.attraction_tag</code>.
      */
     public static final AttractionTag ATTRACTION_TAG = AttractionTag.ATTRACTION_TAG;
+
+    /**
+     * The table <code>public.download</code>.
+     */
+    public static final Download DOWNLOAD = Download.DOWNLOAD;
 
     /**
      * The table <code>public.image</code>.

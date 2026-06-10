@@ -1,6 +1,7 @@
 package ch.schlierelacht.admin.mapper;
 
 import ch.schlierelacht.admin.dto.AttractionType;
+import ch.schlierelacht.admin.dto.DownloadCategory;
 import ch.schlierelacht.admin.dto.ImageType;
 import ch.schlierelacht.admin.dto.LocationType;
 import ch.schlierelacht.admin.dto.SponsoringType;
@@ -26,4 +27,8 @@ public interface EnumMapper {
     SponsoringType fromDb(ch.schlierelacht.admin.jooq.enums.SponsoringType sponsoringType);
 
     ch.schlierelacht.admin.jooq.enums.SponsoringType toDb(SponsoringType sponsoringType);
+
+    DownloadCategory fromDb(ch.schlierelacht.admin.jooq.enums.DownloadCategory downloadCategory);
+
+    ch.schlierelacht.admin.jooq.enums.DownloadCategory toDb(DownloadCategory downloadCategory);
 }
