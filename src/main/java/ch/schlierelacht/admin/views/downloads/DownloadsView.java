@@ -99,6 +99,7 @@ public class DownloadsView extends VerticalLayout {
 
         private final Select<DownloadCategory> categorySelect = new Select<>();
         private final TextField descriptionField = new TextField("Bezeichnung");
+        private final Button save = new Button("Speichern");
 
         public DownloadDialog(@NonNull Runnable onSuccessCallback) {
             this.onSuccessCallback = onSuccessCallback;
@@ -122,7 +123,6 @@ public class DownloadsView extends VerticalLayout {
                                     new FormLayout.ResponsiveStep("400px", 2));
             add(form);
 
-            var save = new Button("Speichern");
             save.addClickListener(_ -> {
                 if (save()) {
                     onSuccessCallback.run();
@@ -164,6 +164,7 @@ public class DownloadsView extends VerticalLayout {
             uploadedFilename = null;
             uploadedFiletype = null;
             uploadedFilesize = 0;
+            save.setEnabled(true);
 
             if (download != null) {
                 categorySelect.setValue(download.category());
