@@ -4,6 +4,7 @@ import ch.schlierelacht.admin.dto.AttractionType;
 import ch.schlierelacht.admin.dto.DownloadCategory;
 import ch.schlierelacht.admin.dto.ImageType;
 import ch.schlierelacht.admin.dto.LocationType;
+import ch.schlierelacht.admin.dto.MeetupJahrgang;
 import ch.schlierelacht.admin.dto.SponsoringType;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -31,4 +32,8 @@ public interface EnumMapper {
     DownloadCategory fromDb(ch.schlierelacht.admin.jooq.enums.DownloadCategory downloadCategory);
 
     ch.schlierelacht.admin.jooq.enums.DownloadCategory toDb(DownloadCategory downloadCategory);
+
+    MeetupJahrgang fromDb(ch.schlierelacht.admin.jooq.enums.MeetupJahrgang meetupJahrgang);
+
+    ch.schlierelacht.admin.jooq.enums.MeetupJahrgang toDb(MeetupJahrgang meetupJahrgang);
 }

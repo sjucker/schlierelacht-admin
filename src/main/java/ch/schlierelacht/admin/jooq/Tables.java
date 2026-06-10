@@ -11,6 +11,7 @@ import ch.schlierelacht.admin.jooq.tables.Download;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
+import ch.schlierelacht.admin.jooq.tables.MeetupRegistration;
 import ch.schlierelacht.admin.jooq.tables.News;
 import ch.schlierelacht.admin.jooq.tables.Programm;
 import ch.schlierelacht.admin.jooq.tables.Sponsoring;
@@ -57,6 +58,11 @@ public class Tables {
      * The table <code>public.login</code>.
      */
     public static final Login LOGIN = Login.LOGIN;
+
+    /**
+     * The table <code>public.meetup_registration</code>.
+     */
+    public static final MeetupRegistration MEETUP_REGISTRATION = MeetupRegistration.MEETUP_REGISTRATION;
 
     /**
      * The table <code>public.news</code>.
