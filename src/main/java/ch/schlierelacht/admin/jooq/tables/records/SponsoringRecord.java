@@ -120,7 +120,7 @@ public class SponsoringRecord extends UpdatableRecordImpl<SponsoringRecord> {
         setName(name);
         setCloudflareId(cloudflareId);
         setUrl(url);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -135,7 +135,7 @@ public class SponsoringRecord extends UpdatableRecordImpl<SponsoringRecord> {
             setName(value.getName());
             setCloudflareId(value.getCloudflareId());
             setUrl(value.getUrl());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

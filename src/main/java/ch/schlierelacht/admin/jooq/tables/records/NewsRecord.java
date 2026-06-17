@@ -151,7 +151,7 @@ public class NewsRecord extends UpdatableRecordImpl<NewsRecord> {
         setFullText(fullText);
         setCloudflareId(cloudflareId);
         setActive(active);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -168,7 +168,7 @@ public class NewsRecord extends UpdatableRecordImpl<NewsRecord> {
             setFullText(value.getFullText());
             setCloudflareId(value.getCloudflareId());
             setActive(value.getActive());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

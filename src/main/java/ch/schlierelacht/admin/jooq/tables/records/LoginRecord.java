@@ -121,7 +121,7 @@ public class LoginRecord extends UpdatableRecordImpl<LoginRecord> {
         setPassword(password);
         setActive(active);
         setLastLogin(lastLogin);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -136,7 +136,7 @@ public class LoginRecord extends UpdatableRecordImpl<LoginRecord> {
             setPassword(value.getPassword());
             setActive(value.getActive());
             setLastLogin(value.getLastLogin());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

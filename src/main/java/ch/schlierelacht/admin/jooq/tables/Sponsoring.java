@@ -13,19 +13,19 @@ import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
-import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
 import org.jooq.SQL;
 import org.jooq.Schema;
-import org.jooq.Select;
 import org.jooq.Stringly;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.TableLike;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.Internal;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
@@ -54,7 +54,7 @@ public class Sponsoring extends TableImpl<SponsoringRecord> {
     /**
      * The column <code>public.sponsoring.id</code>.
      */
-    public final TableField<SponsoringRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+    public final TableField<SponsoringRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * The column <code>public.sponsoring.type</code>.
@@ -111,11 +111,6 @@ public class Sponsoring extends TableImpl<SponsoringRecord> {
     }
 
     @Override
-    public Identity<SponsoringRecord, Long> getIdentity() {
-        return (Identity<SponsoringRecord, Long>) super.getIdentity();
-    }
-
-    @Override
     public UniqueKey<SponsoringRecord> getPrimaryKey() {
         return Keys.PK_SPONSORING;
     }
@@ -164,7 +159,7 @@ public class Sponsoring extends TableImpl<SponsoringRecord> {
      */
     @Override
     public Sponsoring where(Condition condition) {
-        return new Sponsoring(getQualifiedName(), aliased() ? this : null, null, condition);
+        return new Sponsoring(getQualifiedName(), aliased() ? this : null, null, Internal.condition(this, condition));
     }
 
     /**
@@ -231,7 +226,7 @@ public class Sponsoring extends TableImpl<SponsoringRecord> {
      * Create an inline derived table from this table
      */
     @Override
-    public Sponsoring whereExists(Select<?> select) {
+    public Sponsoring whereExists(TableLike<?> select) {
         return where(DSL.exists(select));
     }
 
@@ -239,7 +234,7 @@ public class Sponsoring extends TableImpl<SponsoringRecord> {
      * Create an inline derived table from this table
      */
     @Override
-    public Sponsoring whereNotExists(Select<?> select) {
+    public Sponsoring whereNotExists(TableLike<?> select) {
         return where(DSL.notExists(select));
     }
 }

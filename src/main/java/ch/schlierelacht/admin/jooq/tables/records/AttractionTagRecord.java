@@ -74,7 +74,7 @@ public class AttractionTagRecord extends UpdatableRecordImpl<AttractionTagRecord
 
         setAttractionId(attractionId);
         setTagId(tagId);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -86,7 +86,7 @@ public class AttractionTagRecord extends UpdatableRecordImpl<AttractionTagRecord
         if (value != null) {
             setAttractionId(value.getAttractionId());
             setTagId(value.getTagId());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

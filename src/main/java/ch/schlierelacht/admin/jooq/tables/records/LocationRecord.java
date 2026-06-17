@@ -182,7 +182,7 @@ public class LocationRecord extends UpdatableRecordImpl<LocationRecord> {
         setSortOrder(sortOrder);
         setCloudflareId(cloudflareId);
         setMapId(mapId);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -201,7 +201,7 @@ public class LocationRecord extends UpdatableRecordImpl<LocationRecord> {
             setSortOrder(value.getSortOrder());
             setCloudflareId(value.getCloudflareId());
             setMapId(value.getMapId());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

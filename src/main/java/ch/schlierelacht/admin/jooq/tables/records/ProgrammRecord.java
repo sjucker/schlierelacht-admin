@@ -152,7 +152,7 @@ public class ProgrammRecord extends UpdatableRecordImpl<ProgrammRecord> {
         setFromTime(fromTime);
         setToDate(toDate);
         setToTime(toTime);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -169,7 +169,7 @@ public class ProgrammRecord extends UpdatableRecordImpl<ProgrammRecord> {
             setFromTime(value.getFromTime());
             setToDate(value.getToDate());
             setToTime(value.getToTime());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

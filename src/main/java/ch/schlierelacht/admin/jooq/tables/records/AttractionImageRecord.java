@@ -80,7 +80,7 @@ public class AttractionImageRecord extends TableRecordImpl<AttractionImageRecord
         setAttractionId(attractionId);
         setImageId(imageId);
         setType(type);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -93,7 +93,7 @@ public class AttractionImageRecord extends TableRecordImpl<AttractionImageRecord
             setAttractionId(value.getAttractionId());
             setImageId(value.getImageId());
             setType(value.getType());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

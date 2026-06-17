@@ -119,7 +119,7 @@ public class ImageRecord extends UpdatableRecordImpl<ImageRecord> {
         setDescription(description);
         setWidth(width);
         setHeight(height);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -134,7 +134,7 @@ public class ImageRecord extends UpdatableRecordImpl<ImageRecord> {
             setDescription(value.getDescription());
             setWidth(value.getWidth());
             setHeight(value.getHeight());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

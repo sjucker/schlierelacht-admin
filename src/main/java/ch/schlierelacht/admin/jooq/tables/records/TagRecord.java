@@ -90,7 +90,7 @@ public class TagRecord extends UpdatableRecordImpl<TagRecord> {
         setId(id);
         setName(name);
         setType(type);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -103,7 +103,7 @@ public class TagRecord extends UpdatableRecordImpl<TagRecord> {
             setId(value.getId());
             setName(value.getName());
             setType(value.getType());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

@@ -152,7 +152,7 @@ public class MeetupRegistrationRecord extends UpdatableRecordImpl<MeetupRegistra
         setEmail(email);
         setJahrgang(jahrgang);
         setShowOnList(showOnList);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -169,7 +169,7 @@ public class MeetupRegistrationRecord extends UpdatableRecordImpl<MeetupRegistra
             setEmail(value.getEmail());
             setJahrgang(value.getJahrgang());
             setShowOnList(value.getShowOnList());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

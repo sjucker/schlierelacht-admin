@@ -182,7 +182,7 @@ public class DownloadRecord extends UpdatableRecordImpl<DownloadRecord> {
         setFilesize(filesize);
         setCategory(category);
         setFileData(fileData);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -201,7 +201,7 @@ public class DownloadRecord extends UpdatableRecordImpl<DownloadRecord> {
             setFilesize(value.getFilesize());
             setCategory(value.getCategory());
             setFileData(value.getFileData());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }

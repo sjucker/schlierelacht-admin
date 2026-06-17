@@ -180,7 +180,7 @@ public class AttractionRecord extends UpdatableRecordImpl<AttractionRecord> {
         setFacebook(facebook);
         setYoutube(youtube);
         setExternalId(externalId);
-        resetChangedOnNotNull();
+        resetTouchedOnNotNull();
     }
 
     /**
@@ -199,7 +199,7 @@ public class AttractionRecord extends UpdatableRecordImpl<AttractionRecord> {
             setFacebook(value.getFacebook());
             setYoutube(value.getYoutube());
             setExternalId(value.getExternalId());
-            resetChangedOnNotNull();
+            resetTouchedOnNotNull();
         }
     }
 }
