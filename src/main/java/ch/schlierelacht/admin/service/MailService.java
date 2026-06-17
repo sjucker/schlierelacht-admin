@@ -18,15 +18,18 @@ public class MailService {
     private final MjmlService mjmlService;
     private final String fromEmail;
     private final String notificationEmail;
+    private final String bccEmail;
 
     public MailService(JavaMailSender mailSender,
                        MjmlService mjmlService,
                        @Value("${spring.mail.username}") String fromEmail,
-                       @Value("${app.meetup-notification-email}") String notificationEmail) {
+                       @Value("${app.meetup-notification-email}") String notificationEmail,
+                       @Value("${app.meetup-bcc-email}") String bccEmail) {
         this.mailSender = mailSender;
         this.mjmlService = mjmlService;
         this.fromEmail = fromEmail;
         this.notificationEmail = notificationEmail;
+        this.bccEmail = bccEmail;
     }
 
     public void sendMeetupConfirmation(MeetupRegistrationDTO registration) {
@@ -42,6 +45,7 @@ public class MailService {
             helper.setFrom(fromEmail);
             helper.setTo(registration.email());
             helper.setCc(notificationEmail);
+            helper.setBcc(bccEmail);
             helper.setSubject("Anmeldung Jahrgangstreffen Schlierefäscht 2027");
             if (html.isPresent()) {
                 helper.setText(html.get(), true);
