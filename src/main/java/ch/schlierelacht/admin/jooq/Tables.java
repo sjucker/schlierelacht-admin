@@ -13,6 +13,8 @@ import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 import ch.schlierelacht.admin.jooq.tables.MeetupRegistration;
 import ch.schlierelacht.admin.jooq.tables.News;
+import ch.schlierelacht.admin.jooq.tables.OkMember;
+import ch.schlierelacht.admin.jooq.tables.OkTeamMember;
 import ch.schlierelacht.admin.jooq.tables.Programm;
 import ch.schlierelacht.admin.jooq.tables.Sponsoring;
 import ch.schlierelacht.admin.jooq.tables.Tag;
@@ -68,6 +70,16 @@ public class Tables {
      * The table <code>public.news</code>.
      */
     public static final News NEWS = News.NEWS;
+
+    /**
+     * The table <code>public.ok_member</code>.
+     */
+    public static final OkMember OK_MEMBER = OkMember.OK_MEMBER;
+
+    /**
+     * The table <code>public.ok_team_member</code>.
+     */
+    public static final OkTeamMember OK_TEAM_MEMBER = OkTeamMember.OK_TEAM_MEMBER;
 
     /**
      * The table <code>public.programm</code>.

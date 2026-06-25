@@ -13,6 +13,8 @@ import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 import ch.schlierelacht.admin.jooq.tables.MeetupRegistration;
 import ch.schlierelacht.admin.jooq.tables.News;
+import ch.schlierelacht.admin.jooq.tables.OkMember;
+import ch.schlierelacht.admin.jooq.tables.OkTeamMember;
 import ch.schlierelacht.admin.jooq.tables.Programm;
 import ch.schlierelacht.admin.jooq.tables.Sponsoring;
 import ch.schlierelacht.admin.jooq.tables.Tag;
@@ -85,6 +87,16 @@ public class Public extends SchemaImpl {
     public final News NEWS = News.NEWS;
 
     /**
+     * The table <code>public.ok_member</code>.
+     */
+    public final OkMember OK_MEMBER = OkMember.OK_MEMBER;
+
+    /**
+     * The table <code>public.ok_team_member</code>.
+     */
+    public final OkTeamMember OK_TEAM_MEMBER = OkTeamMember.OK_TEAM_MEMBER;
+
+    /**
      * The table <code>public.programm</code>.
      */
     public final Programm PROGRAMM = Programm.PROGRAMM;
@@ -124,6 +136,8 @@ public class Public extends SchemaImpl {
             Login.LOGIN,
             MeetupRegistration.MEETUP_REGISTRATION,
             News.NEWS,
+            OkMember.OK_MEMBER,
+            OkTeamMember.OK_TEAM_MEMBER,
             Programm.PROGRAMM,
             Sponsoring.SPONSORING,
             Tag.TAG

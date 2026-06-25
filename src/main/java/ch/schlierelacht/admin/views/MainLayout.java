@@ -6,6 +6,7 @@ import ch.schlierelacht.admin.views.gastro.GastroView;
 import ch.schlierelacht.admin.views.meetup.MeetupView;
 import ch.schlierelacht.admin.views.location.LocationView;
 import ch.schlierelacht.admin.views.news.NewsView;
+import ch.schlierelacht.admin.views.ok.OkView;
 import ch.schlierelacht.admin.views.programm.ProgrammView;
 import ch.schlierelacht.admin.views.settings.SettingsView;
 import ch.schlierelacht.admin.views.sponsoring.SponsoringView;
@@ -147,6 +148,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("News", NEWSPAPER_SOLID.create(), NewsView.class),
                 new MenuItemInfo("Downloads", DOWNLOAD_SOLID.create(), DownloadsView.class),
                 new MenuItemInfo("Jahrgangstreffen", USERS_SOLID.create(), MeetupView.class),
+                new MenuItemInfo("OK Komitee", USERS_SOLID.create(), OkView.class),
                 new MenuItemInfo("Sponsoring", HANDSHAKE_SOLID.create(), SponsoringView.class),
                 new MenuItemInfo("Tags", TAGS_SOLID.create(), TagView.class),
                 new MenuItemInfo("Einstellungen", COG_SOLID.create(), SettingsView.class),
