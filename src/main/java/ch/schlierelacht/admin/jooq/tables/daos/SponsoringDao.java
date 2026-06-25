@@ -132,4 +132,19 @@ public class SponsoringDao extends AbstractSpringDAOImpl<SponsoringRecord, ch.sc
     public List<ch.schlierelacht.admin.jooq.tables.pojos.Sponsoring> fetchByUrl(String... values) {
         return fetch(Sponsoring.SPONSORING.URL, values);
     }
+
+    /**
+     * Fetch records that have <code>sort_order BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Sponsoring> fetchRangeOfSortOrder(Integer lowerInclusive, Integer upperInclusive) {
+        return fetchRange(Sponsoring.SPONSORING.SORT_ORDER, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>sort_order IN (values)</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Sponsoring> fetchBySortOrder(Integer... values) {
+        return fetch(Sponsoring.SPONSORING.SORT_ORDER, values);
+    }
 }

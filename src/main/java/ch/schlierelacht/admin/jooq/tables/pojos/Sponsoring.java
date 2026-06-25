@@ -22,6 +22,7 @@ public class Sponsoring implements Serializable {
     private String name;
     private String cloudflareId;
     private String url;
+    private Integer sortOrder;
 
     public Sponsoring() {}
 
@@ -31,6 +32,7 @@ public class Sponsoring implements Serializable {
         this.name = value.name;
         this.cloudflareId = value.cloudflareId;
         this.url = value.url;
+        this.sortOrder = value.sortOrder;
     }
 
     public Sponsoring(
@@ -38,13 +40,15 @@ public class Sponsoring implements Serializable {
         SponsoringType type,
         String name,
         String cloudflareId,
-        String url
+        String url,
+        Integer sortOrder
     ) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.cloudflareId = cloudflareId;
         this.url = url;
+        this.sortOrder = sortOrder;
     }
 
     /**
@@ -117,6 +121,20 @@ public class Sponsoring implements Serializable {
         this.url = url;
     }
 
+    /**
+     * Getter for <code>public.sponsoring.sort_order</code>.
+     */
+    public Integer getSortOrder() {
+        return this.sortOrder;
+    }
+
+    /**
+     * Setter for <code>public.sponsoring.sort_order</code>.
+     */
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -156,6 +174,12 @@ public class Sponsoring implements Serializable {
         }
         else if (!this.url.equals(other.url))
             return false;
+        if (this.sortOrder == null) {
+            if (other.sortOrder != null)
+                return false;
+        }
+        else if (!this.sortOrder.equals(other.sortOrder))
+            return false;
         return true;
     }
 
@@ -168,6 +192,7 @@ public class Sponsoring implements Serializable {
         result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
         result = prime * result + ((this.cloudflareId == null) ? 0 : this.cloudflareId.hashCode());
         result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
+        result = prime * result + ((this.sortOrder == null) ? 0 : this.sortOrder.hashCode());
         return result;
     }
 
@@ -180,6 +205,7 @@ public class Sponsoring implements Serializable {
         sb.append(", ").append(name);
         sb.append(", ").append(cloudflareId);
         sb.append(", ").append(url);
+        sb.append(", ").append(sortOrder);
 
         sb.append(")");
         return sb.toString();

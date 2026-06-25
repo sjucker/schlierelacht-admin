@@ -89,6 +89,20 @@ public class SponsoringRecord extends UpdatableRecordImpl<SponsoringRecord> {
         return (String) get(4);
     }
 
+    /**
+     * Setter for <code>public.sponsoring.sort_order</code>.
+     */
+    public void setSortOrder(Integer value) {
+        set(5, value);
+    }
+
+    /**
+     * Getter for <code>public.sponsoring.sort_order</code>.
+     */
+    public Integer getSortOrder() {
+        return (Integer) get(5);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -112,7 +126,7 @@ public class SponsoringRecord extends UpdatableRecordImpl<SponsoringRecord> {
     /**
      * Create a detached, initialised SponsoringRecord
      */
-    public SponsoringRecord(Long id, SponsoringType type, String name, String cloudflareId, String url) {
+    public SponsoringRecord(Long id, SponsoringType type, String name, String cloudflareId, String url, Integer sortOrder) {
         super(Sponsoring.SPONSORING);
 
         setId(id);
@@ -120,6 +134,7 @@ public class SponsoringRecord extends UpdatableRecordImpl<SponsoringRecord> {
         setName(name);
         setCloudflareId(cloudflareId);
         setUrl(url);
+        setSortOrder(sortOrder);
         resetTouchedOnNotNull();
     }
 
@@ -135,6 +150,7 @@ public class SponsoringRecord extends UpdatableRecordImpl<SponsoringRecord> {
             setName(value.getName());
             setCloudflareId(value.getCloudflareId());
             setUrl(value.getUrl());
+            setSortOrder(value.getSortOrder());
             resetTouchedOnNotNull();
         }
     }

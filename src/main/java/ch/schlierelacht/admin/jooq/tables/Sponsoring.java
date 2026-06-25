@@ -76,6 +76,11 @@ public class Sponsoring extends TableImpl<SponsoringRecord> {
      */
     public final TableField<SponsoringRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(255), this, "");
 
+    /**
+     * The column <code>public.sponsoring.sort_order</code>.
+     */
+    public final TableField<SponsoringRecord, Integer> SORT_ORDER = createField(DSL.name("sort_order"), SQLDataType.INTEGER.nullable(false).defaultValue(DSL.field(DSL.raw("0"), SQLDataType.INTEGER)), this, "");
+
     private Sponsoring(Name alias, Table<SponsoringRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }
