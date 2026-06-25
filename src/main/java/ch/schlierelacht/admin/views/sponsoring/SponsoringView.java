@@ -149,7 +149,7 @@ public class SponsoringView extends VerticalLayout {
 
     private void refreshGrid() {
         grid.setItems(sponsoringDao.findAll().stream()
-                                   .sorted(Comparator.comparing((Sponsoring s) -> s.getType().getLiteral())
+                                   .sorted(Comparator.comparing(Sponsoring::getType)
                                                      .thenComparing(Sponsoring::getSortOrder)
                                                      .thenComparing(Sponsoring::getName))
                                    .toList());
