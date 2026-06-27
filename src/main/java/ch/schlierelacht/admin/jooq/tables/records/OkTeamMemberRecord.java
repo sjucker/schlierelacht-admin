@@ -61,6 +61,20 @@ public class OkTeamMemberRecord extends UpdatableRecordImpl<OkTeamMemberRecord> 
         return (OkTeam) get(2);
     }
 
+    /**
+     * Setter for <code>public.ok_team_member.email</code>.
+     */
+    public void setEmail(String value) {
+        set(3, value);
+    }
+
+    /**
+     * Getter for <code>public.ok_team_member.email</code>.
+     */
+    public String getEmail() {
+        return (String) get(3);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -84,12 +98,13 @@ public class OkTeamMemberRecord extends UpdatableRecordImpl<OkTeamMemberRecord> 
     /**
      * Create a detached, initialised OkTeamMemberRecord
      */
-    public OkTeamMemberRecord(Long id, String name, OkTeam team) {
+    public OkTeamMemberRecord(Long id, String name, OkTeam team, String email) {
         super(OkTeamMember.OK_TEAM_MEMBER);
 
         setId(id);
         setName(name);
         setTeam(team);
+        setEmail(email);
         resetTouchedOnNotNull();
     }
 
@@ -103,6 +118,7 @@ public class OkTeamMemberRecord extends UpdatableRecordImpl<OkTeamMemberRecord> 
             setId(value.getId());
             setName(value.getName());
             setTeam(value.getTeam());
+            setEmail(value.getEmail());
             resetTouchedOnNotNull();
         }
     }

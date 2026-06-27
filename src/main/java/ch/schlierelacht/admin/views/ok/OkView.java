@@ -115,6 +115,7 @@ public class OkView extends VerticalLayout {
         g.addComponentColumn(m -> new Button(EDIT.create(), _ -> teamMemberDialog.open(m))).setWidth("80px").setTextAlign(CENTER).setFlexGrow(0);
         g.addColumn(OkTeamMember::getName).setHeader("Name").setSortable(true);
         g.addColumn(m -> OkTeam.fromDb(m.getTeam()).map(OkTeam::getDescription).orElse("")).setHeader("Team").setSortable(true);
+        g.addColumn(OkTeamMember::getEmail).setHeader("E-Mail");
         g.addItemDoubleClickListener(event -> {
             if (event.getItem() != null) {
                 teamMemberDialog.open(event.getItem());
@@ -270,7 +271,9 @@ public class OkView extends VerticalLayout {
             team.setItems(OkTeam.values());
             team.setItemLabelGenerator(OkTeam::getDescription);
 
-            form.add(name, team);
+            var email = new TextField("E-Mail");
+
+            form.add(name, team, email);
             form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
                                     new FormLayout.ResponsiveStep("500px", 2));
 
@@ -281,6 +284,7 @@ public class OkView extends VerticalLayout {
                   .asRequired()
                   .bind(m -> OkTeam.fromDb(m.getTeam()).orElse(null),
                         (m, v) -> m.setTeam(v != null ? v.toDb() : null));
+            binder.forField(email).bind(OkTeamMember::getEmail, OkTeamMember::setEmail);
 
             var save = new Button("Speichern");
             save.addClickListener(_ -> {

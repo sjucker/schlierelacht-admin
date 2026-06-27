@@ -66,6 +66,11 @@ public class OkTeamMember extends TableImpl<OkTeamMemberRecord> {
      */
     public final TableField<OkTeamMemberRecord, OkTeam> TEAM = createField(DSL.name("team"), SQLDataType.VARCHAR.nullable(false).asEnumDataType(OkTeam.class), this, "");
 
+    /**
+     * The column <code>public.ok_team_member.email</code>.
+     */
+    public final TableField<OkTeamMemberRecord, String> EMAIL = createField(DSL.name("email"), SQLDataType.VARCHAR(255), this, "");
+
     private OkTeamMember(Name alias, Table<OkTeamMemberRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

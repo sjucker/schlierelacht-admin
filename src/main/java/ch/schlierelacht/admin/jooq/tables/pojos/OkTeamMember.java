@@ -20,6 +20,7 @@ public class OkTeamMember implements Serializable {
     private Long id;
     private String name;
     private OkTeam team;
+    private String email;
 
     public OkTeamMember() {}
 
@@ -27,16 +28,19 @@ public class OkTeamMember implements Serializable {
         this.id = value.id;
         this.name = value.name;
         this.team = value.team;
+        this.email = value.email;
     }
 
     public OkTeamMember(
         Long id,
         String name,
-        OkTeam team
+        OkTeam team,
+        String email
     ) {
         this.id = id;
         this.name = name;
         this.team = team;
+        this.email = email;
     }
 
     /**
@@ -81,6 +85,20 @@ public class OkTeamMember implements Serializable {
         this.team = team;
     }
 
+    /**
+     * Getter for <code>public.ok_team_member.email</code>.
+     */
+    public String getEmail() {
+        return this.email;
+    }
+
+    /**
+     * Setter for <code>public.ok_team_member.email</code>.
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -108,6 +126,12 @@ public class OkTeamMember implements Serializable {
         }
         else if (!this.team.equals(other.team))
             return false;
+        if (this.email == null) {
+            if (other.email != null)
+                return false;
+        }
+        else if (!this.email.equals(other.email))
+            return false;
         return true;
     }
 
@@ -118,6 +142,7 @@ public class OkTeamMember implements Serializable {
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
         result = prime * result + ((this.team == null) ? 0 : this.team.hashCode());
+        result = prime * result + ((this.email == null) ? 0 : this.email.hashCode());
         return result;
     }
 
@@ -128,6 +153,7 @@ public class OkTeamMember implements Serializable {
         sb.append(id);
         sb.append(", ").append(name);
         sb.append(", ").append(team);
+        sb.append(", ").append(email);
 
         sb.append(")");
         return sb.toString();

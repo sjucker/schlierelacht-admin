@@ -102,4 +102,19 @@ public class OkTeamMemberDao extends AbstractSpringDAOImpl<OkTeamMemberRecord, c
     public List<ch.schlierelacht.admin.jooq.tables.pojos.OkTeamMember> fetchByTeam(OkTeam... values) {
         return fetch(OkTeamMember.OK_TEAM_MEMBER.TEAM, values);
     }
+
+    /**
+     * Fetch records that have <code>email BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.OkTeamMember> fetchRangeOfEmail(String lowerInclusive, String upperInclusive) {
+        return fetchRange(OkTeamMember.OK_TEAM_MEMBER.EMAIL, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>email IN (values)</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.OkTeamMember> fetchByEmail(String... values) {
+        return fetch(OkTeamMember.OK_TEAM_MEMBER.EMAIL, values);
+    }
 }

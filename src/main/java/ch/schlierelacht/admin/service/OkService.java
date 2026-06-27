@@ -28,7 +28,7 @@ public class OkService {
 
         List<OkTeamMemberDTO> teamMembers = dslContext.selectFrom(OK_TEAM_MEMBER)
                 .orderBy(OK_TEAM_MEMBER.TEAM.asc(), OK_TEAM_MEMBER.NAME.asc())
-                .fetch(r -> new OkTeamMemberDTO(r.getName(), OkTeam.fromDb(r.getTeam()).orElseThrow()));
+                .fetch(r -> new OkTeamMemberDTO(r.getName(), OkTeam.fromDb(r.getTeam()).orElseThrow(), r.getEmail()));
 
         return new OkDTO(members, teamMembers);
     }
