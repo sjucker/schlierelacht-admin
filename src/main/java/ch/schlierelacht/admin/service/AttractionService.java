@@ -1,12 +1,14 @@
 package ch.schlierelacht.admin.service;
 
 import ch.schlierelacht.admin.dto.AttractionDTO;
+import ch.schlierelacht.admin.dto.AttractionRefDTO;
 import ch.schlierelacht.admin.dto.AttractionType;
 import ch.schlierelacht.admin.dto.ImageDTO;
 import ch.schlierelacht.admin.dto.ImageType;
 import ch.schlierelacht.admin.dto.LocationDTO;
 import ch.schlierelacht.admin.dto.LocationType;
 import ch.schlierelacht.admin.dto.ProgrammEntryDTO;
+import ch.schlierelacht.admin.dto.ProgrammPointDTO;
 import ch.schlierelacht.admin.dto.TagDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
@@ -27,6 +30,7 @@ import static ch.schlierelacht.admin.jooq.Tables.TAG;
 import static ch.schlierelacht.admin.util.MapUtil.getGoogleMapsCoordinates;
 import static org.jooq.impl.DSL.exists;
 import static org.jooq.impl.DSL.multiset;
+import static org.jooq.impl.DSL.noCondition;
 import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.selectOne;
 
@@ -36,21 +40,71 @@ import static org.jooq.impl.DSL.selectOne;
 public class AttractionService {
     private final DSLContext dslContext;
 
-    public List<AttractionDTO> findAll(AttractionType type) {
-        return find(type, ch.schlierelacht.admin.jooq.Tables.ATTRACTION.TYPE.eq(type.toDb()));
+    /**
+     * Finds attractions, optionally narrowed by a set of {@link AttractionType}s and/or a tag.
+     * A {@code null}/empty type set means "all types"; a {@code null} tagId means "any tag".
+     */
+    public List<AttractionDTO> find(Set<AttractionType> types, Long tagId) {
+        Condition condition = noCondition();
+        if (types != null && !types.isEmpty()) {
+            condition = condition.and(ATTRACTION.TYPE.in(types.stream().map(AttractionType::toDb).toList()));
+        }
+        if (tagId != null) {
+            condition = condition.and(exists(selectOne().from(ATTRACTION_TAG)
+                                                        .where(ATTRACTION_TAG.ATTRACTION_ID.eq(ATTRACTION.ID),
+                                                               ATTRACTION_TAG.TAG_ID.eq(tagId))));
+        }
+        return find(condition);
     }
 
-    public List<AttractionDTO> findByTagId(AttractionType type, Long tagId) {
-        return find(type, ATTRACTION.TYPE.eq(type.toDb()).and(exists(selectOne().from(ATTRACTION_TAG)
-                                                                                .where(ATTRACTION_TAG.ATTRACTION_ID.eq(ATTRACTION.ID),
-                                                                                       ATTRACTION_TAG.TAG_ID.eq(tagId)))));
+    public Optional<AttractionDTO> findByExternalId(String externalId) {
+        return find(ATTRACTION.EXTERNAL_ID.eq(externalId)).stream().findFirst();
     }
 
-    public Optional<AttractionDTO> findByExternalId(AttractionType type, String externalId) {
-        return find(type, ATTRACTION.TYPE.eq(type.toDb()).and(ATTRACTION.EXTERNAL_ID.eq(externalId))).stream().findFirst();
+    /**
+     * Returns every programm entry joined with its attraction, as a flat list ordered
+     * chronologically (date, then start time, then attraction name). Entries without a
+     * location are omitted, mirroring the per-attraction programm assembled in {@link #find(Condition)}.
+     */
+    public List<ProgrammPointDTO> findAllProgrammPoints() {
+        return dslContext.select(ATTRACTION.EXTERNAL_ID,
+                                 ATTRACTION.NAME,
+                                 PROGRAMM.FROM_DATE,
+                                 PROGRAMM.FROM_TIME,
+                                 PROGRAMM.TO_DATE,
+                                 PROGRAMM.TO_TIME,
+                                 LOCATION.EXTERNAL_ID,
+                                 LOCATION.TYPE,
+                                 LOCATION.NAME,
+                                 LOCATION.LATITUDE,
+                                 LOCATION.LONGITUDE,
+                                 LOCATION.CLOUDFLARE_ID,
+                                 LOCATION.MAP_ID)
+                         .from(PROGRAMM)
+                         .join(ATTRACTION).on(PROGRAMM.ATTRACTION_ID.eq(ATTRACTION.ID))
+                         .join(LOCATION).on(PROGRAMM.LOCATION_ID.eq(LOCATION.ID))
+                         .orderBy(PROGRAMM.FROM_DATE.asc(),
+                                  PROGRAMM.FROM_TIME.nullsFirst(),
+                                  ATTRACTION.NAME.asc())
+                         .fetch(it -> new ProgrammPointDTO(
+                                 new AttractionRefDTO(it.get(ATTRACTION.EXTERNAL_ID),
+                                                      it.get(ATTRACTION.NAME)),
+                                 new ProgrammEntryDTO(
+                                         new LocationDTO(it.get(LOCATION.EXTERNAL_ID),
+                                                         LocationType.fromDb(it.get(LOCATION.TYPE)).orElseThrow(),
+                                                         it.get(LOCATION.NAME),
+                                                         it.get(LOCATION.LATITUDE),
+                                                         it.get(LOCATION.LONGITUDE),
+                                                         getGoogleMapsCoordinates(it.get(LOCATION.LATITUDE), it.get(LOCATION.LONGITUDE)),
+                                                         it.get(LOCATION.CLOUDFLARE_ID),
+                                                         it.get(LOCATION.MAP_ID)),
+                                         it.get(PROGRAMM.FROM_DATE),
+                                         it.get(PROGRAMM.FROM_TIME),
+                                         it.get(PROGRAMM.TO_DATE),
+                                         it.get(PROGRAMM.TO_TIME))));
     }
 
-    private List<AttractionDTO> find(AttractionType type, Condition whereCondition) {
+    private List<AttractionDTO> find(Condition whereCondition) {
         return dslContext.select(ATTRACTION.ID,
                                  ATTRACTION.EXTERNAL_ID,
                                  ATTRACTION.NAME,
