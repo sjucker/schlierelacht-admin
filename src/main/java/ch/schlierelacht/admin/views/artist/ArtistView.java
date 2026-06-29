@@ -3,6 +3,7 @@ package ch.schlierelacht.admin.views.artist;
 import ch.schlierelacht.admin.dto.AttractionType;
 import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
 import ch.schlierelacht.admin.jooq.tables.daos.TagDao;
+import ch.schlierelacht.admin.service.AttractionFileService;
 import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.AbstractAttractionView;
 import ch.schlierelacht.admin.views.MainLayout;
@@ -19,8 +20,9 @@ import org.jspecify.annotations.NonNull;
 @PermitAll
 public class ArtistView extends AbstractAttractionView {
 
-    public ArtistView(AttractionDao attractionDao, TagDao tagDao, CloudflareService cloudflareService, DSLContext dslContext) {
-        super(attractionDao, tagDao, cloudflareService, dslContext);
+    public ArtistView(AttractionDao attractionDao, TagDao tagDao, CloudflareService cloudflareService,
+                      DSLContext dslContext, AttractionFileService attractionFileService) {
+        super(attractionDao, tagDao, cloudflareService, dslContext, attractionFileService);
     }
 
     @Override
