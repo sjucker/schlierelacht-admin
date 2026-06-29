@@ -201,7 +201,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 mainImageMetadata = null;
                 mainImageData = null;
             });
-            mainUpload.setAcceptedFileTypes("image/*");
+            mainUpload.setAcceptedMimeTypes("image/*");
             mainUpload.setMaxFiles(1);
 
             var additionalUploadHandler = UploadHandler.inMemory((metadata, data) -> {
@@ -219,7 +219,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             });
 
             var additionalUpload = new Upload(additionalUploadHandler);
-            additionalUpload.setAcceptedFileTypes("image/*");
+            additionalUpload.setAcceptedMimeTypes("image/*");
             additionalUpload.addFileRemovedListener(event -> {
                 additionalImagesMetadata.remove(event.getFileName());
                 additionalImagesData.remove(event.getFileName());

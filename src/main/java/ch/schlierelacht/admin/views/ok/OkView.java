@@ -220,7 +220,7 @@ public class OkView extends VerticalLayout {
                 }
             });
             var upload = new Upload(uploadHandler);
-            upload.setAcceptedFileTypes("image/*");
+            upload.setAcceptedMimeTypes("image/*");
             upload.setMaxFiles(1);
             return upload;
         }
