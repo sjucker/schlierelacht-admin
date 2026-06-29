@@ -14,7 +14,8 @@
 
 ## Build
 
-* `mvn clean package`
+* `mvn clean package` — produces the production-ready JAR; since Vaadin 25 the Vaadin frontend is
+  built automatically during the `package` phase, so no `-Pproduction` profile is required.
 * `mvn dependency:resolve-sources`
 
 ## Updates

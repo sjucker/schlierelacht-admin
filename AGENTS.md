@@ -1,83 +1,121 @@
-# AI TOOL GUIDANCE
+# AI Agent Guidance — Schlierelacht Admin
 
-This file provides guidance when working with code in this repository.
+This file provides architectural context, coding standards, and development workflows for any AI
+coding agent working in this repository. It is intentionally tool-agnostic.
 
-## Technology Stack
+## 🏗️ Architecture & Technology Stack
 
-This is a Vaadin application built with:
-- Java
-- Spring Boot
-- jOOQ and a PostgreSQL database
-- Maven build system
+- **Backend:** Spring Boot 4.1.0 (Java 25)
+- **Frontend:** Vaadin 25 (server-side UI)
+- **Database:** PostgreSQL (schema managed with Flyway migrations)
+- **Persistence:** jOOQ for type-safe SQL (no JPA)
+- **Mapping:** MapStruct (+ Lombok) for DTO conversions
+- **Security:** Spring Security (Vaadin-integrated for the admin UI, stateless for `/api/**`)
+- **Integrations:** Cloudflare (image hosting/delivery)
+- **Build:** Maven (use the wrapper `./mvnw`)
+- **Testing:** JUnit 5, ArchUnit (architectural consistency)
 
-## Development Commands
+## 📂 Project Structure
 
-### Running the Application
+Root package: `ch.schlierelacht.admin`
+
+- `src/main/java/ch/schlierelacht/admin/`
+    - `dto/`: Data transfer objects (classes ending in `DTO`). The website's TypeScript types are
+      generated from these — see "Public API coupling" below.
+    - `jooq/`: jOOQ-generated code (tables, DAOs, records) — **never hand-edit**. Contains the custom
+      `AbstractSpringDAOImpl` base that generated DAOs extend.
+    - `mapper/`: MapStruct mappers (e.g. `EnumMapper`).
+    - `rest/`: Public, stateless REST endpoints (`*Endpoint.java`, mapped under `/api/**`).
+    - `security/`: Authentication and authorization logic.
+    - `service/`: Business logic and external service integrations (e.g. Cloudflare).
+    - `util/`: Shared helpers.
+    - `views/`: Vaadin views, organized by feature. `MainLayout` is the parent layout for
+      authenticated views.
+    - `Application.java`: Entry point (`@SpringBootApplication`, `@EnableAsync`, `@EnableScheduling`),
+      registers Lumo + `styles.css` stylesheets and `app.*` configuration properties.
+- `src/main/resources/db/migration/`: Flyway SQL migrations.
+- `src/main/resources/META-INF/resources/styles.css`: Custom CSS.
+- `src/main/docker/`: Docker Compose for local development (PostgreSQL).
+
+## 🛠️ Development Workflow
+
+### Run the application
 ```bash
-./mvnw                           # Start in development mode (default goal: spring-boot:run)
-./mvnw spring-boot:run           # Explicit development mode
+./mvnw                           # Dev mode (default goal: spring-boot:run) → http://localhost:8080
+./mvnw spring-boot:run           # Explicit dev mode
 ```
 
-The application will be available at http://localhost:8080
-
-### Building for Production
+### Database (Docker must be running)
 ```bash
-./mvnw -Pproduction package      # Build production JAR
-docker build -t my-application:latest .  # Build Docker image
+docker compose -p schlierelacht -f src/main/docker/postgres.yml up --build
+```
+
+### jOOQ code generation
+jOOQ codegen is **skipped by default** (`jooq-codegen-skip=true`). It starts a Postgres testcontainer,
+applies the Flyway migrations, and regenerates classes into `ch.schlierelacht.admin.jooq`. Re-run it
+after adding a Flyway migration (Docker must be running):
+```bash
+mvn clean test-compile -Djooq-codegen-skip=false
 ```
 
 ### Testing
 ```bash
-./mvnw test                      # Run all tests
-./mvnw test -Dtest=TaskServiceTest  # Run a single test class
-./mvnw test -Dtest=TaskServiceTest#tasks_are_stored_in_the_database_with_the_current_timestamp  # Run a single test method
+./mvnw test                                  # All tests
+./mvnw test -Dtest=SomeServiceTest           # Single test class
+./mvnw test -Dtest=SomeServiceTest#method    # Single test method
 ```
 
-## Architecture
+### Build & deploy
+Since Vaadin 25 the Vaadin frontend is built automatically as part of the `package` phase, so **no
+`-Pproduction` profile is required**:
+```bash
+./mvnw clean package                         # Production-ready JAR
+docker build -t schlierelacht-admin .        # Docker image (builds & runs on JDK/JRE 25)
+```
 
-This project follows a **feature-based package structure** rather than traditional layered architecture. Code is organized by functional units (features), not by technical layers.
+## 🔌 Public API coupling
 
-### Package Structure
+The public website depends on TypeScript types generated from the Java DTOs. The
+`typescript-generator-maven-plugin` scans `ch.schlierelacht.admin.**DTO` and writes directly into the
+sibling website repo. It is **not** bound to the build lifecycle — run it explicitly after changing a
+DTO:
+```bash
+./mvnw process-classes               # compile the changed DTOs
+./mvnw typescript-generator:generate # rewrite the website's shared/types/rest.ts
+```
+Field optionality follows nullability: a DTO field becomes optional in TypeScript only when it lacks
+`@NotNull` (primitives and `@NotNull` fields become required).
 
-- **`ch.schlierelacht.base`**: Reusable components and base classes for all features
-  - `base.ui.MainLayout`: AppLayout with drawer navigation using SideNav, automatically populated from @Menu annotations
-  - `base.ui.component.ViewToolbar`: Reusable toolbar component for views
+## 📜 Coding Conventions
 
-- **`ch.schlierelacht.examplefeature`**: Example feature demonstrating the structure
-  - `Task.java`: JPA entity with validation
-  - `TaskRepository.java`: Spring Data JPA repository
-  - `TaskService.java`: Service layer with @Transactional methods
-  - `ui.TaskListView.java`: Vaadin Flow view component (server-side UI)
-  - `TaskServiceTest.java`: Integration test using @SpringBootTest
+### Backend
+- **Feature-based packages**, not layered: each feature has its view(s) under `views/<feature>/`, a
+  `service/<Feature>Service`, and a `rest/<Feature>Endpoint` where applicable.
+- **Data access:** jOOQ only. Generated DAOs extend the custom `AbstractSpringDAOImpl` for proper
+  Spring transaction integration. Never hand-edit the `jooq/` package.
+- **Mapping:** Use MapStruct for all DTO transformations; map PostgreSQL custom enums consistently
+  via `EnumMapper`.
+- **Service layer:** Keep business logic in `@Service` classes; use `@Transactional` for writes and
+  `@Transactional(readOnly = true)` for reads. Avoid logic in Vaadin views.
+- **Dependency injection:** Constructor injection throughout (no field `@Autowired`).
 
-- **`Application.java`**: Main entry point, annotated with @SpringBootApplication and @Theme("default")
+### Frontend (Vaadin)
+- **Server-side rendering:** UI components are Java classes extending Vaadin components.
+- **View organization:** Follow the feature-based structure under `ch.schlierelacht.admin.views`; use
+  `MainLayout` as the parent for authenticated views.
+- **Navigation:** `@Route` for paths and `@Menu` for navigation entries (order, icon, title);
+  `MainLayout` builds the drawer navigation from `@Menu` annotations.
+- **Styling:** Lumo theme + LineAwesome icons; add custom CSS to
+  `src/main/resources/META-INF/resources/styles.css`.
+- **Grid lazy loading:** Use `VaadinSpringDataHelpers.toSpringPageRequest(query)` for pagination.
 
-### Key Architecture Patterns
+### Database & Migrations
+- **Flyway:** Never modify existing migration files. Create new ones using the
+  `VXXX__description.sql` naming convention.
+- **Schema:** Use descriptive table/column names; include audit fields where appropriate.
 
-1. **Feature Packages**: Each feature is self-contained with its own UI, business logic, data access, and tests
-2. **Navigation**: Views use `@Route` and `@Menu` annotations. MainLayout automatically builds navigation from menu entries
-3. **Service Layer**: Use `@Transactional` for write operations and `@Transactional(readOnly = true)` for read operations
-4. **Validation**: Domain validation in entity setters (see Task.setDescription)
-5. **Dependency Injection**: Constructor injection throughout (no @Autowired on fields)
-
-## Adding New Features
-
-When creating a new feature:
-1. Create a new package under `ch.schlierelacht` (e.g., `ch.schlierelacht.myfeature`)
-2. Include: Entity, Repository, Service, and UI view classes
-3. Use the `examplefeature` package as a reference
-4. Once your features are complete, **delete the `examplefeature` package entirely**
-
-## Vaadin-Specific Notes
-
-- **Server-side rendering**: UI components are Java classes extending Vaadin components
-- **Grid lazy loading**: Use `VaadinSpringDataHelpers.toSpringPageRequest(query)` for pagination
-- **Themes**: Located in `src/main/frontend/themes/default/`, based on Lumo theme
-- **Routing**: `@Route("")` for root path, `@Route("path")` for specific paths
-- **Menu**: `@Menu` annotation controls navigation items (order, icon, title)
-
-## Database
-
-- PostgreSQL database
-- jOOQ code generation from database schema
-- Flyway migrations for database schema changes
+## ✅ Quality Standards
+- **ArchUnit:** All code must pass the architectural checks (`ArchUnitTest`).
+- **Naming:** `PascalCase` for classes, `camelCase` for variables/methods, `snake_case` for database
+  identifiers.
+- **Formatting:** Adhere to standard Java/Spring conventions.
