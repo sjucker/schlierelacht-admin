@@ -19,9 +19,9 @@ Run the following steps from the `schlierelacht-admin/` directory, in order. Sto
    git add pom.xml && git commit -m "Release $ARGUMENTS"
    ```
 
-4. **Tag the commit** with the bare version (matches existing tags, no `v` prefix):
+4. **Tag the commit** with the bare version (matches existing tags, no `v` prefix). Use an **annotated** tag so `git push --follow-tags` includes it:
    ```bash
-   git tag $ARGUMENTS
+   git tag -a $ARGUMENTS -m "Release $ARGUMENTS"
    ```
 
 5. **Push the commit and the tag**:
