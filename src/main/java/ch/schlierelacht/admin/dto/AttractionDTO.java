@@ -13,5 +13,6 @@ public record AttractionDTO(@NotNull String externalId,
                             String youtube,
                             @NotNull List<ImageDTO> images,
                             @NotNull List<TagDTO> tags,
-                            @NotNull List<ProgrammEntryDTO> programm) {
+                            @NotNull List<ProgrammEntryDTO> programm,
+                            @NotNull List<AttractionFileDTO> files) {
 }

@@ -7,6 +7,7 @@ package ch.schlierelacht.admin.jooq.tables;
 import ch.schlierelacht.admin.jooq.Keys;
 import ch.schlierelacht.admin.jooq.Public;
 import ch.schlierelacht.admin.jooq.enums.AttractionType;
+import ch.schlierelacht.admin.jooq.tables.AttractionFile.AttractionFilePath;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage.AttractionImagePath;
 import ch.schlierelacht.admin.jooq.tables.AttractionTag.AttractionTagPath;
 import ch.schlierelacht.admin.jooq.tables.Programm.ProgrammPath;
@@ -181,6 +182,19 @@ public class Attraction extends TableImpl<AttractionRecord> {
     @Override
     public List<UniqueKey<AttractionRecord>> getUniqueKeys() {
         return Arrays.asList(Keys.UQ_ATTRACTION);
+    }
+
+    private transient AttractionFilePath _attractionFile;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.attraction_file</code> table
+     */
+    public AttractionFilePath attractionFile() {
+        if (_attractionFile == null)
+            _attractionFile = new AttractionFilePath(this, null, Keys.ATTRACTION_FILE__FK_ATTRACTION_FILE_ATTRACTION.getInverseKey());
+
+        return _attractionFile;
     }
 
     private transient AttractionImagePath _attractionImage;

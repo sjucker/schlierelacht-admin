@@ -5,6 +5,7 @@ package ch.schlierelacht.admin.jooq;
 
 
 import ch.schlierelacht.admin.jooq.tables.Attraction;
+import ch.schlierelacht.admin.jooq.tables.AttractionFile;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
 import ch.schlierelacht.admin.jooq.tables.AttractionTag;
 import ch.schlierelacht.admin.jooq.tables.Download;
@@ -45,6 +46,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.attraction</code>.
      */
     public final Attraction ATTRACTION = Attraction.ATTRACTION;
+
+    /**
+     * The table <code>public.attraction_file</code>.
+     */
+    public final AttractionFile ATTRACTION_FILE = AttractionFile.ATTRACTION_FILE;
 
     /**
      * The table <code>public.attraction_image</code>.
@@ -128,6 +134,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             Attraction.ATTRACTION,
+            AttractionFile.ATTRACTION_FILE,
             AttractionImage.ATTRACTION_IMAGE,
             AttractionTag.ATTRACTION_TAG,
             Download.DOWNLOAD,

@@ -1,6 +1,7 @@
 package ch.schlierelacht.admin.service;
 
 import ch.schlierelacht.admin.dto.AttractionDTO;
+import ch.schlierelacht.admin.dto.AttractionFileDTO;
 import ch.schlierelacht.admin.dto.AttractionRefDTO;
 import ch.schlierelacht.admin.dto.AttractionType;
 import ch.schlierelacht.admin.dto.ImageDTO;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
+import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_FILE;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_TAG;
 import static ch.schlierelacht.admin.jooq.Tables.IMAGE;
@@ -147,7 +149,15 @@ public class AttractionService {
                                                  TAG.NAME)
                                                   .from(ATTRACTION_TAG)
                                                   .join(TAG).on(ATTRACTION_TAG.TAG_ID.eq(TAG.ID))
-                                                  .where(ATTRACTION_TAG.ATTRACTION_ID.eq(ATTRACTION.ID))))
+                                                  .where(ATTRACTION_TAG.ATTRACTION_ID.eq(ATTRACTION.ID))),
+                                 multiset(select(ATTRACTION_FILE.ID,
+                                                 ATTRACTION_FILE.FILENAME,
+                                                 ATTRACTION_FILE.FILETYPE,
+                                                 ATTRACTION_FILE.DESCRIPTION,
+                                                 ATTRACTION_FILE.FILESIZE)
+                                                  .from(ATTRACTION_FILE)
+                                                  .where(ATTRACTION_FILE.ATTRACTION_ID.eq(ATTRACTION.ID))
+                                                  .orderBy(ATTRACTION_FILE.UPLOADED_AT.asc())))
                          .from(ATTRACTION)
                          .where(whereCondition)
                          .orderBy(ATTRACTION.NAME.asc())
@@ -187,6 +197,13 @@ public class AttractionService {
                                                                    v.get(PROGRAMM.TO_TIME),
                                                                    now)
                                    ))
+                                   .toList(),
+                                 it.value12().stream()
+                                   .map(v -> new AttractionFileDTO(v.get(ATTRACTION_FILE.ID),
+                                                                   v.get(ATTRACTION_FILE.FILENAME),
+                                                                   v.get(ATTRACTION_FILE.FILETYPE),
+                                                                   v.get(ATTRACTION_FILE.DESCRIPTION),
+                                                                   v.get(ATTRACTION_FILE.FILESIZE)))
                                    .toList()
                          ));
     }

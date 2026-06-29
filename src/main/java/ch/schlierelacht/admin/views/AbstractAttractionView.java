@@ -7,6 +7,7 @@ import ch.schlierelacht.admin.jooq.tables.daos.TagDao;
 import ch.schlierelacht.admin.jooq.tables.pojos.Attraction;
 import ch.schlierelacht.admin.jooq.tables.pojos.Image;
 import ch.schlierelacht.admin.jooq.tables.pojos.Tag;
+import ch.schlierelacht.admin.service.AttractionFileService;
 import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.util.CloudflareImage;
 import com.vaadin.flow.component.button.Button;
@@ -34,6 +35,7 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.jooq.DSLContext;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -43,6 +45,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static ch.schlierelacht.admin.dto.ImageType.ADDITIONAL;
 import static ch.schlierelacht.admin.dto.ImageType.MAIN;
@@ -64,18 +67,32 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Slf4j
 public abstract class AbstractAttractionView extends VerticalLayout {
 
+    private static final long MAX_FILE_SIZE = 10L * 1024 * 1024;
+    private static final Set<String> ALLOWED_FILE_MIME_TYPES = Set.of(
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    );
+
     private final AttractionDao attractionDao;
     private final TagDao tagDao;
     private final CloudflareService cloudflareService;
     private final DSLContext dslContext;
+    private final AttractionFileService attractionFileService;
     private final Grid<Attraction> grid;
     private final AttractionDialog dialog;
 
-    public AbstractAttractionView(AttractionDao attractionDao, TagDao tagDao, CloudflareService cloudflareService, DSLContext dslContext) {
+    public AbstractAttractionView(AttractionDao attractionDao, TagDao tagDao, CloudflareService cloudflareService,
+                                  DSLContext dslContext, AttractionFileService attractionFileService) {
         this.attractionDao = attractionDao;
         this.tagDao = tagDao;
         this.cloudflareService = cloudflareService;
         this.dslContext = dslContext;
+        this.attractionFileService = attractionFileService;
 
         this.dialog = new AttractionDialog(() -> {
             refreshGrid();
@@ -122,6 +139,12 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         grid.setItems(attractionDao.fetchByType(getAttractionType().toDb()));
     }
 
+    private static String formatFileSize(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return String.format("%.1f KB", bytes / 1024.0);
+        return String.format("%.1f MB", bytes / (1024.0 * 1024));
+    }
+
     private class AttractionDialog extends Dialog {
         private final Binder<Attraction> binder = new Binder<>(Attraction.class);
         private final MultiSelectComboBox<Tag> tags = new MultiSelectComboBox<>("Tags");
@@ -131,9 +154,13 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         private final Map<String, TextField> additionalImagesDescription = new HashMap<>();
         private final Map<String, UploadMetadata> additionalImagesMetadata = new HashMap<>();
         private final Map<String, byte[]> additionalImagesData = new HashMap<>();
+        private final VerticalLayout fileInfoLayout = new VerticalLayout();
+        private final TextField fileDescription = new TextField("Beschreibung Datei");
         private final Div preview = new Div();
         private UploadMetadata mainImageMetadata;
         private byte[] mainImageData;
+        private UploadMetadata fileMetadata;
+        private byte[] fileData;
 
         public AttractionDialog(Runnable onSuccessCallback) {
             setModality(STRICT);
@@ -228,11 +255,28 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 additionalImagesDescription.remove(event.getFileName());
             });
 
+            fileDescription.setWidthFull();
+
+            var fileUploadHandler = UploadHandler.inMemory((metadata, data) -> {
+                fileMetadata = metadata;
+                fileData = data;
+            });
+            var fileUpload = new Upload(fileUploadHandler);
+            fileUpload.setAcceptedMimeTypes(ALLOWED_FILE_MIME_TYPES.toArray(String[]::new));
+            fileUpload.setMaxFiles(1);
+            fileUpload.setMaxFileSize((int) MAX_FILE_SIZE);
+            fileUpload.addFileRemovedListener(_ -> {
+                fileMetadata = null;
+                fileData = null;
+            });
+
             add(form,
                 new Hr(),
                 new H3("Hauptbild"), mainUpload, mainImageDescription,
                 new Hr(),
-                new H3("Weitere Bilder"), additionalUpload, additionalImagesLayout, imageInfoLayout);
+                new H3("Weitere Bilder"), additionalUpload, additionalImagesLayout, imageInfoLayout,
+                new Hr(),
+                new H3("Dateien (PDF/Office, max. 10 MB)"), fileUpload, fileDescription, fileInfoLayout);
 
             var save = new Button("Speichern");
             save.addClickListener(_ -> {
@@ -278,6 +322,10 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             additionalImagesData.clear();
             mainImageDescription.setValue("");
             mainImageDescription.setVisible(false);
+            fileInfoLayout.removeAll();
+            fileDescription.clear();
+            fileMetadata = null;
+            fileData = null;
 
             if (attraction.getId() != null) {
                 // Show existing tags
@@ -334,6 +382,29 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                     row.add(label, img, deleteBtn);
                     imageInfoLayout.add(row);
                 });
+
+                // Show existing files
+                attractionFileService.findByAttractionId(attraction.getId()).forEach(file -> {
+                    var label = new Span(file.description() + " (" + file.filename() + ", " + formatFileSize(file.filesize()) + ")");
+                    var row = new HorizontalLayout();
+                    row.setAlignItems(Alignment.CENTER);
+                    row.setSpacing(true);
+
+                    var deleteBtn = new Button("Löschen");
+                    deleteBtn.addClickListener(_ -> {
+                        try {
+                            attractionFileService.delete(file.id());
+                            fileInfoLayout.remove(row);
+                        } catch (Exception ex) {
+                            log.error("Error deleting file {} for attraction {}", file.id(), binder.getBean().getId(), ex);
+                            showNotification("Datei konnte nicht gelöscht werden", LUMO_ERROR);
+                        }
+                    });
+                    deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
+                    row.add(label, deleteBtn);
+                    fileInfoLayout.add(row);
+                });
             }
             super.open();
         }
@@ -364,6 +435,21 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 }
             }
 
+            if (fileData != null) {
+                if (isBlank(fileDescription.getValue())) {
+                    showNotification("Beschreibung für die Datei ist erforderlich", LUMO_ERROR);
+                    return false;
+                }
+                if (!ALLOWED_FILE_MIME_TYPES.contains(fileMetadata.contentType())) {
+                    showNotification("Dateityp nicht erlaubt (nur PDF/Office): " + fileMetadata.contentType(), LUMO_ERROR);
+                    return false;
+                }
+                if (fileData.length > MAX_FILE_SIZE) {
+                    showNotification("Datei ist zu gross (max. 10 MB)", LUMO_ERROR);
+                    return false;
+                }
+            }
+
             if (creating) {
                 var it = dslContext.newRecord(ATTRACTION, attraction);
                 it.insert();
@@ -380,6 +466,12 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 var desc = additionalImagesDescription.get(additionalImage.getKey()).getValue();
                 uploadAndLinkImage(attraction.getId(), additionalImage.getValue(), additionalImage.getKey(),
                                    additionalImagesMetadata.get(additionalImage.getKey()).contentType(), ADDITIONAL, desc);
+            }
+
+            if (fileData != null) {
+                var uploadedBy = SecurityContextHolder.getContext().getAuthentication().getName();
+                attractionFileService.create(attraction.getId(), fileMetadata.fileName(), fileMetadata.contentType(),
+                                             fileData.length, fileData, fileDescription.getValue(), uploadedBy);
             }
 
             // Save tags
@@ -399,6 +491,8 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             additionalImagesData.clear();
             additionalImagesMetadata.clear();
             additionalImagesDescription.clear();
+            fileData = null;
+            fileMetadata = null;
 
             close();
             return true;
