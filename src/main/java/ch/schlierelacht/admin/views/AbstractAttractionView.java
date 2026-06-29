@@ -41,6 +41,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -62,6 +63,8 @@ import static com.vaadin.flow.component.icon.VaadinIcon.EDIT;
 import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_ERROR;
 import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SUCCESS;
 import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_WARNING;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsLast;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
@@ -136,7 +139,11 @@ public abstract class AbstractAttractionView extends VerticalLayout {
     }
 
     private void refreshGrid() {
-        grid.setItems(attractionDao.fetchByType(getAttractionType().toDb()));
+        var attractions = attractionDao.fetchByType(getAttractionType().toDb()).stream()
+                                       .sorted(Comparator.comparing(Attraction::getExternalId,
+                                                                    nullsLast(naturalOrder())))
+                                       .toList();
+        grid.setItems(attractions);
     }
 
     private static String formatFileSize(long bytes) {
