@@ -10,12 +10,14 @@ import ch.schlierelacht.admin.dto.LocationType;
 import ch.schlierelacht.admin.dto.ProgrammEntryDTO;
 import ch.schlierelacht.admin.dto.ProgrammPointDTO;
 import ch.schlierelacht.admin.dto.TagDTO;
+import ch.schlierelacht.admin.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -67,6 +69,7 @@ public class AttractionService {
      * location are omitted, mirroring the per-attraction programm assembled in {@link #find(Condition)}.
      */
     public List<ProgrammPointDTO> findAllProgrammPoints() {
+        LocalDateTime now = DateUtil.now();
         return dslContext.select(ATTRACTION.EXTERNAL_ID,
                                  ATTRACTION.NAME,
                                  PROGRAMM.FROM_DATE,
@@ -101,10 +104,15 @@ public class AttractionService {
                                          it.get(PROGRAMM.FROM_DATE),
                                          it.get(PROGRAMM.FROM_TIME),
                                          it.get(PROGRAMM.TO_DATE),
-                                         it.get(PROGRAMM.TO_TIME))));
+                                         it.get(PROGRAMM.TO_TIME),
+                                         ProgrammEntryDTO.isPast(it.get(PROGRAMM.FROM_DATE),
+                                                                 it.get(PROGRAMM.TO_DATE),
+                                                                 it.get(PROGRAMM.TO_TIME),
+                                                                 now))));
     }
 
     private List<AttractionDTO> find(Condition whereCondition) {
+        LocalDateTime now = DateUtil.now();
         return dslContext.select(ATTRACTION.ID,
                                  ATTRACTION.EXTERNAL_ID,
                                  ATTRACTION.NAME,
@@ -173,7 +181,11 @@ public class AttractionService {
                                            v.get(PROGRAMM.FROM_DATE),
                                            v.get(PROGRAMM.FROM_TIME),
                                            v.get(PROGRAMM.TO_DATE),
-                                           v.get(PROGRAMM.TO_TIME)
+                                           v.get(PROGRAMM.TO_TIME),
+                                           ProgrammEntryDTO.isPast(v.get(PROGRAMM.FROM_DATE),
+                                                                   v.get(PROGRAMM.TO_DATE),
+                                                                   v.get(PROGRAMM.TO_TIME),
+                                                                   now)
                                    ))
                                    .toList()
                          ));
