@@ -3,8 +3,8 @@ package ch.schlierelacht.admin.views;
 import ch.schlierelacht.admin.views.artist.ArtistView;
 import ch.schlierelacht.admin.views.downloads.DownloadsView;
 import ch.schlierelacht.admin.views.gastro.GastroView;
-import ch.schlierelacht.admin.views.meetup.MeetupView;
 import ch.schlierelacht.admin.views.location.LocationView;
+import ch.schlierelacht.admin.views.meetup.MeetupView;
 import ch.schlierelacht.admin.views.news.NewsView;
 import ch.schlierelacht.admin.views.ok.OkView;
 import ch.schlierelacht.admin.views.programm.ProgrammView;
@@ -50,11 +50,11 @@ import static org.vaadin.lineawesome.LineAwesomeIcon.CALENDAR_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.DOWNLOAD_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.HANDSHAKE_SOLID;
-import static org.vaadin.lineawesome.LineAwesomeIcon.USERS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.NEWSPAPER_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.PIZZA_SLICE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.TAGS_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.USERS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.USER_SOLID;
 
 @Slf4j
@@ -73,8 +73,7 @@ public class MainLayout extends AppLayout {
             this.view = view;
             RouterLink link = new RouterLink();
             // Use Lumo classnames for various styling
-            link.addClassNames(Display.FLEX, Gap.XSMALL, Height.MEDIUM, AlignItems.CENTER, Padding.Horizontal.SMALL,
-                               TextColor.BODY);
+            link.addClassNames(Display.FLEX, Gap.XSMALL, Height.MEDIUM, AlignItems.CENTER, Padding.Horizontal.SMALL, TextColor.BODY);
             link.setRoute(view);
 
             Span text = new Span(menuTitle);
@@ -98,6 +97,7 @@ public class MainLayout extends AppLayout {
         this.authContext = authContext;
         this.buildProperties = buildProperties;
         addToNavbar(createHeaderContent());
+        setDrawerOpened(false);
     }
 
     private Component createHeaderContent() {
