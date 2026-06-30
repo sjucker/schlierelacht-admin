@@ -30,6 +30,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.server.streams.UploadHandler;
 import com.vaadin.flow.server.streams.UploadMetadata;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -277,9 +278,12 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 fileData = null;
             });
 
+            var mainImageHint = new Span("Optional (max. 1). Wird ein neues Bild hochgeladen wird das bestehende automatisch ersetzt.");
+            mainImageHint.addClassName(LumoUtility.FontSize.SMALL);
+
             add(form,
                 new Hr(),
-                new H3("Hauptbild"), mainUpload, mainImageDescription,
+                new H3("Hauptbild"), mainImageHint, mainUpload, mainImageDescription,
                 new Hr(),
                 new H3("Weitere Bilder"), additionalUpload, additionalImagesLayout, imageInfoLayout,
                 new Hr(),
@@ -367,17 +371,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                     deleteBtn.addClickListener(_ -> {
                         // Delete relation and image, and from Cloudflare
                         try {
-                            dslContext.deleteFrom(ATTRACTION_IMAGE)
-                                      .where(ATTRACTION_IMAGE.ATTRACTION_ID.eq(binder.getBean().getId())
-                                                                           .and(ATTRACTION_IMAGE.IMAGE_ID.eq(imageId)))
-                                      .execute();
-
-                            dslContext.deleteFrom(IMAGE)
-                                      .where(IMAGE.ID.eq(imageId))
-                                      .execute();
-
-                            cloudflareService.delete(cloudflareId);
-
+                            deleteImage(binder.getBean().getId(), imageId, cloudflareId);
                             imageInfoLayout.remove(row);
                         } catch (Exception ex) {
                             log.error("Error deleting image {} for attraction {}", imageId, binder.getBean().getId(), ex);
@@ -425,11 +419,8 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             var attraction = binder.getBean();
             boolean creating = attraction.getId() == null;
 
-            if (creating && mainImageData == null) {
-                showNotification("Hauptbild ist erforderlich", LUMO_ERROR);
-                return false;
-            }
-            if (creating && isBlank(mainImageDescription.getValue())) {
+            // Main image is optional (0 or 1). Only its description is required when one is uploaded.
+            if (mainImageData != null && isBlank(mainImageDescription.getValue())) {
                 showNotification("Beschreibung für Hauptbild ist erforderlich", LUMO_ERROR);
                 return false;
             }
@@ -466,6 +457,8 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             }
 
             if (mainImageData != null) {
+                // Guarantee at most one main image: drop any existing main image before adding the new one.
+                deleteExistingMainImages(attraction.getId());
                 uploadAndLinkImage(attraction.getId(), mainImageData, mainImageMetadata.fileName(), mainImageMetadata.contentType(), MAIN, mainImageDescription.getValue());
             }
 
@@ -538,6 +531,34 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 log.error("Error processing image upload", e);
                 showNotification("Fehler beim Verarbeiten von: " + fileName, LUMO_ERROR);
             }
+        }
+
+        /**
+         * Removes every existing main image of the attraction (relation, image row and Cloudflare asset).
+         * Loops over all matches so any legacy duplicates are cleaned up too, leaving at most one main image
+         * once a replacement is linked.
+         */
+        private void deleteExistingMainImages(Long attractionId) {
+            dslContext.select(IMAGE.ID, IMAGE.CLOUDFLARE_ID)
+                      .from(IMAGE)
+                      .join(ATTRACTION_IMAGE).on(IMAGE.ID.eq(ATTRACTION_IMAGE.IMAGE_ID))
+                      .where(ATTRACTION_IMAGE.ATTRACTION_ID.eq(attractionId)
+                                                           .and(ATTRACTION_IMAGE.TYPE.eq(MAIN.toDb())))
+                      .fetch()
+                      .forEach(r -> deleteImage(attractionId, r.get(IMAGE.ID), r.get(IMAGE.CLOUDFLARE_ID)));
+        }
+
+        private void deleteImage(Long attractionId, Long imageId, String cloudflareId) {
+            dslContext.deleteFrom(ATTRACTION_IMAGE)
+                      .where(ATTRACTION_IMAGE.ATTRACTION_ID.eq(attractionId)
+                                                           .and(ATTRACTION_IMAGE.IMAGE_ID.eq(imageId)))
+                      .execute();
+
+            dslContext.deleteFrom(IMAGE)
+                      .where(IMAGE.ID.eq(imageId))
+                      .execute();
+
+            cloudflareService.delete(cloudflareId);
         }
 
         private void deleteAttraction() {
