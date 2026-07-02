@@ -12,6 +12,8 @@ import jakarta.annotation.security.PermitAll;
 import org.jooq.DSLContext;
 import org.jspecify.annotations.NonNull;
 
+import java.util.Set;
+
 @PageTitle("Gastronomie")
 @Route("food")
 @PermitAll
@@ -22,7 +24,7 @@ public class GastroView extends AbstractAttractionView {
     }
 
     @Override
-    protected @NonNull AttractionType getAttractionType() {
-        return AttractionType.FOOD;
+    protected @NonNull Set<AttractionType> getAttractionTypes() {
+        return Set.of(AttractionType.FOOD);
     }
 }

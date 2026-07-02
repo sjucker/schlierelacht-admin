@@ -12,6 +12,7 @@ import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.util.CloudflareImage;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -45,6 +46,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -104,7 +106,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         });
 
         setSizeFull();
-        add(new H2("%s verwalten".formatted(getAttractionType().getDescription())));
+        add(new H2("%s verwalten".formatted(getViewLabel())));
 
         grid = createGrid();
         add(grid, createToolbar());
@@ -112,13 +114,41 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         refreshGrid();
     }
 
-    protected abstract @NonNull AttractionType getAttractionType();
+    /**
+     * The attraction type(s) this view manages. Single-type views (e.g. artists, food) return one type; a multi-type
+     * view offers a type selector in the dialog and a type column in the grid.
+     */
+    protected abstract @NonNull Set<AttractionType> getAttractionTypes();
+
+    /**
+     * Label used in the H2 heading, toolbar button and dialog header. Defaults to the single managed type's description
+     * (preserving the existing single-type wording); multi-type views must override it.
+     */
+    protected @NonNull String getViewLabel() {
+        var types = getAttractionTypes();
+        if (types.size() == 1) {
+            return types.iterator().next().getDescription();
+        }
+        throw new IllegalStateException("Views managing multiple attraction types must override getViewLabel()");
+    }
+
+    /**
+     * Whether the type is picked per attraction (type ComboBox in the dialog, type column in the grid). Defaults to
+     * true when more than one type is managed.
+     */
+    protected boolean isTypeSelectable() {
+        return getAttractionTypes().size() > 1;
+    }
 
     private Grid<Attraction> createGrid() {
         var g = new Grid<Attraction>();
         g.addComponentColumn(a -> new Button(EDIT.create(), _ -> dialog.open(a)))
          .setWidth("80px").setTextAlign(CENTER).setFlexGrow(0);
         g.addColumn(Attraction::getName).setHeader("Name").setSortable(true);
+        if (isTypeSelectable()) {
+            g.addColumn(a -> AttractionType.fromDb(a.getType()).map(AttractionType::getDescription).orElse(""))
+             .setHeader("Typ").setSortable(true);
+        }
         g.addItemDoubleClickListener(event -> {
             if (event.getItem() != null) {
                 dialog.open(event.getItem());
@@ -128,19 +158,24 @@ public abstract class AbstractAttractionView extends VerticalLayout {
     }
 
     private HorizontalLayout createToolbar() {
-        var addButton = new Button("%s hinzufügen".formatted(getAttractionType().getDescription()),
+        var addButton = new Button("%s hinzufügen".formatted(getViewLabel()),
                                    _ -> dialog.open(newAttraction()));
         return new HorizontalLayout(addButton);
     }
 
     private Attraction newAttraction() {
         var attraction = new Attraction();
-        attraction.setType(getAttractionType().toDb());
+        if (!isTypeSelectable()) {
+            attraction.setType(getAttractionTypes().iterator().next().toDb());
+        }
         return attraction;
     }
 
     private void refreshGrid() {
-        var attractions = attractionDao.fetchByType(getAttractionType().toDb()).stream()
+        var types = getAttractionTypes().stream()
+                                        .map(AttractionType::toDb)
+                                        .toArray(ch.schlierelacht.admin.jooq.enums.AttractionType[]::new);
+        var attractions = attractionDao.fetchByType(types).stream()
                                        .sorted(Comparator.comparing(Attraction::getExternalId,
                                                                     nullsLast(naturalOrder())))
                                        .toList();
@@ -155,6 +190,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
 
     private class AttractionDialog extends Dialog {
         private final Binder<Attraction> binder = new Binder<>(Attraction.class);
+        private final ComboBox<AttractionType> typeSelect = isTypeSelectable() ? new ComboBox<>("Typ") : null;
         private final MultiSelectComboBox<Tag> tags = new MultiSelectComboBox<>("Tags");
         private final VerticalLayout imageInfoLayout = new VerticalLayout();
         private final TextField mainImageDescription = new TextField("Beschreibung Hauptbild");
@@ -174,10 +210,20 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             setModality(STRICT);
             setCloseOnOutsideClick(false);
             setCloseOnEsc(false);
-            setHeaderTitle("%s bearbeiten".formatted(getAttractionType().getDescription()));
+            setHeaderTitle("%s bearbeiten".formatted(getViewLabel()));
             setWidth("800px");
 
             var form = new FormLayout();
+
+            if (typeSelect != null) {
+                typeSelect.setItems(getAttractionTypes());
+                typeSelect.setItemLabelGenerator(AttractionType::getDescription);
+                typeSelect.setRequired(true);
+                typeSelect.setWidthFull();
+                // Tags are scoped to the attraction type, so reload them whenever the type changes.
+                typeSelect.addValueChangeListener(event -> reloadTags(event.getValue()));
+            }
+
             var name = new TextField("Name");
             name.setMaxLength(255);
 
@@ -200,10 +246,17 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             var youtube = new TextField("Youtube");
             var externalId = new TextField("External ID (z.B. 'dj-mario')");
 
-            tags.setItems(tagDao.fetchByType(getAttractionType().toDb()));
+            if (typeSelect == null) {
+                // Single-type view: tags never change, load them once.
+                reloadTags(getAttractionTypes().iterator().next());
+            }
             tags.setItemLabelGenerator(Tag::getName);
             tags.setWidthFull();
 
+            if (typeSelect != null) {
+                form.add(typeSelect);
+                form.setColspan(typeSelect, 2);
+            }
             form.add(name, externalId, website, instagram, facebook, youtube, tags, description, previewLayout);
             form.setColspan(description, 2);
             form.setColspan(tags, 2);
@@ -211,6 +264,15 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
                                     new FormLayout.ResponsiveStep("500px", 2));
 
+            if (typeSelect != null) {
+                binder.forField(typeSelect).asRequired()
+                      .bind(a -> AttractionType.fromDb(a.getType()).orElse(null),
+                            (a, t) -> {
+                                if (t != null) {
+                                    a.setType(t.toDb());
+                                }
+                            });
+            }
             binder.forField(name).asRequired().bind(Attraction::getName, Attraction::setName);
             binder.forField(description).bind(Attraction::getDescription, Attraction::setDescription);
             binder.forField(website).bind(Attraction::getWebsite, Attraction::setWebsite);
@@ -310,6 +372,10 @@ public abstract class AbstractAttractionView extends VerticalLayout {
 
             var cancel = new Button("Abbrechen", _ -> close());
             getFooter().add(delete, cancel, save);
+        }
+
+        private void reloadTags(AttractionType type) {
+            tags.setItems(type == null ? List.of() : tagDao.fetchByType(type.toDb()));
         }
 
         private void updatePreview(String md) {

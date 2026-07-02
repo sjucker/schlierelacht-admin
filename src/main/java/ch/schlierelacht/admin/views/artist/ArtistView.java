@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jspecify.annotations.NonNull;
 
+import java.util.Set;
+
 @Slf4j
 @PageTitle("Künstler")
 @Route(value = "artists", layout = MainLayout.class)
@@ -26,7 +28,7 @@ public class ArtistView extends AbstractAttractionView {
     }
 
     @Override
-    protected @NonNull AttractionType getAttractionType() {
-        return AttractionType.ARTIST;
+    protected @NonNull Set<AttractionType> getAttractionTypes() {
+        return Set.of(AttractionType.ARTIST);
     }
 }

@@ -1,6 +1,7 @@
 package ch.schlierelacht.admin.views;
 
 import ch.schlierelacht.admin.views.artist.ArtistView;
+import ch.schlierelacht.admin.views.attraction.AttractionView;
 import ch.schlierelacht.admin.views.downloads.DownloadsView;
 import ch.schlierelacht.admin.views.gastro.GastroView;
 import ch.schlierelacht.admin.views.location.LocationView;
@@ -46,6 +47,7 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import static ch.schlierelacht.admin.util.DateUtil.formatInstant;
+import static org.vaadin.lineawesome.LineAwesomeIcon.ADDRESS_BOOK_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.CALENDAR_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.DOWNLOAD_SOLID;
@@ -54,6 +56,7 @@ import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.NEWSPAPER_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.PIZZA_SLICE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.TAGS_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.THEATER_MASKS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.USERS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.USER_SOLID;
 
@@ -144,10 +147,11 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Standorte", MAP_MARKER_SOLID.create(), LocationView.class),
                 new MenuItemInfo("Gastronomie", PIZZA_SLICE_SOLID.create(), GastroView.class),
                 new MenuItemInfo("Künstler", USER_SOLID.create(), ArtistView.class),
+                new MenuItemInfo("Attraktionen", THEATER_MASKS_SOLID.create(), AttractionView.class),
                 new MenuItemInfo("Programm", CALENDAR_SOLID.create(), ProgrammView.class),
                 new MenuItemInfo("News", NEWSPAPER_SOLID.create(), NewsView.class),
                 new MenuItemInfo("Downloads", DOWNLOAD_SOLID.create(), DownloadsView.class),
-                new MenuItemInfo("Jahrgangstreffen", USERS_SOLID.create(), MeetupView.class),
+                new MenuItemInfo("Jahrgangstreffen", ADDRESS_BOOK_SOLID.create(), MeetupView.class),
                 new MenuItemInfo("OK Komitee", USERS_SOLID.create(), OkView.class),
                 new MenuItemInfo("Sponsoring", HANDSHAKE_SOLID.create(), SponsoringView.class),
                 new MenuItemInfo("Tags", TAGS_SOLID.create(), TagView.class),

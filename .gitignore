@@ -1,5 +1,6 @@
 /target/
 .idea/
+!.idea/codeStyles
 .vscode/
 .settings
 .project
