@@ -10,7 +10,6 @@ import ch.schlierelacht.admin.dto.LocationDTO;
 import ch.schlierelacht.admin.dto.LocationType;
 import ch.schlierelacht.admin.dto.ProgrammEntryDTO;
 import ch.schlierelacht.admin.dto.ProgrammPointDTO;
-import ch.schlierelacht.admin.dto.TagDTO;
 import ch.schlierelacht.admin.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,17 +25,13 @@ import java.util.Set;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_FILE;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
-import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_TAG;
 import static ch.schlierelacht.admin.jooq.Tables.IMAGE;
 import static ch.schlierelacht.admin.jooq.Tables.LOCATION;
 import static ch.schlierelacht.admin.jooq.Tables.PROGRAMM;
-import static ch.schlierelacht.admin.jooq.Tables.TAG;
 import static ch.schlierelacht.admin.util.MapUtil.getGoogleMapsCoordinates;
-import static org.jooq.impl.DSL.exists;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.noCondition;
 import static org.jooq.impl.DSL.select;
-import static org.jooq.impl.DSL.selectOne;
 
 @Slf4j
 @Service
@@ -45,18 +40,13 @@ public class AttractionService {
     private final DSLContext dslContext;
 
     /**
-     * Finds attractions, optionally narrowed by a set of {@link AttractionType}s and/or a tag.
-     * A {@code null}/empty type set means "all types"; a {@code null} tagId means "any tag".
+     * Finds attractions, optionally narrowed by a set of {@link AttractionType}s.
+     * A {@code null}/empty type set means "all types".
      */
-    public List<AttractionDTO> find(Set<AttractionType> types, Long tagId) {
+    public List<AttractionDTO> find(Set<AttractionType> types) {
         Condition condition = noCondition();
         if (types != null && !types.isEmpty()) {
             condition = condition.and(ATTRACTION.TYPE.in(types.stream().map(AttractionType::toDb).toList()));
-        }
-        if (tagId != null) {
-            condition = condition.and(exists(selectOne().from(ATTRACTION_TAG)
-                                                        .where(ATTRACTION_TAG.ATTRACTION_ID.eq(ATTRACTION.ID),
-                                                               ATTRACTION_TAG.TAG_ID.eq(tagId))));
         }
         return find(condition);
     }
@@ -146,11 +136,6 @@ public class AttractionService {
                                                   .from(ATTRACTION_IMAGE)
                                                   .join(IMAGE).on(ATTRACTION_IMAGE.IMAGE_ID.eq(IMAGE.ID))
                                                   .where(ATTRACTION_IMAGE.ATTRACTION_ID.eq(ATTRACTION.ID))),
-                                 multiset(select(TAG.ID,
-                                                 TAG.NAME)
-                                                  .from(ATTRACTION_TAG)
-                                                  .join(TAG).on(ATTRACTION_TAG.TAG_ID.eq(TAG.ID))
-                                                  .where(ATTRACTION_TAG.ATTRACTION_ID.eq(ATTRACTION.ID))),
                                  multiset(select(ATTRACTION_FILE.ID,
                                                  ATTRACTION_FILE.FILENAME,
                                                  ATTRACTION_FILE.FILETYPE,
@@ -176,10 +161,6 @@ public class AttractionService {
                                                           v.get(IMAGE.DESCRIPTION),
                                                           ImageType.fromDb(v.get(ATTRACTION_IMAGE.TYPE)).orElseThrow()))
                                    .toList(),
-                                 it.value12().stream()
-                                   .map(v -> new TagDTO(v.get(TAG.ID),
-                                                        v.get(TAG.NAME)))
-                                   .toList(),
                                  it.value10().stream()
                                    .map(v -> new ProgrammEntryDTO(
                                            new LocationDTO(v.get(LOCATION.EXTERNAL_ID),
@@ -200,7 +181,7 @@ public class AttractionService {
                                                                    now)
                                    ))
                                    .toList(),
-                                 it.value13().stream()
+                                 it.value12().stream()
                                    .map(v -> new AttractionFileDTO(v.get(ATTRACTION_FILE.ID),
                                                                    v.get(ATTRACTION_FILE.FILENAME),
                                                                    v.get(ATTRACTION_FILE.FILETYPE),

@@ -11,7 +11,6 @@ import ch.schlierelacht.admin.views.ok.OkView;
 import ch.schlierelacht.admin.views.programm.ProgrammView;
 import ch.schlierelacht.admin.views.settings.SettingsView;
 import ch.schlierelacht.admin.views.sponsoring.SponsoringView;
-import ch.schlierelacht.admin.views.tag.TagView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
@@ -55,7 +54,6 @@ import static org.vaadin.lineawesome.LineAwesomeIcon.HANDSHAKE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.NEWSPAPER_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.PIZZA_SLICE_SOLID;
-import static org.vaadin.lineawesome.LineAwesomeIcon.TAGS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.THEATER_MASKS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.USERS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.USER_SOLID;
@@ -154,7 +152,6 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Jahrgangstreffen", ADDRESS_BOOK_SOLID.create(), MeetupView.class),
                 new MenuItemInfo("OK Komitee", USERS_SOLID.create(), OkView.class),
                 new MenuItemInfo("Sponsoring", HANDSHAKE_SOLID.create(), SponsoringView.class),
-                new MenuItemInfo("Tags", TAGS_SOLID.create(), TagView.class),
                 new MenuItemInfo("Einstellungen", COG_SOLID.create(), SettingsView.class),
         };
     }

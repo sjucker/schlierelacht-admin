@@ -7,7 +7,6 @@ package ch.schlierelacht.admin.jooq;
 import ch.schlierelacht.admin.jooq.tables.Attraction;
 import ch.schlierelacht.admin.jooq.tables.AttractionFile;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
-import ch.schlierelacht.admin.jooq.tables.AttractionTag;
 import ch.schlierelacht.admin.jooq.tables.Download;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
@@ -18,7 +17,6 @@ import ch.schlierelacht.admin.jooq.tables.OkMember;
 import ch.schlierelacht.admin.jooq.tables.OkTeamMember;
 import ch.schlierelacht.admin.jooq.tables.Programm;
 import ch.schlierelacht.admin.jooq.tables.Sponsoring;
-import ch.schlierelacht.admin.jooq.tables.Tag;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,11 +54,6 @@ public class Public extends SchemaImpl {
      * The table <code>public.attraction_image</code>.
      */
     public final AttractionImage ATTRACTION_IMAGE = AttractionImage.ATTRACTION_IMAGE;
-
-    /**
-     * The table <code>public.attraction_tag</code>.
-     */
-    public final AttractionTag ATTRACTION_TAG = AttractionTag.ATTRACTION_TAG;
 
     /**
      * The table <code>public.download</code>.
@@ -113,11 +106,6 @@ public class Public extends SchemaImpl {
     public final Sponsoring SPONSORING = Sponsoring.SPONSORING;
 
     /**
-     * The table <code>public.tag</code>.
-     */
-    public final Tag TAG = Tag.TAG;
-
-    /**
      * No further instances allowed
      */
     private Public() {
@@ -136,7 +124,6 @@ public class Public extends SchemaImpl {
             Attraction.ATTRACTION,
             AttractionFile.ATTRACTION_FILE,
             AttractionImage.ATTRACTION_IMAGE,
-            AttractionTag.ATTRACTION_TAG,
             Download.DOWNLOAD,
             Image.IMAGE,
             Location.LOCATION,
@@ -146,8 +133,7 @@ public class Public extends SchemaImpl {
             OkMember.OK_MEMBER,
             OkTeamMember.OK_TEAM_MEMBER,
             Programm.PROGRAMM,
-            Sponsoring.SPONSORING,
-            Tag.TAG
+            Sponsoring.SPONSORING
         );
     }
 }

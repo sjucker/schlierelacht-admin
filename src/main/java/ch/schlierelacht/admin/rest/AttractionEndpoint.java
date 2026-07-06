@@ -29,11 +29,10 @@ public class AttractionEndpoint {
     private final AttractionFileService attractionFileService;
 
     @GetMapping
-    public ResponseEntity<List<AttractionDTO>> getAttractions(@RequestParam(required = false) Set<AttractionType> type,
-                                                              @RequestParam(required = false) Long tagId) {
-        log.info("GET /api/attraction?type={}&tagId={}", type, tagId);
+    public ResponseEntity<List<AttractionDTO>> getAttractions(@RequestParam(required = false) Set<AttractionType> type) {
+        log.info("GET /api/attraction?type={}", type);
 
-        return ResponseEntity.ok(attractionService.find(type, tagId));
+        return ResponseEntity.ok(attractionService.find(type));
     }
 
     @GetMapping("/{externalId}")

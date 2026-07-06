@@ -7,7 +7,6 @@ package ch.schlierelacht.admin.jooq;
 import ch.schlierelacht.admin.jooq.tables.Attraction;
 import ch.schlierelacht.admin.jooq.tables.AttractionFile;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
-import ch.schlierelacht.admin.jooq.tables.AttractionTag;
 import ch.schlierelacht.admin.jooq.tables.Download;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
@@ -18,11 +17,9 @@ import ch.schlierelacht.admin.jooq.tables.OkMember;
 import ch.schlierelacht.admin.jooq.tables.OkTeamMember;
 import ch.schlierelacht.admin.jooq.tables.Programm;
 import ch.schlierelacht.admin.jooq.tables.Sponsoring;
-import ch.schlierelacht.admin.jooq.tables.Tag;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionFileRecord;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionImageRecord;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionRecord;
-import ch.schlierelacht.admin.jooq.tables.records.AttractionTagRecord;
 import ch.schlierelacht.admin.jooq.tables.records.DownloadRecord;
 import ch.schlierelacht.admin.jooq.tables.records.ImageRecord;
 import ch.schlierelacht.admin.jooq.tables.records.LocationRecord;
@@ -33,7 +30,6 @@ import ch.schlierelacht.admin.jooq.tables.records.OkMemberRecord;
 import ch.schlierelacht.admin.jooq.tables.records.OkTeamMemberRecord;
 import ch.schlierelacht.admin.jooq.tables.records.ProgrammRecord;
 import ch.schlierelacht.admin.jooq.tables.records.SponsoringRecord;
-import ch.schlierelacht.admin.jooq.tables.records.TagRecord;
 
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
@@ -57,7 +53,6 @@ public class Keys {
     public static final UniqueKey<AttractionRecord> PK_ARTIST = Internal.createUniqueKey(Attraction.ATTRACTION, DSL.name("pk_artist"), new TableField[] { Attraction.ATTRACTION.ID }, true);
     public static final UniqueKey<AttractionRecord> UQ_ATTRACTION = Internal.createUniqueKey(Attraction.ATTRACTION, DSL.name("uq_attraction"), new TableField[] { Attraction.ATTRACTION.EXTERNAL_ID }, true);
     public static final UniqueKey<AttractionFileRecord> PK_ATTRACTION_FILE = Internal.createUniqueKey(AttractionFile.ATTRACTION_FILE, DSL.name("pk_attraction_file"), new TableField[] { AttractionFile.ATTRACTION_FILE.ID }, true);
-    public static final UniqueKey<AttractionTagRecord> PK_ATTRACTION_TAG = Internal.createUniqueKey(AttractionTag.ATTRACTION_TAG, DSL.name("pk_attraction_tag"), new TableField[] { AttractionTag.ATTRACTION_TAG.ATTRACTION_ID, AttractionTag.ATTRACTION_TAG.TAG_ID }, true);
     public static final UniqueKey<DownloadRecord> PK_DOWNLOAD = Internal.createUniqueKey(Download.DOWNLOAD, DSL.name("pk_download"), new TableField[] { Download.DOWNLOAD.ID }, true);
     public static final UniqueKey<ImageRecord> PK_IMAGE = Internal.createUniqueKey(Image.IMAGE, DSL.name("pk_image"), new TableField[] { Image.IMAGE.ID }, true);
     public static final UniqueKey<ImageRecord> UQ_IMAGE = Internal.createUniqueKey(Image.IMAGE, DSL.name("uq_image"), new TableField[] { Image.IMAGE.CLOUDFLARE_ID }, true);
@@ -70,7 +65,6 @@ public class Keys {
     public static final UniqueKey<OkTeamMemberRecord> PK_OK_TEAM_MEMBER = Internal.createUniqueKey(OkTeamMember.OK_TEAM_MEMBER, DSL.name("pk_ok_team_member"), new TableField[] { OkTeamMember.OK_TEAM_MEMBER.ID }, true);
     public static final UniqueKey<ProgrammRecord> PK_PROGRAMM = Internal.createUniqueKey(Programm.PROGRAMM, DSL.name("pk_programm"), new TableField[] { Programm.PROGRAMM.ID }, true);
     public static final UniqueKey<SponsoringRecord> PK_SPONSORING = Internal.createUniqueKey(Sponsoring.SPONSORING, DSL.name("pk_sponsoring"), new TableField[] { Sponsoring.SPONSORING.ID }, true);
-    public static final UniqueKey<TagRecord> PK_TAG = Internal.createUniqueKey(Tag.TAG, DSL.name("pk_tag"), new TableField[] { Tag.TAG.ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -79,8 +73,6 @@ public class Keys {
     public static final ForeignKey<AttractionFileRecord, AttractionRecord> ATTRACTION_FILE__FK_ATTRACTION_FILE_ATTRACTION = Internal.createForeignKey(AttractionFile.ATTRACTION_FILE, DSL.name("fk_attraction_file_attraction"), new TableField[] { AttractionFile.ATTRACTION_FILE.ATTRACTION_ID }, Keys.PK_ARTIST, new TableField[] { Attraction.ATTRACTION.ID }, true, ForeignKeyRule.CASCADE, ForeignKeyRule.NO_ACTION);
     public static final ForeignKey<AttractionImageRecord, AttractionRecord> ATTRACTION_IMAGE__FK_ATTRACTION_IMAGE_ATTRACTION = Internal.createForeignKey(AttractionImage.ATTRACTION_IMAGE, DSL.name("fk_attraction_image_attraction"), new TableField[] { AttractionImage.ATTRACTION_IMAGE.ATTRACTION_ID }, Keys.PK_ARTIST, new TableField[] { Attraction.ATTRACTION.ID }, true, ForeignKeyRule.CASCADE, ForeignKeyRule.NO_ACTION);
     public static final ForeignKey<AttractionImageRecord, ImageRecord> ATTRACTION_IMAGE__FK_ATTRACTION_IMAGE_IMAGE = Internal.createForeignKey(AttractionImage.ATTRACTION_IMAGE, DSL.name("fk_attraction_image_image"), new TableField[] { AttractionImage.ATTRACTION_IMAGE.IMAGE_ID }, Keys.PK_IMAGE, new TableField[] { Image.IMAGE.ID }, true, ForeignKeyRule.CASCADE, ForeignKeyRule.NO_ACTION);
-    public static final ForeignKey<AttractionTagRecord, AttractionRecord> ATTRACTION_TAG__FK_ATTRACTION_TAG_ATTRACTION = Internal.createForeignKey(AttractionTag.ATTRACTION_TAG, DSL.name("fk_attraction_tag_attraction"), new TableField[] { AttractionTag.ATTRACTION_TAG.ATTRACTION_ID }, Keys.PK_ARTIST, new TableField[] { Attraction.ATTRACTION.ID }, true, ForeignKeyRule.CASCADE, ForeignKeyRule.NO_ACTION);
-    public static final ForeignKey<AttractionTagRecord, TagRecord> ATTRACTION_TAG__FK_ATTRACTION_TAG_TAG = Internal.createForeignKey(AttractionTag.ATTRACTION_TAG, DSL.name("fk_attraction_tag_tag"), new TableField[] { AttractionTag.ATTRACTION_TAG.TAG_ID }, Keys.PK_TAG, new TableField[] { Tag.TAG.ID }, true, ForeignKeyRule.CASCADE, ForeignKeyRule.NO_ACTION);
     public static final ForeignKey<ProgrammRecord, AttractionRecord> PROGRAMM__FK_PROGRAMM_ATTRACTION = Internal.createForeignKey(Programm.PROGRAMM, DSL.name("fk_programm_attraction"), new TableField[] { Programm.PROGRAMM.ATTRACTION_ID }, Keys.PK_ARTIST, new TableField[] { Attraction.ATTRACTION.ID }, true, ForeignKeyRule.CASCADE, ForeignKeyRule.NO_ACTION);
     public static final ForeignKey<ProgrammRecord, LocationRecord> PROGRAMM__FK_PROGRAMM_LOCATION = Internal.createForeignKey(Programm.PROGRAMM, DSL.name("fk_programm_location"), new TableField[] { Programm.PROGRAMM.LOCATION_ID }, Keys.PK_LOCATION, new TableField[] { Location.LOCATION.ID }, true, ForeignKeyRule.SET_NULL, ForeignKeyRule.NO_ACTION);
 }

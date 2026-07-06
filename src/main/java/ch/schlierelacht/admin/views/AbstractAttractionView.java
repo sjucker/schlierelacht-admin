@@ -3,17 +3,14 @@ package ch.schlierelacht.admin.views;
 import ch.schlierelacht.admin.dto.AttractionType;
 import ch.schlierelacht.admin.dto.ImageType;
 import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
-import ch.schlierelacht.admin.jooq.tables.daos.TagDao;
 import ch.schlierelacht.admin.jooq.tables.pojos.Attraction;
 import ch.schlierelacht.admin.jooq.tables.pojos.Image;
-import ch.schlierelacht.admin.jooq.tables.pojos.Tag;
 import ch.schlierelacht.admin.service.AttractionFileService;
 import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.util.CloudflareImage;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -45,8 +42,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -56,9 +51,7 @@ import static ch.schlierelacht.admin.dto.ImageType.ADDITIONAL;
 import static ch.schlierelacht.admin.dto.ImageType.MAIN;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
-import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_TAG;
 import static ch.schlierelacht.admin.jooq.tables.Image.IMAGE;
-import static ch.schlierelacht.admin.jooq.tables.Tag.TAG;
 import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
 import static com.vaadin.flow.component.ModalityMode.STRICT;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
@@ -86,17 +79,15 @@ public abstract class AbstractAttractionView extends VerticalLayout {
     );
 
     private final AttractionDao attractionDao;
-    private final TagDao tagDao;
     private final CloudflareService cloudflareService;
     private final DSLContext dslContext;
     private final AttractionFileService attractionFileService;
     private final Grid<Attraction> grid;
     private final AttractionDialog dialog;
 
-    public AbstractAttractionView(AttractionDao attractionDao, TagDao tagDao, CloudflareService cloudflareService,
+    public AbstractAttractionView(AttractionDao attractionDao, CloudflareService cloudflareService,
                                   DSLContext dslContext, AttractionFileService attractionFileService) {
         this.attractionDao = attractionDao;
-        this.tagDao = tagDao;
         this.cloudflareService = cloudflareService;
         this.dslContext = dslContext;
         this.attractionFileService = attractionFileService;
@@ -204,7 +195,6 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         private final Binder<Attraction> binder = new Binder<>(Attraction.class);
         private final ComboBox<AttractionType> typeSelect = isTypeSelectable() ? new ComboBox<>("Typ") : null;
         private final TextField operator = new TextField("Betreiber");
-        private final MultiSelectComboBox<Tag> tags = new MultiSelectComboBox<>("Tags");
         private final VerticalLayout imageInfoLayout = new VerticalLayout();
         private final TextField mainImageDescription = new TextField("Beschreibung Hauptbild");
         private final VerticalLayout additionalImagesLayout = new VerticalLayout();
@@ -233,8 +223,6 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 typeSelect.setItemLabelGenerator(AttractionType::getDescription);
                 typeSelect.setRequired(true);
                 typeSelect.setWidthFull();
-                // Tags are scoped to the attraction type, so reload them whenever the type changes.
-                typeSelect.addValueChangeListener(event -> reloadTags(event.getValue()));
                 // The operator field only applies to FOOD, so toggle it as the selected type changes.
                 if (isOperatorApplicable()) {
                     typeSelect.addValueChangeListener(event -> operator.setVisible(event.getValue() == FOOD));
@@ -265,13 +253,6 @@ public abstract class AbstractAttractionView extends VerticalLayout {
 
             operator.setMaxLength(255);
 
-            if (typeSelect == null) {
-                // Single-type view: tags never change, load them once.
-                reloadTags(getAttractionTypes().iterator().next());
-            }
-            tags.setItemLabelGenerator(Tag::getName);
-            tags.setWidthFull();
-
             if (typeSelect != null) {
                 form.add(typeSelect);
                 form.setColspan(typeSelect, 2);
@@ -280,9 +261,8 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             if (isOperatorApplicable()) {
                 form.add(operator);
             }
-            form.add(tags, description, previewLayout);
+            form.add(description, previewLayout);
             form.setColspan(description, 2);
-            form.setColspan(tags, 2);
             form.setColspan(previewLayout, 2);
             form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
                                     new FormLayout.ResponsiveStep("500px", 2));
@@ -400,10 +380,6 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             getFooter().add(delete, cancel, save);
         }
 
-        private void reloadTags(AttractionType type) {
-            tags.setItems(type == null ? List.of() : tagDao.fetchByType(type.toDb()));
-        }
-
         private void updatePreview(String md) {
             if (isBlank(md)) {
                 preview.getElement().setProperty("innerHTML", "");
@@ -435,14 +411,6 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             fileData = null;
 
             if (attraction.getId() != null) {
-                // Show existing tags
-                var existingTags = dslContext.select(TAG.asterisk())
-                                             .from(TAG)
-                                             .join(ATTRACTION_TAG).on(TAG.ID.eq(ATTRACTION_TAG.TAG_ID))
-                                             .where(ATTRACTION_TAG.ATTRACTION_ID.eq(attraction.getId()))
-                                             .fetchInto(Tag.class);
-                tags.setValue(new HashSet<>(existingTags));
-
                 // Show existing images
                 var images = dslContext.select(IMAGE.ID, IMAGE.CLOUDFLARE_ID, ATTRACTION_IMAGE.TYPE, IMAGE.DESCRIPTION)
                                        .from(IMAGE)
@@ -568,18 +536,6 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 var uploadedBy = SecurityContextHolder.getContext().getAuthentication().getName();
                 attractionFileService.create(attraction.getId(), fileMetadata.fileName(), fileMetadata.contentType(),
                                              fileData.length, fileData, fileDescription.getValue(), uploadedBy);
-            }
-
-            // Save tags
-            dslContext.deleteFrom(ATTRACTION_TAG)
-                      .where(ATTRACTION_TAG.ATTRACTION_ID.eq(attraction.getId()))
-                      .execute();
-
-            for (Tag selectedTag : tags.getValue()) {
-                dslContext.insertInto(ATTRACTION_TAG)
-                          .set(ATTRACTION_TAG.ATTRACTION_ID, attraction.getId())
-                          .set(ATTRACTION_TAG.TAG_ID, selectedTag.getId())
-                          .execute();
             }
 
             mainImageData = null;

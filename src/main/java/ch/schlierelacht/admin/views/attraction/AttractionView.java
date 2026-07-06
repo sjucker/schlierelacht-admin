@@ -2,7 +2,6 @@ package ch.schlierelacht.admin.views.attraction;
 
 import ch.schlierelacht.admin.dto.AttractionType;
 import ch.schlierelacht.admin.jooq.tables.daos.AttractionDao;
-import ch.schlierelacht.admin.jooq.tables.daos.TagDao;
 import ch.schlierelacht.admin.service.AttractionFileService;
 import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.AbstractAttractionView;
@@ -33,9 +32,9 @@ public class AttractionView extends AbstractAttractionView {
 
     private static final Set<AttractionType> EXCLUDED = Set.of(AttractionType.ARTIST, AttractionType.FOOD);
 
-    public AttractionView(AttractionDao attractionDao, TagDao tagDao, CloudflareService cloudflareService,
+    public AttractionView(AttractionDao attractionDao, CloudflareService cloudflareService,
                           DSLContext dslContext, AttractionFileService attractionFileService) {
-        super(attractionDao, tagDao, cloudflareService, dslContext, attractionFileService);
+        super(attractionDao, cloudflareService, dslContext, attractionFileService);
     }
 
     @Override
