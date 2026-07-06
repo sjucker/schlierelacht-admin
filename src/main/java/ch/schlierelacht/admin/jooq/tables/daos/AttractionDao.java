@@ -206,4 +206,19 @@ public class AttractionDao extends AbstractSpringDAOImpl<AttractionRecord, ch.sc
     public Optional<ch.schlierelacht.admin.jooq.tables.pojos.Attraction> fetchOptionalByExternalId(String value) {
         return fetchOptional(Attraction.ATTRACTION.EXTERNAL_ID, value);
     }
+
+    /**
+     * Fetch records that have <code>operator BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Attraction> fetchRangeOfOperator(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Attraction.ATTRACTION.OPERATOR, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>operator IN (values)</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Attraction> fetchByOperator(String... values) {
+        return fetch(Attraction.ATTRACTION.OPERATOR, values);
+    }
 }

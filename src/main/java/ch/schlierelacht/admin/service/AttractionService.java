@@ -123,6 +123,7 @@ public class AttractionService {
                                  ATTRACTION.INSTAGRAM,
                                  ATTRACTION.FACEBOOK,
                                  ATTRACTION.YOUTUBE,
+                                 ATTRACTION.OPERATOR,
                                  multiset(select(PROGRAMM.FROM_DATE,
                                                  PROGRAMM.FROM_TIME,
                                                  PROGRAMM.TO_DATE,
@@ -169,16 +170,17 @@ public class AttractionService {
                                  it.get(ATTRACTION.INSTAGRAM),
                                  it.get(ATTRACTION.FACEBOOK),
                                  it.get(ATTRACTION.YOUTUBE),
-                                 it.value10().stream()
+                                 it.get(ATTRACTION.OPERATOR),
+                                 it.value11().stream()
                                    .map(v -> new ImageDTO(v.get(IMAGE.CLOUDFLARE_ID),
                                                           v.get(IMAGE.DESCRIPTION),
                                                           ImageType.fromDb(v.get(ATTRACTION_IMAGE.TYPE)).orElseThrow()))
                                    .toList(),
-                                 it.value11().stream()
+                                 it.value12().stream()
                                    .map(v -> new TagDTO(v.get(TAG.ID),
                                                         v.get(TAG.NAME)))
                                    .toList(),
-                                 it.value9().stream()
+                                 it.value10().stream()
                                    .map(v -> new ProgrammEntryDTO(
                                            new LocationDTO(v.get(LOCATION.EXTERNAL_ID),
                                                            LocationType.fromDb(v.get(LOCATION.TYPE)).orElseThrow(),
@@ -198,7 +200,7 @@ public class AttractionService {
                                                                    now)
                                    ))
                                    .toList(),
-                                 it.value12().stream()
+                                 it.value13().stream()
                                    .map(v -> new AttractionFileDTO(v.get(ATTRACTION_FILE.ID),
                                                                    v.get(ATTRACTION_FILE.FILENAME),
                                                                    v.get(ATTRACTION_FILE.FILETYPE),

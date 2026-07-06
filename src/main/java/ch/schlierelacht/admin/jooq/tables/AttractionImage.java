@@ -4,6 +4,7 @@
 package ch.schlierelacht.admin.jooq.tables;
 
 
+import ch.schlierelacht.admin.jooq.Indexes;
 import ch.schlierelacht.admin.jooq.Keys;
 import ch.schlierelacht.admin.jooq.Public;
 import ch.schlierelacht.admin.jooq.enums.ImageType;
@@ -18,6 +19,7 @@ import java.util.List;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Index;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
@@ -138,6 +140,11 @@ public class AttractionImage extends TableImpl<AttractionImageRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.UQ_ATTRACTION_ONE_MAIN_IMAGE);
     }
 
     @Override

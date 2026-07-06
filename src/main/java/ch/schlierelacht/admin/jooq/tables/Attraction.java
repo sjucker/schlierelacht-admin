@@ -107,6 +107,11 @@ public class Attraction extends TableImpl<AttractionRecord> {
      */
     public final TableField<AttractionRecord, String> EXTERNAL_ID = createField(DSL.name("external_id"), SQLDataType.VARCHAR(255).nullable(false).defaultValue(DSL.field(DSL.raw("''::character varying"), SQLDataType.VARCHAR)), this, "");
 
+    /**
+     * The column <code>public.attraction.operator</code>.
+     */
+    public final TableField<AttractionRecord, String> OPERATOR = createField(DSL.name("operator"), SQLDataType.VARCHAR(255), this, "");
+
     private Attraction(Name alias, Table<AttractionRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static ch.schlierelacht.admin.dto.AttractionType.FOOD;
 import static ch.schlierelacht.admin.dto.ImageType.ADDITIONAL;
 import static ch.schlierelacht.admin.dto.ImageType.MAIN;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
@@ -140,6 +141,14 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         return getAttractionTypes().size() > 1;
     }
 
+    /**
+     * Whether the operator ("Betreiber") field/column applies. It is only meaningful for {@link AttractionType#FOOD},
+     * so it shows exactly for views that manage that type (the dialog additionally hides it unless FOOD is selected).
+     */
+    protected boolean isOperatorApplicable() {
+        return getAttractionTypes().contains(FOOD);
+    }
+
     private Grid<Attraction> createGrid() {
         var g = new Grid<Attraction>();
         g.addComponentColumn(a -> new Button(EDIT.create(), _ -> dialog.open(a)))
@@ -148,6 +157,9 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         if (isTypeSelectable()) {
             g.addColumn(a -> AttractionType.fromDb(a.getType()).map(AttractionType::getDescription).orElse(""))
              .setHeader("Typ").setSortable(true);
+        }
+        if (isOperatorApplicable()) {
+            g.addColumn(Attraction::getOperator).setHeader("Betreiber").setSortable(true);
         }
         g.addItemDoubleClickListener(event -> {
             if (event.getItem() != null) {
@@ -191,6 +203,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
     private class AttractionDialog extends Dialog {
         private final Binder<Attraction> binder = new Binder<>(Attraction.class);
         private final ComboBox<AttractionType> typeSelect = isTypeSelectable() ? new ComboBox<>("Typ") : null;
+        private final TextField operator = new TextField("Betreiber");
         private final MultiSelectComboBox<Tag> tags = new MultiSelectComboBox<>("Tags");
         private final VerticalLayout imageInfoLayout = new VerticalLayout();
         private final TextField mainImageDescription = new TextField("Beschreibung Hauptbild");
@@ -222,6 +235,10 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 typeSelect.setWidthFull();
                 // Tags are scoped to the attraction type, so reload them whenever the type changes.
                 typeSelect.addValueChangeListener(event -> reloadTags(event.getValue()));
+                // The operator field only applies to FOOD, so toggle it as the selected type changes.
+                if (isOperatorApplicable()) {
+                    typeSelect.addValueChangeListener(event -> operator.setVisible(event.getValue() == FOOD));
+                }
             }
 
             var name = new TextField("Name");
@@ -246,6 +263,8 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             var youtube = new TextField("Youtube");
             var externalId = new TextField("External ID (z.B. 'dj-mario')");
 
+            operator.setMaxLength(255);
+
             if (typeSelect == null) {
                 // Single-type view: tags never change, load them once.
                 reloadTags(getAttractionTypes().iterator().next());
@@ -257,7 +276,11 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 form.add(typeSelect);
                 form.setColspan(typeSelect, 2);
             }
-            form.add(name, externalId, website, instagram, facebook, youtube, tags, description, previewLayout);
+            form.add(name, externalId, website, instagram, facebook, youtube);
+            if (isOperatorApplicable()) {
+                form.add(operator);
+            }
+            form.add(tags, description, previewLayout);
             form.setColspan(description, 2);
             form.setColspan(tags, 2);
             form.setColspan(previewLayout, 2);
@@ -280,6 +303,9 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             binder.forField(facebook).bind(Attraction::getFacebook, Attraction::setFacebook);
             binder.forField(youtube).bind(Attraction::getYoutube, Attraction::setYoutube);
             binder.forField(externalId).bind(Attraction::getExternalId, Attraction::setExternalId);
+            if (isOperatorApplicable()) {
+                binder.forField(operator).bind(Attraction::getOperator, Attraction::setOperator);
+            }
 
             mainImageDescription.setRequired(true);
             mainImageDescription.setWidthFull();
@@ -391,6 +417,10 @@ public abstract class AbstractAttractionView extends VerticalLayout {
 
         public void open(Attraction attraction) {
             binder.setBean(attraction);
+            // Operator only applies to FOOD; show it accordingly (single-type FOOD views always, others when FOOD is set).
+            if (isOperatorApplicable()) {
+                operator.setVisible(AttractionType.fromDb(attraction.getType()).orElse(null) == FOOD);
+            }
             updatePreview(attraction.getDescription());
             imageInfoLayout.removeAll();
             additionalImagesLayout.removeAll();
