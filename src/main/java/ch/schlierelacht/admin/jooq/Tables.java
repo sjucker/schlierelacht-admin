@@ -8,6 +8,8 @@ import ch.schlierelacht.admin.jooq.tables.Attraction;
 import ch.schlierelacht.admin.jooq.tables.AttractionFile;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
 import ch.schlierelacht.admin.jooq.tables.Download;
+import ch.schlierelacht.admin.jooq.tables.GalleryCategory;
+import ch.schlierelacht.admin.jooq.tables.GalleryImage;
 import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
@@ -44,6 +46,16 @@ public class Tables {
      * The table <code>public.download</code>.
      */
     public static final Download DOWNLOAD = Download.DOWNLOAD;
+
+    /**
+     * The table <code>public.gallery_category</code>.
+     */
+    public static final GalleryCategory GALLERY_CATEGORY = GalleryCategory.GALLERY_CATEGORY;
+
+    /**
+     * The table <code>public.gallery_image</code>.
+     */
+    public static final GalleryImage GALLERY_IMAGE = GalleryImage.GALLERY_IMAGE;
 
     /**
      * The table <code>public.image</code>.

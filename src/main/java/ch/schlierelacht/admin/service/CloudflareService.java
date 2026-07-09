@@ -24,6 +24,13 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 @Service
 public class CloudflareService {
 
+    /**
+     * Cloudflare Images rejects uploads larger than 10 MB with HTTP 413.
+     *
+     * @see <a href="https://developers.cloudflare.com/images/get-started/limits/#hosted-images">Cloudflare Images: Limits and formats</a>
+     */
+    public static final long MAX_IMAGE_SIZE_BYTES = 10L * 1024 * 1024;
+
     private final Application.Properties applicationProperties;
     private final WebClient webClient;
 

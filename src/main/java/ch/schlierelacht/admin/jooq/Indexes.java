@@ -5,6 +5,7 @@ package ch.schlierelacht.admin.jooq;
 
 
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
+import ch.schlierelacht.admin.jooq.tables.GalleryImage;
 
 import org.jooq.Index;
 import org.jooq.OrderField;
@@ -22,5 +23,6 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
+    public static final Index IDX_GALLERY_IMAGE_CATEGORY = Internal.createIndex(DSL.name("idx_gallery_image_category"), GalleryImage.GALLERY_IMAGE, new OrderField[] { GalleryImage.GALLERY_IMAGE.CATEGORY }, false);
     public static final Index UQ_ATTRACTION_ONE_MAIN_IMAGE = Internal.createIndex(DSL.name("uq_attraction_one_main_image"), AttractionImage.ATTRACTION_IMAGE, new OrderField[] { AttractionImage.ATTRACTION_IMAGE.ATTRACTION_ID }, true);
 }

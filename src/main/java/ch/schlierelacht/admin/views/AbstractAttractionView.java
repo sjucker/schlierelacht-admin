@@ -52,6 +52,7 @@ import static ch.schlierelacht.admin.dto.ImageType.MAIN;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION;
 import static ch.schlierelacht.admin.jooq.Tables.ATTRACTION_IMAGE;
 import static ch.schlierelacht.admin.jooq.tables.Image.IMAGE;
+import static ch.schlierelacht.admin.service.CloudflareService.MAX_IMAGE_SIZE_BYTES;
 import static ch.schlierelacht.admin.views.util.NotificationUtil.showNotification;
 import static com.vaadin.flow.component.ModalityMode.STRICT;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
@@ -306,6 +307,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             });
             mainUpload.setAcceptedMimeTypes("image/*");
             mainUpload.setMaxFiles(1);
+            mainUpload.setMaxFileSize((int) MAX_IMAGE_SIZE_BYTES);
 
             var additionalUploadHandler = UploadHandler.inMemory((metadata, data) -> {
                 additionalImagesMetadata.put(metadata.fileName(), metadata);
@@ -323,6 +325,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
 
             var additionalUpload = new Upload(additionalUploadHandler);
             additionalUpload.setAcceptedMimeTypes("image/*");
+            additionalUpload.setMaxFileSize((int) MAX_IMAGE_SIZE_BYTES);
             additionalUpload.addFileRemovedListener(event -> {
                 additionalImagesMetadata.remove(event.getFileName());
                 additionalImagesData.remove(event.getFileName());
@@ -346,14 +349,16 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 fileData = null;
             });
 
-            var mainImageHint = new Span("Optional (max. 1). Wird ein neues Bild hochgeladen wird das bestehende automatisch ersetzt.");
+            var mainImageHint = new Span("Optional (max. 1, max. %d MB). Wird ein neues Bild hochgeladen wird das bestehende automatisch ersetzt."
+                                                 .formatted(MAX_IMAGE_SIZE_BYTES / (1024 * 1024)));
             mainImageHint.addClassName(LumoUtility.FontSize.SMALL);
 
             add(form,
                 new Hr(),
                 new H3("Hauptbild"), mainImageHint, mainUpload, mainImageDescription,
                 new Hr(),
-                new H3("Weitere Bilder"), additionalUpload, additionalImagesLayout, imageInfoLayout,
+                new H3("Weitere Bilder (max. %d MB pro Bild)".formatted(MAX_IMAGE_SIZE_BYTES / (1024 * 1024))),
+                additionalUpload, additionalImagesLayout, imageInfoLayout,
                 new Hr(),
                 new H3("Dateien (PDF/Office, max. 10 MB)"), fileUpload, fileDescription, fileInfoLayout);
 
@@ -488,11 +493,21 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 showNotification("Beschreibung für Hauptbild ist erforderlich", LUMO_ERROR);
                 return false;
             }
+            if (mainImageData != null && mainImageData.length > MAX_IMAGE_SIZE_BYTES) {
+                showNotification("Hauptbild ist zu gross (max. %d MB)".formatted(MAX_IMAGE_SIZE_BYTES / (1024 * 1024)), LUMO_ERROR);
+                return false;
+            }
 
             for (var additionalImage : additionalImagesMetadata.entrySet()) {
                 var descField = additionalImagesDescription.get(additionalImage.getKey());
                 if (descField == null || isBlank(descField.getValue())) {
                     showNotification("Beschreibung für " + additionalImage.getKey() + " ist erforderlich", LUMO_ERROR);
+                    return false;
+                }
+                var data = additionalImagesData.get(additionalImage.getKey());
+                if (data != null && data.length > MAX_IMAGE_SIZE_BYTES) {
+                    showNotification("Bild ist zu gross (max. %d MB): %s".formatted(MAX_IMAGE_SIZE_BYTES / (1024 * 1024), additionalImage.getKey()),
+                                     LUMO_ERROR);
                     return false;
                 }
             }
