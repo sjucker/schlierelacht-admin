@@ -18,6 +18,7 @@ import ch.schlierelacht.admin.jooq.tables.News;
 import ch.schlierelacht.admin.jooq.tables.OkMember;
 import ch.schlierelacht.admin.jooq.tables.OkTeamMember;
 import ch.schlierelacht.admin.jooq.tables.Programm;
+import ch.schlierelacht.admin.jooq.tables.PushDeviceToken;
 import ch.schlierelacht.admin.jooq.tables.Sponsoring;
 
 import java.util.Arrays;
@@ -113,6 +114,11 @@ public class Public extends SchemaImpl {
     public final Programm PROGRAMM = Programm.PROGRAMM;
 
     /**
+     * The table <code>public.push_device_token</code>.
+     */
+    public final PushDeviceToken PUSH_DEVICE_TOKEN = PushDeviceToken.PUSH_DEVICE_TOKEN;
+
+    /**
      * The table <code>public.sponsoring</code>.
      */
     public final Sponsoring SPONSORING = Sponsoring.SPONSORING;
@@ -147,6 +153,7 @@ public class Public extends SchemaImpl {
             OkMember.OK_MEMBER,
             OkTeamMember.OK_TEAM_MEMBER,
             Programm.PROGRAMM,
+            PushDeviceToken.PUSH_DEVICE_TOKEN,
             Sponsoring.SPONSORING
         );
     }

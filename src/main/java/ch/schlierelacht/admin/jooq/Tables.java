@@ -18,6 +18,7 @@ import ch.schlierelacht.admin.jooq.tables.News;
 import ch.schlierelacht.admin.jooq.tables.OkMember;
 import ch.schlierelacht.admin.jooq.tables.OkTeamMember;
 import ch.schlierelacht.admin.jooq.tables.Programm;
+import ch.schlierelacht.admin.jooq.tables.PushDeviceToken;
 import ch.schlierelacht.admin.jooq.tables.Sponsoring;
 
 
@@ -96,6 +97,11 @@ public class Tables {
      * The table <code>public.programm</code>.
      */
     public static final Programm PROGRAMM = Programm.PROGRAMM;
+
+    /**
+     * The table <code>public.push_device_token</code>.
+     */
+    public static final PushDeviceToken PUSH_DEVICE_TOKEN = PushDeviceToken.PUSH_DEVICE_TOKEN;
 
     /**
      * The table <code>public.sponsoring</code>.

@@ -18,6 +18,7 @@ import ch.schlierelacht.admin.jooq.tables.News;
 import ch.schlierelacht.admin.jooq.tables.OkMember;
 import ch.schlierelacht.admin.jooq.tables.OkTeamMember;
 import ch.schlierelacht.admin.jooq.tables.Programm;
+import ch.schlierelacht.admin.jooq.tables.PushDeviceToken;
 import ch.schlierelacht.admin.jooq.tables.Sponsoring;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionFileRecord;
 import ch.schlierelacht.admin.jooq.tables.records.AttractionImageRecord;
@@ -33,6 +34,7 @@ import ch.schlierelacht.admin.jooq.tables.records.NewsRecord;
 import ch.schlierelacht.admin.jooq.tables.records.OkMemberRecord;
 import ch.schlierelacht.admin.jooq.tables.records.OkTeamMemberRecord;
 import ch.schlierelacht.admin.jooq.tables.records.ProgrammRecord;
+import ch.schlierelacht.admin.jooq.tables.records.PushDeviceTokenRecord;
 import ch.schlierelacht.admin.jooq.tables.records.SponsoringRecord;
 
 import org.jooq.ForeignKey;
@@ -71,6 +73,8 @@ public class Keys {
     public static final UniqueKey<OkMemberRecord> PK_OK_MEMBER = Internal.createUniqueKey(OkMember.OK_MEMBER, DSL.name("pk_ok_member"), new TableField[] { OkMember.OK_MEMBER.ID }, true);
     public static final UniqueKey<OkTeamMemberRecord> PK_OK_TEAM_MEMBER = Internal.createUniqueKey(OkTeamMember.OK_TEAM_MEMBER, DSL.name("pk_ok_team_member"), new TableField[] { OkTeamMember.OK_TEAM_MEMBER.ID }, true);
     public static final UniqueKey<ProgrammRecord> PK_PROGRAMM = Internal.createUniqueKey(Programm.PROGRAMM, DSL.name("pk_programm"), new TableField[] { Programm.PROGRAMM.ID }, true);
+    public static final UniqueKey<PushDeviceTokenRecord> PK_PUSH_DEVICE_TOKEN = Internal.createUniqueKey(PushDeviceToken.PUSH_DEVICE_TOKEN, DSL.name("pk_push_device_token"), new TableField[] { PushDeviceToken.PUSH_DEVICE_TOKEN.ID }, true);
+    public static final UniqueKey<PushDeviceTokenRecord> UQ_PUSH_DEVICE_TOKEN_TOKEN = Internal.createUniqueKey(PushDeviceToken.PUSH_DEVICE_TOKEN, DSL.name("uq_push_device_token_token"), new TableField[] { PushDeviceToken.PUSH_DEVICE_TOKEN.TOKEN }, true);
     public static final UniqueKey<SponsoringRecord> PK_SPONSORING = Internal.createUniqueKey(Sponsoring.SPONSORING, DSL.name("pk_sponsoring"), new TableField[] { Sponsoring.SPONSORING.ID }, true);
 
     // -------------------------------------------------------------------------

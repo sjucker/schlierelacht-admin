@@ -8,6 +8,7 @@ import ch.schlierelacht.admin.views.gastro.GastroView;
 import ch.schlierelacht.admin.views.location.LocationView;
 import ch.schlierelacht.admin.views.meetup.MeetupView;
 import ch.schlierelacht.admin.views.news.NewsView;
+import ch.schlierelacht.admin.views.notification.PushNotificationView;
 import ch.schlierelacht.admin.views.ok.OkView;
 import ch.schlierelacht.admin.views.programm.ProgrammView;
 import ch.schlierelacht.admin.views.settings.SettingsView;
@@ -48,6 +49,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import static ch.schlierelacht.admin.util.DateUtil.formatInstant;
 import static org.vaadin.lineawesome.LineAwesomeIcon.ADDRESS_BOOK_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.BELL_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.CALENDAR_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.DOWNLOAD_SOLID;
@@ -155,6 +157,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Jahrgangstreffen", ADDRESS_BOOK_SOLID.create(), MeetupView.class),
                 new MenuItemInfo("OK Komitee", USERS_SOLID.create(), OkView.class),
                 new MenuItemInfo("Sponsoring", HANDSHAKE_SOLID.create(), SponsoringView.class),
+                new MenuItemInfo("Push senden", BELL_SOLID.create(), PushNotificationView.class),
                 new MenuItemInfo("Einstellungen", COG_SOLID.create(), SettingsView.class),
         };
     }
