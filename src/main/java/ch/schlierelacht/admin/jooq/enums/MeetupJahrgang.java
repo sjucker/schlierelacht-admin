@@ -23,7 +23,7 @@ public enum MeetupJahrgang implements EnumType {
 
     BORN_1959_1963("BORN_1959_1963"),
 
-    BORN_1965_1968("BORN_1965_1968"),
+    BORN_1964_1968("BORN_1964_1968"),
 
     BORN_1969_1973("BORN_1969_1973"),
 
