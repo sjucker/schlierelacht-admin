@@ -11,7 +11,7 @@ coding agent working in this repository. It is intentionally tool-agnostic.
 - **Persistence:** jOOQ for type-safe SQL (no JPA)
 - **Mapping:** MapStruct (+ Lombok) for DTO conversions
 - **Security:** Spring Security (Vaadin-integrated for the admin UI, stateless for `/api/**`)
-- **Integrations:** Cloudflare (image hosting/delivery)
+- **Integrations:** Cloudflare (WAF, caching, image hosting/delivery)
 - **Build:** Maven (use the wrapper `./mvnw`)
 - **Testing:** JUnit 5, ArchUnit (architectural consistency)
 
@@ -40,25 +40,30 @@ Root package: `ch.schlierelacht.admin`
 ## 🛠️ Development Workflow
 
 ### Run the application
+
 ```bash
 ./mvnw                           # Dev mode (default goal: spring-boot:run) → http://localhost:8080
 ./mvnw spring-boot:run           # Explicit dev mode
 ```
 
 ### Database (Docker must be running)
+
 ```bash
 docker compose -p schlierelacht -f src/main/docker/postgres.yml up --build
 ```
 
 ### jOOQ code generation
+
 jOOQ codegen is **skipped by default** (`jooq-codegen-skip=true`). It starts a Postgres testcontainer,
 applies the Flyway migrations, and regenerates classes into `ch.schlierelacht.admin.jooq`. Re-run it
 after adding a Flyway migration (Docker must be running):
+
 ```bash
 mvn clean test-compile -Djooq-codegen-skip=false
 ```
 
 ### Testing
+
 ```bash
 ./mvnw test                                  # All tests
 ./mvnw test -Dtest=SomeServiceTest           # Single test class
@@ -66,8 +71,10 @@ mvn clean test-compile -Djooq-codegen-skip=false
 ```
 
 ### Build & deploy
+
 Since Vaadin 25 the Vaadin frontend is built automatically as part of the `package` phase, so **no
 `-Pproduction` profile is required**:
+
 ```bash
 ./mvnw clean package                         # Production-ready JAR
 docker build -t schlierelacht-admin .        # Docker image (builds & runs on JDK/JRE 25)
@@ -79,16 +86,24 @@ The public website depends on TypeScript types generated from the Java DTOs. The
 `typescript-generator-maven-plugin` scans `ch.schlierelacht.admin.**DTO` and writes directly into the
 sibling website repo. It is **not** bound to the build lifecycle — run it explicitly after changing a
 DTO:
+
 ```bash
 ./mvnw process-classes               # compile the changed DTOs
 ./mvnw typescript-generator:generate # rewrite the website's shared/types/rest.ts
 ```
+
 Field optionality follows nullability: a DTO field becomes optional in TypeScript only when it lacks
 `@NotNull` (primitives and `@NotNull` fields become required).
+
+### Caching & Infrastructure
+- **Cloudflare WAF:** All public `/api/**` traffic routes through Cloudflare's Web Application Firewall.
+- **Cache-Control Headers:** Public GET REST endpoints explicitly append custom `Cache-Control: public, max-age=<duration>` headers directly in each controller response. Max-ages are configured using Spring's native `CacheControl.maxAge` with readable units (e.g., 1 minute for news listings, 5 minutes for general program/attractions data, 10–15 minutes for locations/gallery, and 1 hour for static file downloads using `TimeUnit.MINUTES` or `TimeUnit.HOURS`). Spring Security's default cache control headers are disabled for `/api/**` to permit this behavior.
+
 
 ## 📜 Coding Conventions
 
 ### Backend
+
 - **Feature-based packages**, not layered: each feature has its view(s) under `views/<feature>/`, a
   `service/<Feature>Service`, and a `rest/<Feature>Endpoint` where applicable.
 - **Data access:** jOOQ only. Generated DAOs extend the custom `AbstractSpringDAOImpl` for proper
@@ -100,6 +115,7 @@ Field optionality follows nullability: a DTO field becomes optional in TypeScrip
 - **Dependency injection:** Constructor injection throughout (no field `@Autowired`).
 
 ### Frontend (Vaadin)
+
 - **Server-side rendering:** UI components are Java classes extending Vaadin components.
 - **View organization:** Follow the feature-based structure under `ch.schlierelacht.admin.views`; use
   `MainLayout` as the parent for authenticated views.
@@ -110,11 +126,13 @@ Field optionality follows nullability: a DTO field becomes optional in TypeScrip
 - **Grid lazy loading:** Use `VaadinSpringDataHelpers.toSpringPageRequest(query)` for pagination.
 
 ### Database & Migrations
+
 - **Flyway:** Never modify existing migration files. Create new ones using the
   `VXXX__description.sql` naming convention.
 - **Schema:** Use descriptive table/column names; include audit fields where appropriate.
 
 ## ✅ Quality Standards
+
 - **ArchUnit:** All code must pass the architectural checks (`ArchUnitTest`).
 - **Naming:** `PascalCase` for classes, `camelCase` for variables/methods, `snake_case` for database
   identifiers.

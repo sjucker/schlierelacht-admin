@@ -4,6 +4,7 @@ import ch.schlierelacht.admin.dto.DownloadDTO;
 import ch.schlierelacht.admin.service.DownloadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RestController
@@ -26,8 +28,10 @@ public class DownloadsEndpoint {
     @GetMapping
     public ResponseEntity<List<DownloadDTO>> getDownloads() {
         log.info("GET /api/downloads");
-        return ResponseEntity.ok(downloadService.findAll());
-    }
+        return ResponseEntity.ok()
+                             .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic())
+                             .body(downloadService.findAll());
+     }
 
     @GetMapping("/{id}/file")
     public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
@@ -41,6 +45,7 @@ public class DownloadsEndpoint {
                                                                                   .build());
                                   return ResponseEntity.ok()
                                                        .headers(headers)
+                                                       .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
                                                        .body(download.getFileData());
                               })
                               .orElse(ResponseEntity.notFound().build());

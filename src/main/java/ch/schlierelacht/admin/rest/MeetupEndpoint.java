@@ -5,6 +5,7 @@ import ch.schlierelacht.admin.dto.MeetupRegistrationDTO;
 import ch.schlierelacht.admin.service.MeetupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RestController
@@ -25,7 +27,9 @@ public class MeetupEndpoint {
     @GetMapping
     public ResponseEntity<List<MeetupEntryDTO>> getMeetupEntries() {
         log.info("GET /api/meetup");
-        return ResponseEntity.ok(meetupService.findAllPublic());
+        return ResponseEntity.ok()
+                             .cacheControl(CacheControl.maxAge(2, TimeUnit.MINUTES).cachePublic())
+                             .body(meetupService.findAllPublic());
     }
 
     @PostMapping

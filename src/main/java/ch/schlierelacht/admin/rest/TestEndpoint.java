@@ -2,6 +2,7 @@ package ch.schlierelacht.admin.rest;
 
 import ch.schlierelacht.admin.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,14 +15,18 @@ public class TestEndpoint {
 
     @GetMapping(value = "/ping")
     public ResponseEntity<String> ping() {
-        return ResponseEntity.ok("pong");
+        return ResponseEntity.ok()
+                             .cacheControl(CacheControl.noStore())
+                             .body("pong");
     }
 
     @GetMapping(value = "/error")
     public ResponseEntity<Void> error() {
         log.error("test error: {}", DateUtil.currentTime());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                             .cacheControl(CacheControl.noStore())
+                             .build();
     }
 
 }

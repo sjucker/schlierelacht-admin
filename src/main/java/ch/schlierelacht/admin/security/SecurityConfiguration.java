@@ -61,6 +61,7 @@ public class SecurityConfiguration {
                    .csrf(AbstractHttpConfigurer::disable)
                    .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
                    .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                   .headers(headers -> headers.cacheControl(cacheControl -> cacheControl.disable()))
                    .build();
     }
 
