@@ -30,7 +30,5 @@
  *       mobile app when its next build goes out.</li>
  *   <li>Delete the old version once nothing calls it any more.</li>
  * </ol>
- *
- * @see ch.schlierelacht.admin.rest.LegacyApiVersionFilter
  */
 package ch.schlierelacht.admin.rest;

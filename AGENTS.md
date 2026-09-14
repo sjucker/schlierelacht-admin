@@ -116,9 +116,8 @@ optional field, a new endpoint, a new enum constant clients handle leniently —
 so existing clients keep their responses. Point the consumers at it one at a time (website `develop`, then `main`, then
 the app's next release), and delete the old version once nothing calls it.
 
-`rest/LegacyApiVersionFilter.java` forwards the pre-versioning `/api/<resource>` paths to their
-`/api/v1/` counterpart and logs each at WARN. It exists only for clients deployed before versioning — delete it once
-that WARN falls silent.
+There are no unversioned `/api/<resource>` paths any more: the transitional forwarding filter was removed once every
+consumer called a versioned path, so an unversioned call is now simply not routed.
 
 ## 📜 Coding Conventions
 
