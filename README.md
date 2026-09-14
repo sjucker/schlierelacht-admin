@@ -14,15 +14,33 @@
 
 ## Build
 
-* `mvn clean package` — produces the production-ready JAR; since Vaadin 25 the Vaadin frontend is
-  built automatically during the `package` phase, so no `-Pproduction` profile is required.
+* `mvn clean package` — produces the production-ready JAR; since Vaadin 25 the Vaadin frontend is built automatically
+  during the `package` phase, so no `-Pproduction` profile is required.
 * `mvn dependency:resolve-sources`
 
 ## Updates
 
 * Update Maven Parent
-  * `mvn -U versions:display-parent-updates`
-  * `mvn -U versions:update-parent`
+    * `mvn -U versions:display-parent-updates`
+    * `mvn -U versions:update-parent`
 * Update Versions in Properties
-  * `mvn -U versions:display-property-updates`
-  * `mvn -U versions:update-properties`
+    * `mvn -U versions:display-property-updates`
+    * `mvn -U versions:update-properties`
+
+## Heroku
+
+### Database
+
+* `heroku pg:info --app schlierelacht-admin`
+
+### Database Backup
+
+* Prod:  
+  `heroku pg:backups:schedule DATABASE_URL --at '04:00 CET' --app schlierelacht-admin`
+  `heroku pg:backups --app schlierelacht-admin`
+  `heroku pg:backups:capture --app schlierelacht-admin`  
+  `heroku pg:backups:download --app schlierelacht-admin`
+
+* Restore locally:
+    * Drop all tables
+    * `pg_restore --no-owner -h localhost -U schlierelacht -d schlierelacht -W latest.dump`
