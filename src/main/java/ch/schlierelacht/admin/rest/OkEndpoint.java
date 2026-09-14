@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/ok")
+@RequestMapping(value = "/api/v1/ok")
 @RequiredArgsConstructor
 public class OkEndpoint {
 
@@ -19,7 +19,7 @@ public class OkEndpoint {
 
     @GetMapping
     public ResponseEntity<OkDTO> getOk() {
-        log.info("GET /api/ok");
+        log.info("GET /api/v1/ok");
         return ResponseEntity.ok(okService.findAll());
     }
 }

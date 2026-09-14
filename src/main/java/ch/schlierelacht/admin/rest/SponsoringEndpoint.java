@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/sponsoring")
+@RequestMapping(value = "/api/v1/sponsoring")
 @RequiredArgsConstructor
 public class SponsoringEndpoint {
 
@@ -24,14 +24,14 @@ public class SponsoringEndpoint {
 
     @GetMapping
     public ResponseEntity<List<SponsoringDTO>> getSponsorings() {
-        log.info("GET /api/sponsoring");
+        log.info("GET /api/v1/sponsoring");
 
         return ResponseEntity.ok(sponsoringService.findAll());
     }
 
     @GetMapping(value = "/type")
     public ResponseEntity<List<SponsoringTypeDTO>> getSponsoringTypes() {
-        log.info("GET /api/sponsoring/type");
+        log.info("GET /api/v1/sponsoring/type");
 
         return ResponseEntity.ok(Arrays.stream(SponsoringType.values()).map(SponsoringTypeDTO::of).toList());
     }

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/gallery")
+@RequestMapping(value = "/api/v1/gallery")
 @RequiredArgsConstructor
 public class GalleryEndpoint {
 
@@ -21,7 +21,7 @@ public class GalleryEndpoint {
 
     @GetMapping
     public ResponseEntity<List<GalleryCategoryDTO>> getGallery() {
-        log.info("GET /api/gallery");
+        log.info("GET /api/v1/gallery");
         return ResponseEntity.ok(galleryService.findGroupedByCategory());
     }
 }

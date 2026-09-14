@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/downloads")
+@RequestMapping(value = "/api/v1/downloads")
 @RequiredArgsConstructor
 public class DownloadsEndpoint {
 
@@ -25,13 +25,13 @@ public class DownloadsEndpoint {
 
     @GetMapping
     public ResponseEntity<List<DownloadDTO>> getDownloads() {
-        log.info("GET /api/downloads");
+        log.info("GET /api/v1/downloads");
         return ResponseEntity.ok(downloadService.findAll());
     }
 
     @GetMapping("/{id}/file")
     public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
-        log.info("GET /api/downloads/{}/file", id);
+        log.info("GET /api/v1/downloads/{}/file", id);
         return downloadService.findById(id)
                               .map(download -> {
                                   var headers = new HttpHeaders();

@@ -16,7 +16,7 @@ import ch.schlierelacht.admin.service.LocationService;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/location")
+@RequestMapping("/api/v1/location")
 @RequiredArgsConstructor
 public class LocationEndpoint {
 
@@ -24,14 +24,14 @@ public class LocationEndpoint {
 
     @GetMapping
     public List<LocationDTO> findAll() {
-        log.info("GET /api/location");
+        log.info("GET /api/v1/location");
 
         return locationService.findAll();
     }
 
     @GetMapping("/{externalId}")
     public ResponseEntity<LocationDTO> findByExternalId(@PathVariable String externalId) {
-        log.info("GET /api/location/{}",  externalId);
+        log.info("GET /api/v1/location/{}",  externalId);
 
         return ResponseEntity.of(locationService.findByExternalId(externalId));
     }

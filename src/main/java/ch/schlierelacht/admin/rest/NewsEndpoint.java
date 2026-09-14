@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/news")
+@RequestMapping(value = "/api/v1/news")
 @RequiredArgsConstructor
 public class NewsEndpoint {
 
@@ -22,13 +22,13 @@ public class NewsEndpoint {
 
     @GetMapping
     public ResponseEntity<List<NewsDTO>> getNews() {
-        log.info("GET /api/news");
+        log.info("GET /api/v1/news");
         return ResponseEntity.ok(newsService.findAllActive());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<NewsDTO> getNewsEntry(@PathVariable Long id) {
-        log.info("GET /api/news/{}", id);
+        log.info("GET /api/v1/news/{}", id);
         return ResponseEntity.of(newsService.findActiveById(id));
     }
 }

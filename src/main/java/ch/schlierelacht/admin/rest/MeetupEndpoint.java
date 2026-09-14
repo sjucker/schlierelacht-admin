@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/meetup")
+@RequestMapping(value = "/api/v1/meetup")
 @RequiredArgsConstructor
 public class MeetupEndpoint {
 
@@ -24,13 +24,13 @@ public class MeetupEndpoint {
 
     @GetMapping
     public ResponseEntity<List<MeetupEntryDTO>> getMeetupEntries() {
-        log.info("GET /api/meetup");
+        log.info("GET /api/v1/meetup");
         return ResponseEntity.ok(meetupService.findAllPublic());
     }
 
     @PostMapping
     public ResponseEntity<Void> register(@RequestBody MeetupRegistrationDTO dto) {
-        log.info("POST /api/meetup: {} {}", dto.firstname(), dto.lastname());
+        log.info("POST /api/v1/meetup: {} {}", dto.firstname(), dto.lastname());
         meetupService.register(dto);
         return ResponseEntity.ok().build();
     }

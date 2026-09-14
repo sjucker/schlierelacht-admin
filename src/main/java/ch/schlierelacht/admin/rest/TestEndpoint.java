@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/test")
+@RequestMapping(value = "/api/v1/test")
 public class TestEndpoint {
 
     @GetMapping(value = "/ping")

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/push")
+@RequestMapping(value = "/api/v1/push")
 @RequiredArgsConstructor
 public class PushEndpoint {
 
@@ -20,7 +20,7 @@ public class PushEndpoint {
 
     @PostMapping(value = "/register")
     public ResponseEntity<Void> register(@RequestBody PushRegistrationDTO dto) {
-        log.info("POST /api/push/register: platform={}", dto.platform());
+        log.info("POST /api/v1/push/register: platform={}", dto.platform());
         pushService.register(dto);
         return ResponseEntity.ok().build();
     }

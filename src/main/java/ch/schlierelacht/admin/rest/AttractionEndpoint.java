@@ -21,7 +21,7 @@ import java.util.Set;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/attraction")
+@RequestMapping(value = "/api/v1/attraction")
 @RequiredArgsConstructor
 public class AttractionEndpoint {
 
@@ -30,21 +30,21 @@ public class AttractionEndpoint {
 
     @GetMapping
     public ResponseEntity<List<AttractionDTO>> getAttractions(@RequestParam(required = false) Set<AttractionType> type) {
-        log.info("GET /api/attraction?type={}", type);
+        log.info("GET /api/v1/attraction?type={}", type);
 
         return ResponseEntity.ok(attractionService.find(type));
     }
 
     @GetMapping("/{externalId}")
     public ResponseEntity<AttractionDTO> getAttraction(@PathVariable String externalId) {
-        log.info("GET /api/attraction/{}", externalId);
+        log.info("GET /api/v1/attraction/{}", externalId);
 
         return ResponseEntity.of(attractionService.findByExternalId(externalId));
     }
 
     @GetMapping("/{externalId}/files/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String externalId, @PathVariable Long id) {
-        log.info("GET /api/attraction/{}/files/{}", externalId, id);
+        log.info("GET /api/v1/attraction/{}/files/{}", externalId, id);
 
         return attractionFileService.findFile(externalId, id)
                                     .map(file -> {

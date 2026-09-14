@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/programm")
+@RequestMapping(value = "/api/v1/programm")
 @RequiredArgsConstructor
 public class ProgrammEndpoint {
 
@@ -21,7 +21,7 @@ public class ProgrammEndpoint {
 
     @GetMapping
     public ResponseEntity<List<ProgrammPointDTO>> getProgrammPoints() {
-        log.info("GET /api/programm");
+        log.info("GET /api/v1/programm");
 
         return ResponseEntity.ok(attractionService.findAllProgrammPoints());
     }
