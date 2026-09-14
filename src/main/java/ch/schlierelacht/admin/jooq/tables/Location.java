@@ -104,6 +104,11 @@ public class Location extends TableImpl<LocationRecord> {
      */
     public final TableField<LocationRecord, String> MAP_ID = createField(DSL.name("map_id"), SQLDataType.VARCHAR(5), this, "");
 
+    /**
+     * The column <code>public.location.show_in_festplan</code>.
+     */
+    public final TableField<LocationRecord, Boolean> SHOW_IN_FESTPLAN = createField(DSL.name("show_in_festplan"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field(DSL.raw("true"), SQLDataType.BOOLEAN)), this, "");
+
     private Location(Name alias, Table<LocationRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

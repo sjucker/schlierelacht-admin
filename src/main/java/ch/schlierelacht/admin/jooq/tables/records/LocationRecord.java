@@ -147,6 +147,20 @@ public class LocationRecord extends UpdatableRecordImpl<LocationRecord> {
         return (String) get(8);
     }
 
+    /**
+     * Setter for <code>public.location.show_in_festplan</code>.
+     */
+    public void setShowInFestplan(Boolean value) {
+        set(9, value);
+    }
+
+    /**
+     * Getter for <code>public.location.show_in_festplan</code>.
+     */
+    public Boolean getShowInFestplan() {
+        return (Boolean) get(9);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -170,7 +184,7 @@ public class LocationRecord extends UpdatableRecordImpl<LocationRecord> {
     /**
      * Create a detached, initialised LocationRecord
      */
-    public LocationRecord(Long id, String externalId, LocationType type, String name, BigDecimal latitude, BigDecimal longitude, Integer sortOrder, String cloudflareId, String mapId) {
+    public LocationRecord(Long id, String externalId, LocationType type, String name, BigDecimal latitude, BigDecimal longitude, Integer sortOrder, String cloudflareId, String mapId, Boolean showInFestplan) {
         super(Location.LOCATION);
 
         setId(id);
@@ -182,6 +196,7 @@ public class LocationRecord extends UpdatableRecordImpl<LocationRecord> {
         setSortOrder(sortOrder);
         setCloudflareId(cloudflareId);
         setMapId(mapId);
+        setShowInFestplan(showInFestplan);
         resetTouchedOnNotNull();
     }
 
@@ -201,6 +216,7 @@ public class LocationRecord extends UpdatableRecordImpl<LocationRecord> {
             setSortOrder(value.getSortOrder());
             setCloudflareId(value.getCloudflareId());
             setMapId(value.getMapId());
+            setShowInFestplan(value.getShowInFestplan());
             resetTouchedOnNotNull();
         }
     }

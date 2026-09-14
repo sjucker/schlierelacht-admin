@@ -207,4 +207,19 @@ public class LocationDao extends AbstractSpringDAOImpl<LocationRecord, ch.schlie
     public List<ch.schlierelacht.admin.jooq.tables.pojos.Location> fetchByMapId(String... values) {
         return fetch(Location.LOCATION.MAP_ID, values);
     }
+
+    /**
+     * Fetch records that have <code>show_in_festplan BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Location> fetchRangeOfShowInFestplan(Boolean lowerInclusive, Boolean upperInclusive) {
+        return fetchRange(Location.LOCATION.SHOW_IN_FESTPLAN, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>show_in_festplan IN (values)</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Location> fetchByShowInFestplan(Boolean... values) {
+        return fetch(Location.LOCATION.SHOW_IN_FESTPLAN, values);
+    }
 }

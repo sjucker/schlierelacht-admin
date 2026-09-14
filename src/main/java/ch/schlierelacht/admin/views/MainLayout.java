@@ -13,6 +13,7 @@ import ch.schlierelacht.admin.views.ok.OkView;
 import ch.schlierelacht.admin.views.programm.ProgrammView;
 import ch.schlierelacht.admin.views.settings.SettingsView;
 import ch.schlierelacht.admin.views.sponsoring.SponsoringView;
+import ch.schlierelacht.admin.views.wirtschaft.WirtschaftView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
@@ -50,6 +51,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import static ch.schlierelacht.admin.util.DateUtil.formatInstant;
 import static org.vaadin.lineawesome.LineAwesomeIcon.ADDRESS_BOOK_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.BELL_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.BRIEFCASE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.CALENDAR_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.DOWNLOAD_SOLID;
@@ -151,6 +153,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Künstler", USER_SOLID.create(), ArtistView.class),
                 new MenuItemInfo("Attraktionen", THEATER_MASKS_SOLID.create(), AttractionView.class),
                 new MenuItemInfo("Programm", CALENDAR_SOLID.create(), ProgrammView.class),
+                new MenuItemInfo("Wirtschaft/Gewerbe", BRIEFCASE_SOLID.create(), WirtschaftView.class),
                 new MenuItemInfo("News", NEWSPAPER_SOLID.create(), NewsView.class),
                 new MenuItemInfo("Downloads", DOWNLOAD_SOLID.create(), DownloadsView.class),
                 new MenuItemInfo("Galerie", IMAGES_SOLID.create(), GalleryView.class),

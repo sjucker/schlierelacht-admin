@@ -1,8 +1,8 @@
 package ch.schlierelacht.admin.dto;
 
-import java.math.BigDecimal;
-
 import jakarta.validation.constraints.NotNull;
+
+import java.math.BigDecimal;
 
 public record LocationDTO(@NotNull String externalId,
                           @NotNull LocationType type,
@@ -11,5 +11,6 @@ public record LocationDTO(@NotNull String externalId,
                           @NotNull BigDecimal longitude,
                           @NotNull String googleMapsUrl,
                           String cloudflareId,
-                          String mapId) {
+                          String mapId,
+                          boolean showInFestplan) {
 }

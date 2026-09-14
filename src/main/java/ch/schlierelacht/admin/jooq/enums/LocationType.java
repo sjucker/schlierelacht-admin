@@ -29,7 +29,9 @@ public enum LocationType implements EnumType {
 
     SANITARY("SANITARY"),
 
-    INFO("INFO");
+    INFO("INFO"),
+
+    EVENT_LOCATION("EVENT_LOCATION");
 
     private final String literal;
 

@@ -15,7 +15,8 @@ public enum LocationType implements HasDescription {
     TENT("Festzelt"),
     ATTRACTION("Attraktion"),
     SANITARY("Sanitäre Anlagen"),
-    INFO("Info-Stand");
+    INFO("Info-Stand"),
+    EVENT_LOCATION("Anlass-Ort");
 
     private final String description;
 

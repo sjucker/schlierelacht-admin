@@ -40,7 +40,8 @@ public class LocationService {
                 location.getLongitude(),
                 getGoogleMapsCoordinates(location.getLatitude(), location.getLongitude()),
                 location.getCloudflareId(),
-                location.getMapId()
+                location.getMapId(),
+                location.getShowInFestplan()
         );
     }
 }

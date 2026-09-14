@@ -27,6 +27,7 @@ public class Location implements Serializable {
     private Integer sortOrder;
     private String cloudflareId;
     private String mapId;
+    private Boolean showInFestplan;
 
     public Location() {}
 
@@ -40,6 +41,7 @@ public class Location implements Serializable {
         this.sortOrder = value.sortOrder;
         this.cloudflareId = value.cloudflareId;
         this.mapId = value.mapId;
+        this.showInFestplan = value.showInFestplan;
     }
 
     public Location(
@@ -51,7 +53,8 @@ public class Location implements Serializable {
         BigDecimal longitude,
         Integer sortOrder,
         String cloudflareId,
-        String mapId
+        String mapId,
+        Boolean showInFestplan
     ) {
         this.id = id;
         this.externalId = externalId;
@@ -62,6 +65,7 @@ public class Location implements Serializable {
         this.sortOrder = sortOrder;
         this.cloudflareId = cloudflareId;
         this.mapId = mapId;
+        this.showInFestplan = showInFestplan;
     }
 
     /**
@@ -190,6 +194,20 @@ public class Location implements Serializable {
         this.mapId = mapId;
     }
 
+    /**
+     * Getter for <code>public.location.show_in_festplan</code>.
+     */
+    public Boolean getShowInFestplan() {
+        return this.showInFestplan;
+    }
+
+    /**
+     * Setter for <code>public.location.show_in_festplan</code>.
+     */
+    public void setShowInFestplan(Boolean showInFestplan) {
+        this.showInFestplan = showInFestplan;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -253,6 +271,12 @@ public class Location implements Serializable {
         }
         else if (!this.mapId.equals(other.mapId))
             return false;
+        if (this.showInFestplan == null) {
+            if (other.showInFestplan != null)
+                return false;
+        }
+        else if (!this.showInFestplan.equals(other.showInFestplan))
+            return false;
         return true;
     }
 
@@ -269,6 +293,7 @@ public class Location implements Serializable {
         result = prime * result + ((this.sortOrder == null) ? 0 : this.sortOrder.hashCode());
         result = prime * result + ((this.cloudflareId == null) ? 0 : this.cloudflareId.hashCode());
         result = prime * result + ((this.mapId == null) ? 0 : this.mapId.hashCode());
+        result = prime * result + ((this.showInFestplan == null) ? 0 : this.showInFestplan.hashCode());
         return result;
     }
 
@@ -285,6 +310,7 @@ public class Location implements Serializable {
         sb.append(", ").append(sortOrder);
         sb.append(", ").append(cloudflareId);
         sb.append(", ").append(mapId);
+        sb.append(", ").append(showInFestplan);
 
         sb.append(")");
         return sb.toString();

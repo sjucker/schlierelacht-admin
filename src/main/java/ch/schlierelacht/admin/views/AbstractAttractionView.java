@@ -42,6 +42,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -83,8 +84,8 @@ public abstract class AbstractAttractionView extends VerticalLayout {
     private final CloudflareService cloudflareService;
     private final DSLContext dslContext;
     private final AttractionFileService attractionFileService;
-    private final Grid<Attraction> grid;
-    private final AttractionDialog dialog;
+    private Grid<Attraction> grid;
+    private AttractionDialog dialog;
 
     public AbstractAttractionView(AttractionDao attractionDao, CloudflareService cloudflareService,
                                   DSLContext dslContext, AttractionFileService attractionFileService) {
@@ -93,12 +94,26 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         this.dslContext = dslContext;
         this.attractionFileService = attractionFileService;
 
+        setSizeFull();
+    }
+
+    /**
+     * The UI (dialog, grid, toolbar) is built on first attach rather than in the constructor so that any
+     * subclass state the extension hooks rely on (its own fields and injected collaborators) is fully
+     * initialized by then — subclass field/constructor assignments run only after {@code super(...)} returns.
+     */
+    @Override
+    protected void onAttach(com.vaadin.flow.component.AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        if (dialog != null) {
+            return;
+        }
+
         this.dialog = new AttractionDialog(() -> {
             refreshGrid();
             showNotification("Speichern erfolgreich", LUMO_SUCCESS);
         });
 
-        setSizeFull();
         add(new H2("%s verwalten".formatted(getViewLabel())));
 
         grid = createGrid();
@@ -141,6 +156,54 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         return getAttractionTypes().contains(FOOD);
     }
 
+    // --- Extension hooks --------------------------------------------------------------------------
+    // No-ops by default so the single-type/generic views (artist, food, attractions) are unaffected.
+    // A subclass can attach data that lives outside the ATTRACTION row itself — e.g. the Wirtschaft
+    // view edits an attraction together with its single programm entry (location + date/time).
+
+    /**
+     * Add extra columns to the grid (rendered after Name/Typ/Betreiber).
+     */
+    protected void addExtraColumns(Grid<Attraction> grid) {
+    }
+
+    /**
+     * Prepare any lookup data the extra grid columns need, before the grid items are set.
+     */
+    protected void prepareExtraColumnData(List<Attraction> attractions) {
+    }
+
+    /**
+     * Add extra fields to the dialog form (inserted before the description/markdown area).
+     */
+    protected void addExtraFormFields(FormLayout form) {
+    }
+
+    /**
+     * Load the extra fields from the given attraction when the dialog opens (or clear for a new one).
+     */
+    protected void loadExtraFields(Attraction attraction) {
+    }
+
+    /**
+     * Validate the extra fields on save; return {@code false} (after notifying) to abort the save.
+     */
+    protected boolean validateExtraFields() {
+        return true;
+    }
+
+    /**
+     * Persist the extra fields after the attraction has been inserted/updated.
+     */
+    protected void saveExtraFields(Long attractionId) {
+    }
+
+    /**
+     * Remove dependent data before the attraction is deleted (e.g. its programm entries).
+     */
+    protected void deleteExtraFields(Long attractionId) {
+    }
+
     private Grid<Attraction> createGrid() {
         var g = new Grid<Attraction>();
         g.addComponentColumn(a -> new Button(EDIT.create(), _ -> dialog.open(a)))
@@ -153,6 +216,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         if (isOperatorApplicable()) {
             g.addColumn(Attraction::getOperator).setHeader("Betreiber").setSortable(true);
         }
+        addExtraColumns(g);
         g.addItemDoubleClickListener(event -> {
             if (event.getItem() != null) {
                 dialog.open(event.getItem());
@@ -183,6 +247,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                                        .sorted(Comparator.comparing(Attraction::getExternalId,
                                                                     nullsLast(naturalOrder())))
                                        .toList();
+        prepareExtraColumnData(attractions);
         grid.setItems(attractions);
     }
 
@@ -262,6 +327,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             if (isOperatorApplicable()) {
                 form.add(operator);
             }
+            addExtraFormFields(form);
             form.add(description, previewLayout);
             form.setColspan(description, 2);
             form.setColspan(previewLayout, 2);
@@ -476,6 +542,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                     fileInfoLayout.add(row);
                 });
             }
+            loadExtraFields(attraction);
             super.open();
         }
 
@@ -527,6 +594,10 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 }
             }
 
+            if (!validateExtraFields()) {
+                return false;
+            }
+
             if (creating) {
                 var it = dslContext.newRecord(ATTRACTION, attraction);
                 it.insert();
@@ -552,6 +623,8 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 attractionFileService.create(attraction.getId(), fileMetadata.fileName(), fileMetadata.contentType(),
                                              fileData.length, fileData, fileDescription.getValue(), uploadedBy);
             }
+
+            saveExtraFields(attraction.getId());
 
             mainImageData = null;
             mainImageMetadata = null;
@@ -631,6 +704,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         private void deleteAttraction() {
             var attraction = binder.getBean();
             if (attraction != null && attraction.getId() != null) {
+                deleteExtraFields(attraction.getId());
                 attractionDao.delete(attraction);
                 close();
             }

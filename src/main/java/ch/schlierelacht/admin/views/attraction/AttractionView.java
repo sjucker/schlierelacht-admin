@@ -20,9 +20,10 @@ import java.util.Set;
 import static java.util.stream.Collectors.toCollection;
 
 /**
- * Manages every attraction type except {@link AttractionType#ARTIST} and {@link AttractionType#FOOD}, which have their
- * own dedicated views. The type is picked per attraction via the dialog's type selector. Deriving the managed set from
- * the enum means any future type shows up here automatically unless it gets its own view.
+ * Manages every attraction type except {@link AttractionType#ARTIST}, {@link AttractionType#FOOD} and
+ * {@link AttractionType#EVENT}, which have their own dedicated views. The type is picked per attraction via the dialog's
+ * type selector. Deriving the managed set from the enum means any future type shows up here automatically unless it gets
+ * its own view.
  */
 @Slf4j
 @PageTitle("Attraktionen")
@@ -30,7 +31,7 @@ import static java.util.stream.Collectors.toCollection;
 @PermitAll
 public class AttractionView extends AbstractAttractionView {
 
-    private static final Set<AttractionType> EXCLUDED = Set.of(AttractionType.ARTIST, AttractionType.FOOD);
+    private static final Set<AttractionType> EXCLUDED = Set.of(AttractionType.ARTIST, AttractionType.FOOD, AttractionType.EVENT);
 
     public AttractionView(AttractionDao attractionDao, CloudflareService cloudflareService,
                           DSLContext dslContext, AttractionFileService attractionFileService) {

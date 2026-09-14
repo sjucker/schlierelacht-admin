@@ -1,0 +1,1 @@
+ALTER TYPE location_type ADD VALUE 'EVENT_LOCATION';

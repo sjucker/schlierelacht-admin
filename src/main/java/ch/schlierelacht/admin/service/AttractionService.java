@@ -59,8 +59,23 @@ public class AttractionService {
      * Returns every programm entry joined with its attraction, as a flat list ordered
      * chronologically (date, then start time, then attraction name). Entries without a
      * location are omitted, mirroring the per-attraction programm assembled in {@link #find(Condition)}.
+     * <p>
+     * {@link AttractionType#EVENT}s are excluded here: they belong to the separate Wirtschaft/Gewerbe
+     * page and are served by {@link #findEventProgrammPoints()}.
      */
     public List<ProgrammPointDTO> findAllProgrammPoints() {
+        return findProgrammPoints(ATTRACTION.TYPE.ne(AttractionType.EVENT.toDb()));
+    }
+
+    /**
+     * Returns the programm points of {@link AttractionType#EVENT} attractions (the Wirtschaft/Gewerbe
+     * events), as a flat, chronologically ordered list — the counterpart of {@link #findAllProgrammPoints()}.
+     */
+    public List<ProgrammPointDTO> findEventProgrammPoints() {
+        return findProgrammPoints(ATTRACTION.TYPE.eq(AttractionType.EVENT.toDb()));
+    }
+
+    private List<ProgrammPointDTO> findProgrammPoints(Condition attractionCondition) {
         LocalDateTime now = DateUtil.now();
         return dslContext.select(ATTRACTION.EXTERNAL_ID,
                                  ATTRACTION.NAME,
@@ -74,10 +89,12 @@ public class AttractionService {
                                  LOCATION.LATITUDE,
                                  LOCATION.LONGITUDE,
                                  LOCATION.CLOUDFLARE_ID,
-                                 LOCATION.MAP_ID)
+                                 LOCATION.MAP_ID,
+                                 LOCATION.SHOW_IN_FESTPLAN)
                          .from(PROGRAMM)
                          .join(ATTRACTION).on(PROGRAMM.ATTRACTION_ID.eq(ATTRACTION.ID))
                          .join(LOCATION).on(PROGRAMM.LOCATION_ID.eq(LOCATION.ID))
+                         .where(attractionCondition)
                          .orderBy(PROGRAMM.FROM_DATE.asc(),
                                   PROGRAMM.FROM_TIME.nullsFirst(),
                                   ATTRACTION.NAME.asc())
@@ -92,7 +109,8 @@ public class AttractionService {
                                                          it.get(LOCATION.LONGITUDE),
                                                          getGoogleMapsCoordinates(it.get(LOCATION.LATITUDE), it.get(LOCATION.LONGITUDE)),
                                                          it.get(LOCATION.CLOUDFLARE_ID),
-                                                         it.get(LOCATION.MAP_ID)),
+                                                         it.get(LOCATION.MAP_ID),
+                                                         it.get(LOCATION.SHOW_IN_FESTPLAN)),
                                          it.get(PROGRAMM.FROM_DATE),
                                          it.get(PROGRAMM.FROM_TIME),
                                          it.get(PROGRAMM.TO_DATE),
@@ -124,7 +142,8 @@ public class AttractionService {
                                                  LOCATION.LATITUDE,
                                                  LOCATION.LONGITUDE,
                                                  LOCATION.CLOUDFLARE_ID,
-                                                 LOCATION.MAP_ID)
+                                                 LOCATION.MAP_ID,
+                                                 LOCATION.SHOW_IN_FESTPLAN)
                                                   .from(PROGRAMM)
                                                   .join(LOCATION).on(PROGRAMM.LOCATION_ID.eq(LOCATION.ID))
                                                   .where(PROGRAMM.ATTRACTION_ID.eq(ATTRACTION.ID))
@@ -170,7 +189,8 @@ public class AttractionService {
                                                            v.get(LOCATION.LONGITUDE),
                                                            getGoogleMapsCoordinates(v.get(LOCATION.LATITUDE), v.get(LOCATION.LONGITUDE)),
                                                            v.get(LOCATION.CLOUDFLARE_ID),
-                                                           v.get(LOCATION.MAP_ID)),
+                                                           v.get(LOCATION.MAP_ID),
+                                                           v.get(LOCATION.SHOW_IN_FESTPLAN)),
                                            v.get(PROGRAMM.FROM_DATE),
                                            v.get(PROGRAMM.FROM_TIME),
                                            v.get(PROGRAMM.TO_DATE),

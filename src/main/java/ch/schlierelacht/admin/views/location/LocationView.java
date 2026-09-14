@@ -7,6 +7,7 @@ import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.MainLayout;
 import ch.schlierelacht.admin.views.util.CloudflareImage;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -72,6 +73,7 @@ public class LocationView extends VerticalLayout {
         g.addColumn(Location::getExternalId).setHeader("External ID");
         g.addColumn(Location::getMapId).setHeader("Map ID");
         g.addColumn(Location::getSortOrder).setHeader("Sortierung");
+        g.addColumn(l -> Boolean.TRUE.equals(l.getShowInFestplan()) ? "Ja" : "Nein").setHeader("Festplan").setSortable(true);
         g.addComponentColumn(l -> new Anchor(getGoogleMapsCoordinates(l.getLatitude(), l.getLongitude()), "Google Maps", BLANK));
         g.addItemDoubleClickListener(event -> {
             if (event.getItem() != null) {
@@ -85,6 +87,7 @@ public class LocationView extends VerticalLayout {
         var addLocationButton = new Button("Standort hinzufügen", _ -> {
             Location location = new Location();
             location.setSortOrder(0);
+            location.setShowInFestplan(true);
             dialog.open(location);
         });
 
@@ -118,12 +121,13 @@ public class LocationView extends VerticalLayout {
             var sortOrder = new IntegerField("Sortierung");
             var cloudflareId = new TextField("Cloudflare ID");
             var mapId = new TextField("Map ID");
+            var showInFestplan = new Checkbox("Auf Festplan anzeigen");
 
             var imagePreview = new VerticalLayout();
             imagePreview.setPadding(false);
             imagePreview.setSpacing(false);
 
-            form.add(name, type, externalId, sortOrder, latitude, longitude, cloudflareId, mapId, imagePreview);
+            form.add(name, type, externalId, sortOrder, latitude, longitude, cloudflareId, mapId, showInFestplan, imagePreview);
             form.setColspan(imagePreview, 2);
             form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
                                     new FormLayout.ResponsiveStep("500px", 2));
@@ -168,6 +172,9 @@ public class LocationView extends VerticalLayout {
             });
             binder.forField(mapId)
                   .bind(Location::getMapId, Location::setMapId);
+
+            binder.forField(showInFestplan)
+                  .bind(Location::getShowInFestplan, Location::setShowInFestplan);
 
             var save = new Button("Speichern");
             save.addClickListener(_ -> {
