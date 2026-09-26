@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -55,7 +56,7 @@ public class Download extends TableImpl<DownloadRecord> {
     /**
      * The column <code>public.download.id</code>.
      */
-    public final TableField<DownloadRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<DownloadRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).generatedByDefaultAsIdentity(), this, "");
 
     /**
      * The column <code>public.download.uploaded_at</code>.
@@ -129,6 +130,11 @@ public class Download extends TableImpl<DownloadRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public Identity<DownloadRecord, Long> getIdentity() {
+        return (Identity<DownloadRecord, Long>) super.getIdentity();
     }
 
     @Override

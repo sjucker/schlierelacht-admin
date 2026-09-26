@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -55,7 +56,7 @@ public class MeetupRegistration extends TableImpl<MeetupRegistrationRecord> {
     /**
      * The column <code>public.meetup_registration.id</code>.
      */
-    public final TableField<MeetupRegistrationRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<MeetupRegistrationRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).generatedByDefaultAsIdentity(), this, "");
 
     /**
      * The column <code>public.meetup_registration.registered_at</code>.
@@ -119,6 +120,11 @@ public class MeetupRegistration extends TableImpl<MeetupRegistrationRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public Identity<MeetupRegistrationRecord, Long> getIdentity() {
+        return (Identity<MeetupRegistrationRecord, Long>) super.getIdentity();
     }
 
     @Override

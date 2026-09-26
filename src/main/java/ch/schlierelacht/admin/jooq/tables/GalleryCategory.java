@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -55,7 +56,7 @@ public class GalleryCategory extends TableImpl<GalleryCategoryRecord> {
     /**
      * The column <code>public.gallery_category.id</code>.
      */
-    public final TableField<GalleryCategoryRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<GalleryCategoryRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).generatedByDefaultAsIdentity(), this, "");
 
     /**
      * The column <code>public.gallery_category.name</code>.
@@ -99,6 +100,11 @@ public class GalleryCategory extends TableImpl<GalleryCategoryRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public Identity<GalleryCategoryRecord, Long> getIdentity() {
+        return (Identity<GalleryCategoryRecord, Long>) super.getIdentity();
     }
 
     @Override

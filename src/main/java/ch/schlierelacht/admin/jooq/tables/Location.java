@@ -18,6 +18,7 @@ import java.util.List;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
@@ -62,7 +63,7 @@ public class Location extends TableImpl<LocationRecord> {
     /**
      * The column <code>public.location.id</code>.
      */
-    public final TableField<LocationRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<LocationRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).generatedByDefaultAsIdentity(), this, "");
 
     /**
      * The column <code>public.location.external_id</code>.
@@ -174,6 +175,11 @@ public class Location extends TableImpl<LocationRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public Identity<LocationRecord, Long> getIdentity() {
+        return (Identity<LocationRecord, Long>) super.getIdentity();
     }
 
     @Override

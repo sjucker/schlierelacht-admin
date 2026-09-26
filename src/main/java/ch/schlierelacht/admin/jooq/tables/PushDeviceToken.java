@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -56,7 +57,7 @@ public class PushDeviceToken extends TableImpl<PushDeviceTokenRecord> {
     /**
      * The column <code>public.push_device_token.id</code>.
      */
-    public final TableField<PushDeviceTokenRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<PushDeviceTokenRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).generatedByDefaultAsIdentity(), this, "");
 
     /**
      * The column <code>public.push_device_token.token</code>.
@@ -115,6 +116,11 @@ public class PushDeviceToken extends TableImpl<PushDeviceTokenRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public Identity<PushDeviceTokenRecord, Long> getIdentity() {
+        return (Identity<PushDeviceTokenRecord, Long>) super.getIdentity();
     }
 
     @Override

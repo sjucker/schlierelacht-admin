@@ -13,6 +13,7 @@ import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -54,7 +55,7 @@ public class News extends TableImpl<NewsRecord> {
     /**
      * The column <code>public.news.id</code>.
      */
-    public final TableField<NewsRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<NewsRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).generatedByDefaultAsIdentity(), this, "");
 
     /**
      * The column <code>public.news.date</code>.
@@ -118,6 +119,11 @@ public class News extends TableImpl<NewsRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public Identity<NewsRecord, Long> getIdentity() {
+        return (Identity<NewsRecord, Long>) super.getIdentity();
     }
 
     @Override

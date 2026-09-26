@@ -12,6 +12,7 @@ import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -53,7 +54,7 @@ public class OkMember extends TableImpl<OkMemberRecord> {
     /**
      * The column <code>public.ok_member.id</code>.
      */
-    public final TableField<OkMemberRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<OkMemberRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).generatedByDefaultAsIdentity(), this, "");
 
     /**
      * The column <code>public.ok_member.name</code>.
@@ -112,6 +113,11 @@ public class OkMember extends TableImpl<OkMemberRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public Identity<OkMemberRecord, Long> getIdentity() {
+        return (Identity<OkMemberRecord, Long>) super.getIdentity();
     }
 
     @Override

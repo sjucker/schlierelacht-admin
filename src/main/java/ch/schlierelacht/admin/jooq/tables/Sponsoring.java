@@ -13,6 +13,7 @@ import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -54,7 +55,7 @@ public class Sponsoring extends TableImpl<SponsoringRecord> {
     /**
      * The column <code>public.sponsoring.id</code>.
      */
-    public final TableField<SponsoringRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<SponsoringRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).generatedByDefaultAsIdentity(), this, "");
 
     /**
      * The column <code>public.sponsoring.type</code>.
@@ -113,6 +114,11 @@ public class Sponsoring extends TableImpl<SponsoringRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public Identity<SponsoringRecord, Long> getIdentity() {
+        return (Identity<SponsoringRecord, Long>) super.getIdentity();
     }
 
     @Override
