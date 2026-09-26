@@ -5,10 +5,9 @@ import ch.schlierelacht.admin.views.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
@@ -19,16 +18,13 @@ import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_ER
 import static com.vaadin.flow.component.notification.NotificationVariant.LUMO_SUCCESS;
 
 /**
- * Admin view to compose and send a push notification, either to the broadcast
- * topic ({@code general}) or to every individually registered device token.
+ * Admin view to compose and send a push notification to the broadcast topic
+ * ({@code general}), which every app installation subscribes to.
  */
 @PageTitle("Push senden")
 @Route(value = "push", layout = MainLayout.class)
 @PermitAll
 public class PushNotificationView extends VerticalLayout {
-
-    private static final String TARGET_TOPIC = "Alle (Topic \"general\")";
-    private static final String TARGET_DEVICES = "Registrierte Geräte einzeln";
 
     private final PushService pushService;
 
@@ -41,7 +37,7 @@ public class PushNotificationView extends VerticalLayout {
         if (!pushService.isSendingAvailable()) {
             var warning = new Paragraph(
                     "Firebase ist nicht konfiguriert (app.firebase-credentials fehlt). "
-                    + "Das Versenden ist deaktiviert.");
+                            + "Das Versenden ist deaktiviert.");
             warning.getStyle().set("color", "var(--lumo-error-text-color)");
             add(warning);
         }
@@ -55,11 +51,6 @@ public class PushNotificationView extends VerticalLayout {
         var route = new TextField("Route (optional, z.B. \"news\")");
         route.setWidthFull();
 
-        var target = new RadioButtonGroup<String>();
-        target.setLabel("Empfänger");
-        target.setItems(TARGET_TOPIC, TARGET_DEVICES);
-        target.setValue(TARGET_TOPIC);
-
         var send = new Button("Senden");
         send.addThemeVariants(LUMO_PRIMARY);
         send.setDisableOnClick(true);
@@ -70,14 +61,8 @@ public class PushNotificationView extends VerticalLayout {
                     showNotification("Titel und Nachricht sind erforderlich.", LUMO_ERROR);
                     return;
                 }
-                var r = route.getValue();
-                if (TARGET_TOPIC.equals(target.getValue())) {
-                    pushService.sendToGeneralTopic(title.getValue(), body.getValue(), r);
-                    showNotification("An Topic \"general\" gesendet.", LUMO_SUCCESS);
-                } else {
-                    var count = pushService.sendToAllDevices(title.getValue(), body.getValue(), r);
-                    showNotification("An " + count + " Geräte gesendet.", LUMO_SUCCESS);
-                }
+                pushService.sendToGeneralTopic(title.getValue(), body.getValue(), route.getValue());
+                showNotification("An Topic \"general\" gesendet.", LUMO_SUCCESS);
                 title.clear();
                 body.clear();
                 route.clear();
@@ -88,6 +73,6 @@ public class PushNotificationView extends VerticalLayout {
             }
         });
 
-        add(target, title, body, route, send);
+        add(title, body, route, send);
     }
 }
