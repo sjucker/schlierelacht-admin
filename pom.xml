@@ -10,7 +10,7 @@
     <properties>
         <java.version>25</java.version>
 
-        <vaadin.version>25.3.0</vaadin.version>
+        <vaadin.version>25.3.1</vaadin.version>
         <line-awesome.version>2.1.0</line-awesome.version>
         <archunit-junit5.version>1.5.1</archunit-junit5.version>
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -229,7 +229,7 @@
                             <skip>${jooq-codegen-skip}</skip>
                             <database>
                                 <type>POSTGRES</type>
-                                <containerImage>postgres:17.6</containerImage>
+                                <containerImage>postgres:17.10</containerImage>
                             </database>
                             <flyway/>
                             <jooq>

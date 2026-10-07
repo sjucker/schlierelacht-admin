@@ -1,6 +1,6 @@
 services:
   schlierelacht-admin-db:
-    image: postgres:17.6
+    image: postgres:17.10
     environment:
       - POSTGRES_USER=schlierelacht
       - POSTGRES_PASSWORD=schlierelacht
