@@ -6,6 +6,7 @@ import ch.schlierelacht.admin.jooq.tables.pojos.Location;
 import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.MainLayout;
 import ch.schlierelacht.admin.views.util.CloudflareImage;
+import ch.schlierelacht.admin.views.util.ExternalIdValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -145,6 +146,7 @@ public class LocationView extends VerticalLayout {
 
             binder.forField(externalId)
                   .asRequired()
+                  .withValidator(new ExternalIdValidator())
                   .bind(Location::getExternalId, Location::setExternalId);
 
             binder.forField(latitude)

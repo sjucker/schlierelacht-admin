@@ -8,6 +8,7 @@ import ch.schlierelacht.admin.jooq.tables.pojos.Image;
 import ch.schlierelacht.admin.service.AttractionFileService;
 import ch.schlierelacht.admin.service.CloudflareService;
 import ch.schlierelacht.admin.views.util.CloudflareImage;
+import ch.schlierelacht.admin.views.util.ExternalIdValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -349,7 +350,10 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             binder.forField(instagram).bind(Attraction::getInstagram, Attraction::setInstagram);
             binder.forField(facebook).bind(Attraction::getFacebook, Attraction::setFacebook);
             binder.forField(youtube).bind(Attraction::getYoutube, Attraction::setYoutube);
-            binder.forField(externalId).bind(Attraction::getExternalId, Attraction::setExternalId);
+            binder.forField(externalId)
+                  .asRequired()
+                  .withValidator(new ExternalIdValidator())
+                  .bind(Attraction::getExternalId, Attraction::setExternalId);
             if (isOperatorApplicable()) {
                 binder.forField(operator).bind(Attraction::getOperator, Attraction::setOperator);
             }
