@@ -46,6 +46,26 @@ Root package: `ch.schlierelacht.admin`
 ./mvnw spring-boot:run           # Explicit dev mode
 ```
 
+### Vaadin dev loop (agents)
+
+Agents run and verify UI changes through the Vaadin dev loop instead of `spring-boot:run` / `mvn compile` — see the
+`vaadin-devloop` skill (`.agents/skills/vaadin-devloop/`, Claude Code adapter in `.claude/skills/vaadin-devloop/`).
+The app needs the `local` profile (gitignored `application-local.properties`) and a running Postgres:
+
+```bash
+VAADIN_DEV_DAEMON_OPTS="-Dspring.profiles.active=local" .vaadin/vaadin-dev start
+.vaadin/vaadin-dev apply      # after a batch of edits; exit code is the verdict
+.vaadin/vaadin-dev status | stop | shutdown
+```
+
+On Windows use the launcher from PowerShell: `$env:VAADIN_DEV_DAEMON_OPTS="-Dspring.profiles.active=local";
+.\.vaadin\vaadin-dev.cmd start`. (`bash .vaadin/vaadin-dev` in Git Bash goes through the POSIX `mvnw`, which fails here
+if a broken `wget` is on the PATH.)
+
+Don't run `./mvnw` or the IDE run config at the same time (both want port 8080). The scripts and skills are generated
+by `./mvnw vaadin:install-dev-cli` — **re-run it after every Vaadin upgrade** and don't hand-edit them. Vaadin API
+questions: use the Vaadin MCP server (`https://mcp.vaadin.com/docs`, configured in `.mcp.json`).
+
 ### Database (Docker must be running)
 
 ```bash
