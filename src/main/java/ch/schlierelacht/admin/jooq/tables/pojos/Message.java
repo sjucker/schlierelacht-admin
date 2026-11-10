@@ -25,6 +25,7 @@ public class Message implements Serializable {
     private Boolean active;
     private String createdBy;
     private LocalDateTime createdAt;
+    private LocalDateTime publishedAt;
 
     public Message() {}
 
@@ -36,6 +37,7 @@ public class Message implements Serializable {
         this.active = value.active;
         this.createdBy = value.createdBy;
         this.createdAt = value.createdAt;
+        this.publishedAt = value.publishedAt;
     }
 
     public Message(
@@ -45,7 +47,8 @@ public class Message implements Serializable {
         String content,
         Boolean active,
         String createdBy,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime publishedAt
     ) {
         this.id = id;
         this.priority = priority;
@@ -54,6 +57,7 @@ public class Message implements Serializable {
         this.active = active;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
+        this.publishedAt = publishedAt;
     }
 
     /**
@@ -154,6 +158,20 @@ public class Message implements Serializable {
         this.createdAt = createdAt;
     }
 
+    /**
+     * Getter for <code>public.message.published_at</code>.
+     */
+    public LocalDateTime getPublishedAt() {
+        return this.publishedAt;
+    }
+
+    /**
+     * Setter for <code>public.message.published_at</code>.
+     */
+    public void setPublishedAt(LocalDateTime publishedAt) {
+        this.publishedAt = publishedAt;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -205,6 +223,12 @@ public class Message implements Serializable {
         }
         else if (!this.createdAt.equals(other.createdAt))
             return false;
+        if (this.publishedAt == null) {
+            if (other.publishedAt != null)
+                return false;
+        }
+        else if (!this.publishedAt.equals(other.publishedAt))
+            return false;
         return true;
     }
 
@@ -219,6 +243,7 @@ public class Message implements Serializable {
         result = prime * result + ((this.active == null) ? 0 : this.active.hashCode());
         result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
         result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
+        result = prime * result + ((this.publishedAt == null) ? 0 : this.publishedAt.hashCode());
         return result;
     }
 
@@ -233,6 +258,7 @@ public class Message implements Serializable {
         sb.append(", ").append(active);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(createdAt);
+        sb.append(", ").append(publishedAt);
 
         sb.append(")");
         return sb.toString();

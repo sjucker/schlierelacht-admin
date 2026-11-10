@@ -119,6 +119,20 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> {
         return (LocalDateTime) get(6);
     }
 
+    /**
+     * Setter for <code>public.message.published_at</code>.
+     */
+    public void setPublishedAt(LocalDateTime value) {
+        set(7, value);
+    }
+
+    /**
+     * Getter for <code>public.message.published_at</code>.
+     */
+    public LocalDateTime getPublishedAt() {
+        return (LocalDateTime) get(7);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -142,7 +156,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> {
     /**
      * Create a detached, initialised MessageRecord
      */
-    public MessageRecord(Long id, MessagePriority priority, String title, String content, Boolean active, String createdBy, LocalDateTime createdAt) {
+    public MessageRecord(Long id, MessagePriority priority, String title, String content, Boolean active, String createdBy, LocalDateTime createdAt, LocalDateTime publishedAt) {
         super(Message.MESSAGE);
 
         setId(id);
@@ -152,6 +166,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> {
         setActive(active);
         setCreatedBy(createdBy);
         setCreatedAt(createdAt);
+        setPublishedAt(publishedAt);
         resetTouchedOnNotNull();
     }
 
@@ -169,6 +184,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> {
             setActive(value.getActive());
             setCreatedBy(value.getCreatedBy());
             setCreatedAt(value.getCreatedAt());
+            setPublishedAt(value.getPublishedAt());
             resetTouchedOnNotNull();
         }
     }

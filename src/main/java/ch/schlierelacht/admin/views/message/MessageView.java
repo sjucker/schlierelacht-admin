@@ -5,6 +5,7 @@ import ch.schlierelacht.admin.jooq.tables.daos.LoginDao;
 import ch.schlierelacht.admin.jooq.tables.daos.MessageDao;
 import ch.schlierelacht.admin.jooq.tables.pojos.Login;
 import ch.schlierelacht.admin.jooq.tables.pojos.Message;
+import ch.schlierelacht.admin.service.MessageService;
 import ch.schlierelacht.admin.util.DateUtil;
 import ch.schlierelacht.admin.views.MainLayout;
 import com.vaadin.flow.component.button.Button;
@@ -56,9 +57,10 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class MessageView extends VerticalLayout {
 
     /**
-     * Same order as the app: priority, then newest first.
+     * Like the app: priority, then most recently published; never published (prepared) ones last, newest first.
      */
     private static final Comparator<Message> ORDER = Comparator.comparing(Message::getPriority)
+                                                               .thenComparing(Message::getPublishedAt, Comparator.nullsLast(Comparator.reverseOrder()))
                                                                .thenComparing(Message::getCreatedAt, Comparator.reverseOrder());
 
     private final MessageDao messageDao;
@@ -78,7 +80,9 @@ public class MessageView extends VerticalLayout {
 
         add(new H2("Meldungen verwalten"),
             new Paragraph("Die App zeigt auf der Startseite die wichtigste aktive Meldung (Notfall vor Warnung vor Info, " +
-                          "bei gleicher Priorität die neuere) und alle aktiven Meldungen in einer Liste."));
+                          "bei gleicher Priorität die zuletzt veröffentlichte) und alle aktiven Meldungen in einer Liste. " +
+                          "Meldungen lassen sich inaktiv vorbereiten: beim Aktivieren erhalten sie ihren Veröffentlichungszeitpunkt, " +
+                          "den die App anzeigt."));
 
         grid = createGrid();
         add(grid, createToolbar());
@@ -92,6 +96,8 @@ public class MessageView extends VerticalLayout {
         g.addComponentColumn(m -> priorityBadge(m.getPriority())).setHeader("Priorität").setComparator(Message::getPriority);
         g.addColumn(Message::getTitle).setHeader("Titel").setSortable(true).setFlexGrow(3);
         g.addColumn(m -> Boolean.TRUE.equals(m.getActive()) ? "Ja" : "Nein").setHeader("Aktiv").setSortable(true);
+        g.addColumn(m -> formatDateTime(m.getPublishedAt())).setHeader("Veröffentlicht am")
+         .setComparator(Comparator.comparing(Message::getPublishedAt, Comparator.nullsFirst(Comparator.naturalOrder())));
         g.addColumn(m -> formatDateTime(m.getCreatedAt())).setHeader("Erstellt am").setComparator(Message::getCreatedAt);
         g.addColumn(m -> creatorName(m.getCreatedBy())).setHeader("Erstellt von").setSortable(true);
         g.addItemDoubleClickListener(event -> {
@@ -139,6 +145,10 @@ public class MessageView extends VerticalLayout {
         private final Binder<Message> binder = new Binder<>(Message.class);
         private final Div contentPreview = new Div();
         private final Span createdInfo = new Span();
+        /**
+         * Whether the message was active when the dialog opened: saving it active then doesn't publish it anew.
+         */
+        private boolean wasActive;
 
         public MessageDialog(@NonNull Runnable onSuccessCallback) {
             setModality(STRICT);
@@ -217,11 +227,16 @@ public class MessageView extends VerticalLayout {
         }
 
         public void open(Message message) {
+            wasActive = Boolean.TRUE.equals(message.getActive());
             binder.setBean(message);
             updatePreview(message.getContent());
-            createdInfo.setText(message.getId() == null
-                                ? ""
-                                : "Erstellt am %s von %s".formatted(formatDateTime(message.getCreatedAt()), creatorName(message.getCreatedBy())));
+            var info = message.getId() == null
+                       ? ""
+                       : "Erstellt am %s von %s".formatted(formatDateTime(message.getCreatedAt()), creatorName(message.getCreatedBy()));
+            if (message.getPublishedAt() != null) {
+                info += ", zuletzt veröffentlicht am %s".formatted(formatDateTime(message.getPublishedAt()));
+            }
+            createdInfo.setText(info);
             super.open();
         }
 
@@ -237,10 +252,12 @@ public class MessageView extends VerticalLayout {
         private boolean save() {
             if (binder.validate().isOk()) {
                 var message = binder.getBean();
+                var now = DateUtil.now();
+                MessageService.markPublishedIfActivated(message, wasActive, now);
                 if (message.getId() == null) {
                     // the login's email, like the uploader of a download or gallery image
                     message.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-                    message.setCreatedAt(DateUtil.now());
+                    message.setCreatedAt(now);
                     messageDao.insert(message);
                 } else {
                     messageDao.update(message);

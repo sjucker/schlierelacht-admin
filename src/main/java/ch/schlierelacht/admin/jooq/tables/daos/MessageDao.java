@@ -163,4 +163,19 @@ public class MessageDao extends AbstractSpringDAOImpl<MessageRecord, ch.schliere
     public List<ch.schlierelacht.admin.jooq.tables.pojos.Message> fetchByCreatedAt(LocalDateTime... values) {
         return fetch(Message.MESSAGE.CREATED_AT, values);
     }
+
+    /**
+     * Fetch records that have <code>published_at BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Message> fetchRangeOfPublishedAt(LocalDateTime lowerInclusive, LocalDateTime upperInclusive) {
+        return fetchRange(Message.MESSAGE.PUBLISHED_AT, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>published_at IN (values)</code>
+     */
+    public List<ch.schlierelacht.admin.jooq.tables.pojos.Message> fetchByPublishedAt(LocalDateTime... values) {
+        return fetch(Message.MESSAGE.PUBLISHED_AT, values);
+    }
 }

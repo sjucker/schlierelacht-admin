@@ -88,6 +88,11 @@ public class Message extends TableImpl<MessageRecord> {
      */
     public final TableField<MessageRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field(DSL.raw("now()"), SQLDataType.LOCALDATETIME)), this, "");
 
+    /**
+     * The column <code>public.message.published_at</code>.
+     */
+    public final TableField<MessageRecord, LocalDateTime> PUBLISHED_AT = createField(DSL.name("published_at"), SQLDataType.LOCALDATETIME(6), this, "");
+
     private Message(Name alias, Table<MessageRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }
