@@ -7,6 +7,7 @@ import ch.schlierelacht.admin.views.gallery.GalleryView;
 import ch.schlierelacht.admin.views.gastro.GastroView;
 import ch.schlierelacht.admin.views.location.LocationView;
 import ch.schlierelacht.admin.views.meetup.MeetupView;
+import ch.schlierelacht.admin.views.message.MessageView;
 import ch.schlierelacht.admin.views.news.NewsView;
 import ch.schlierelacht.admin.views.notification.PushNotificationView;
 import ch.schlierelacht.admin.views.ok.OkView;
@@ -55,6 +56,7 @@ import static org.vaadin.lineawesome.LineAwesomeIcon.BRIEFCASE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.CALENDAR_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.COG_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.DOWNLOAD_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.EXCLAMATION_TRIANGLE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.HANDSHAKE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.IMAGES_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
@@ -155,6 +157,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Programm", CALENDAR_SOLID.create(), ProgrammView.class),
                 new MenuItemInfo("Wirtschaft/Gewerbe", BRIEFCASE_SOLID.create(), WirtschaftView.class),
                 new MenuItemInfo("News", NEWSPAPER_SOLID.create(), NewsView.class),
+                new MenuItemInfo("Meldungen", EXCLAMATION_TRIANGLE_SOLID.create(), MessageView.class),
                 new MenuItemInfo("Downloads", DOWNLOAD_SOLID.create(), DownloadsView.class),
                 new MenuItemInfo("Galerie", IMAGES_SOLID.create(), GalleryView.class),
                 new MenuItemInfo("Jahrgangstreffen", ADDRESS_BOOK_SOLID.create(), MeetupView.class),

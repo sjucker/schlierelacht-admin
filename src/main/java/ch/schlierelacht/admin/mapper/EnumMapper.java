@@ -5,6 +5,7 @@ import ch.schlierelacht.admin.dto.DownloadCategory;
 import ch.schlierelacht.admin.dto.ImageType;
 import ch.schlierelacht.admin.dto.LocationType;
 import ch.schlierelacht.admin.dto.MeetupJahrgang;
+import ch.schlierelacht.admin.dto.MessagePriority;
 import ch.schlierelacht.admin.dto.OkTeam;
 import ch.schlierelacht.admin.dto.SponsoringType;
 import org.mapstruct.Mapper;
@@ -41,4 +42,8 @@ public interface EnumMapper {
     OkTeam fromDb(ch.schlierelacht.admin.jooq.enums.OkTeam okTeam);
 
     ch.schlierelacht.admin.jooq.enums.OkTeam toDb(OkTeam okTeam);
+
+    MessagePriority fromDb(ch.schlierelacht.admin.jooq.enums.MessagePriority messagePriority);
+
+    ch.schlierelacht.admin.jooq.enums.MessagePriority toDb(MessagePriority messagePriority);
 }

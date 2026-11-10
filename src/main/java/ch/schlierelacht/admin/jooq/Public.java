@@ -14,6 +14,7 @@ import ch.schlierelacht.admin.jooq.tables.Image;
 import ch.schlierelacht.admin.jooq.tables.Location;
 import ch.schlierelacht.admin.jooq.tables.Login;
 import ch.schlierelacht.admin.jooq.tables.MeetupRegistration;
+import ch.schlierelacht.admin.jooq.tables.Message;
 import ch.schlierelacht.admin.jooq.tables.News;
 import ch.schlierelacht.admin.jooq.tables.OkMember;
 import ch.schlierelacht.admin.jooq.tables.OkTeamMember;
@@ -94,6 +95,11 @@ public class Public extends SchemaImpl {
     public final MeetupRegistration MEETUP_REGISTRATION = MeetupRegistration.MEETUP_REGISTRATION;
 
     /**
+     * The table <code>public.message</code>.
+     */
+    public final Message MESSAGE = Message.MESSAGE;
+
+    /**
      * The table <code>public.news</code>.
      */
     public final News NEWS = News.NEWS;
@@ -149,6 +155,7 @@ public class Public extends SchemaImpl {
             Location.LOCATION,
             Login.LOGIN,
             MeetupRegistration.MEETUP_REGISTRATION,
+            Message.MESSAGE,
             News.NEWS,
             OkMember.OK_MEMBER,
             OkTeamMember.OK_TEAM_MEMBER,
