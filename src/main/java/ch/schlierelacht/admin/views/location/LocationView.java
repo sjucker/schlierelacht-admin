@@ -54,7 +54,7 @@ public class LocationView extends VerticalLayout {
         this.cloudflareService = cloudflareService;
         this.dialog = new LocationDialog(() -> {
             refreshGrid();
-            showNotification("Speichern erfolreich", LUMO_SUCCESS);
+            showNotification("Speichern erfolgreich", LUMO_SUCCESS);
         });
         setSizeFull();
 
@@ -227,6 +227,8 @@ public class LocationView extends VerticalLayout {
             if (location != null && location.getId() != null) {
                 locationDao.delete(location);
                 close();
+                refreshGrid();
+                showNotification("Löschen erfolgreich", LUMO_SUCCESS);
             }
         }
     }

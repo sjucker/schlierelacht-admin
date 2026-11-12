@@ -249,6 +249,8 @@ public class OkView extends VerticalLayout {
             if (member != null && member.getId() != null) {
                 okMemberDao.delete(member);
                 close();
+                refreshMembersGrid();
+                showNotification("Löschen erfolgreich", LUMO_SUCCESS);
             }
         }
     }
@@ -333,6 +335,8 @@ public class OkView extends VerticalLayout {
             if (member != null && member.getId() != null) {
                 okTeamMemberDao.delete(member);
                 close();
+                refreshTeamMembersGrid();
+                showNotification("Löschen erfolgreich", LUMO_SUCCESS);
             }
         }
     }

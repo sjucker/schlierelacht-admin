@@ -227,6 +227,8 @@ public class ProgrammView extends VerticalLayout {
             if (programm != null && programm.getId() != null) {
                 programmDao.delete(programm);
                 close();
+                refreshGrid();
+                showNotification("Löschen erfolgreich", LUMO_SUCCESS);
             }
         }
     }

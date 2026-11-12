@@ -711,6 +711,8 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 deleteExtraFields(attraction.getId());
                 attractionDao.delete(attraction);
                 close();
+                refreshGrid();
+                showNotification("Löschen erfolgreich", LUMO_SUCCESS);
             }
         }
     }

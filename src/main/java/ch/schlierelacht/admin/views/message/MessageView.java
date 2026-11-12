@@ -273,6 +273,8 @@ public class MessageView extends VerticalLayout {
             if (message != null && message.getId() != null) {
                 messageDao.delete(message);
                 close();
+                refreshGrid();
+                showNotification("Löschen erfolgreich", LUMO_SUCCESS);
             }
         }
     }

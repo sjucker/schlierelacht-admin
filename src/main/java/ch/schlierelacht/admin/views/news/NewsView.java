@@ -271,6 +271,8 @@ public class NewsView extends VerticalLayout {
             if (news != null && news.getId() != null) {
                 newsDao.delete(news);
                 close();
+                refreshGrid();
+                showNotification("Löschen erfolgreich", LUMO_SUCCESS);
             }
         }
     }

@@ -282,6 +282,8 @@ public class SponsoringView extends VerticalLayout {
             if (sponsoring != null && sponsoring.getId() != null) {
                 sponsoringDao.delete(sponsoring);
                 close();
+                refreshGrid();
+                showNotification("Löschen erfolgreich", LUMO_SUCCESS);
             }
         }
     }
