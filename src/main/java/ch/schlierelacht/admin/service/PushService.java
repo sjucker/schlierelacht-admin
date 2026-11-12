@@ -84,7 +84,7 @@ public class PushService {
         var messaging = firebaseMessaging.getIfAvailable();
         if (messaging == null) {
             throw new IllegalStateException(
-                    "Firebase ist nicht konfiguriert (app.firebase-credentials fehlt).");
+                    "Firebase ist nicht konfiguriert (FIREBASE_CREDENTIALS fehlt oder ist ungültig).");
         }
         return messaging;
     }

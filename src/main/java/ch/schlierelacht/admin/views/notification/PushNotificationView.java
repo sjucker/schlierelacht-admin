@@ -36,7 +36,7 @@ public class PushNotificationView extends VerticalLayout {
 
         if (!pushService.isSendingAvailable()) {
             var warning = new Paragraph(
-                    "Firebase ist nicht konfiguriert (app.firebase-credentials fehlt). "
+                    "Firebase ist nicht konfiguriert (FIREBASE_CREDENTIALS fehlt oder ist ungültig). "
                             + "Das Versenden ist deaktiviert.");
             warning.getStyle().set("color", "var(--lumo-error-text-color)");
             add(warning);
