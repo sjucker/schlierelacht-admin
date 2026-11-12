@@ -8,6 +8,7 @@ import ch.schlierelacht.admin.jooq.tables.Attraction;
 import ch.schlierelacht.admin.jooq.tables.AttractionFile;
 import ch.schlierelacht.admin.jooq.tables.AttractionImage;
 import ch.schlierelacht.admin.jooq.tables.Download;
+import ch.schlierelacht.admin.jooq.tables.Faq;
 import ch.schlierelacht.admin.jooq.tables.GalleryCategory;
 import ch.schlierelacht.admin.jooq.tables.GalleryImage;
 import ch.schlierelacht.admin.jooq.tables.Image;
@@ -63,6 +64,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.download</code>.
      */
     public final Download DOWNLOAD = Download.DOWNLOAD;
+
+    /**
+     * The table <code>public.faq</code>.
+     */
+    public final Faq FAQ = Faq.FAQ;
 
     /**
      * The table <code>public.gallery_category</code>.
@@ -149,6 +155,7 @@ public class Public extends SchemaImpl {
             AttractionFile.ATTRACTION_FILE,
             AttractionImage.ATTRACTION_IMAGE,
             Download.DOWNLOAD,
+            Faq.FAQ,
             GalleryCategory.GALLERY_CATEGORY,
             GalleryImage.GALLERY_IMAGE,
             Image.IMAGE,

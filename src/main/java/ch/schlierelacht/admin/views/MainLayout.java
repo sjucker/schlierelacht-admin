@@ -3,6 +3,7 @@ package ch.schlierelacht.admin.views;
 import ch.schlierelacht.admin.views.artist.ArtistView;
 import ch.schlierelacht.admin.views.attraction.AttractionView;
 import ch.schlierelacht.admin.views.downloads.DownloadsView;
+import ch.schlierelacht.admin.views.faq.FaqView;
 import ch.schlierelacht.admin.views.gallery.GalleryView;
 import ch.schlierelacht.admin.views.gastro.GastroView;
 import ch.schlierelacht.admin.views.location.LocationView;
@@ -62,6 +63,7 @@ import static org.vaadin.lineawesome.LineAwesomeIcon.IMAGES_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.MAP_MARKER_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.NEWSPAPER_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.PIZZA_SLICE_SOLID;
+import static org.vaadin.lineawesome.LineAwesomeIcon.QUESTION_CIRCLE_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.THEATER_MASKS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.USERS_SOLID;
 import static org.vaadin.lineawesome.LineAwesomeIcon.USER_SOLID;
@@ -158,6 +160,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Wirtschaft/Gewerbe", BRIEFCASE_SOLID.create(), WirtschaftView.class),
                 new MenuItemInfo("News", NEWSPAPER_SOLID.create(), NewsView.class),
                 new MenuItemInfo("Meldungen", EXCLAMATION_TRIANGLE_SOLID.create(), MessageView.class),
+                new MenuItemInfo("FAQ", QUESTION_CIRCLE_SOLID.create(), FaqView.class),
                 new MenuItemInfo("Downloads", DOWNLOAD_SOLID.create(), DownloadsView.class),
                 new MenuItemInfo("Galerie", IMAGES_SOLID.create(), GalleryView.class),
                 new MenuItemInfo("Jahrgangstreffen", ADDRESS_BOOK_SOLID.create(), MeetupView.class),
