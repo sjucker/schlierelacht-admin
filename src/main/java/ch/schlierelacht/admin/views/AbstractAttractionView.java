@@ -11,6 +11,7 @@ import ch.schlierelacht.admin.views.util.CloudflareImage;
 import ch.schlierelacht.admin.views.util.ExternalIdValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -217,6 +218,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
         if (isOperatorApplicable()) {
             g.addColumn(Attraction::getOperator).setHeader("Betreiber").setSortable(true);
         }
+        g.addColumn(a -> Boolean.TRUE.equals(a.getActive()) ? "Ja" : "Nein").setHeader("Aktiv").setSortable(true);
         addExtraColumns(g);
         g.addItemDoubleClickListener(event -> {
             if (event.getItem() != null) {
@@ -234,6 +236,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
 
     private Attraction newAttraction() {
         var attraction = new Attraction();
+        attraction.setActive(true);
         if (!isTypeSelectable()) {
             attraction.setType(getAttractionTypes().iterator().next().toDb());
         }
@@ -317,6 +320,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
             var facebook = new TextField("Facebook");
             var youtube = new TextField("Youtube");
             var externalId = new TextField("External ID (z.B. 'dj-mario')");
+            var active = new Checkbox("Aktiv (auf der Website und in der App sichtbar)");
 
             operator.setMaxLength(255);
 
@@ -324,6 +328,8 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                 form.add(typeSelect);
                 form.setColspan(typeSelect, 2);
             }
+            form.add(active);
+            form.setColspan(active, 2);
             form.add(name, externalId, website, instagram, facebook, youtube);
             if (isOperatorApplicable()) {
                 form.add(operator);
@@ -344,6 +350,7 @@ public abstract class AbstractAttractionView extends VerticalLayout {
                                 }
                             });
             }
+            binder.forField(active).bind(Attraction::getActive, Attraction::setActive);
             binder.forField(name).asRequired().bind(Attraction::getName, Attraction::setName);
             binder.forField(description).bind(Attraction::getDescription, Attraction::setDescription);
             binder.forField(website).bind(Attraction::getWebsite, Attraction::setWebsite);

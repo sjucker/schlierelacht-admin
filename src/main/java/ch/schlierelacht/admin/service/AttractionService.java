@@ -33,6 +33,11 @@ import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.noCondition;
 import static org.jooq.impl.DSL.select;
 
+/**
+ * The attractions of the public API. Only {@code active} ones are ever served: inactive attractions are left out of
+ * the lists, the detail (404), the programm and the events; {@link AttractionFileService#findFile} does the same for
+ * their files.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -94,7 +99,7 @@ public class AttractionService {
                          .from(PROGRAMM)
                          .join(ATTRACTION).on(PROGRAMM.ATTRACTION_ID.eq(ATTRACTION.ID))
                          .join(LOCATION).on(PROGRAMM.LOCATION_ID.eq(LOCATION.ID))
-                         .where(attractionCondition)
+                         .where(ATTRACTION.ACTIVE.isTrue(), attractionCondition)
                          .orderBy(PROGRAMM.FROM_DATE.asc(),
                                   PROGRAMM.FROM_TIME.nullsFirst(),
                                   ATTRACTION.NAME.asc())
@@ -164,7 +169,7 @@ public class AttractionService {
                                                   .where(ATTRACTION_FILE.ATTRACTION_ID.eq(ATTRACTION.ID))
                                                   .orderBy(ATTRACTION_FILE.UPLOADED_AT.asc())))
                          .from(ATTRACTION)
-                         .where(whereCondition)
+                         .where(ATTRACTION.ACTIVE.isTrue(), whereCondition)
                          .orderBy(ATTRACTION.NAME.asc())
                          .fetch(it -> new AttractionDTO(
                                  it.get(ATTRACTION.EXTERNAL_ID),

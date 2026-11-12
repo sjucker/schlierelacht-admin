@@ -111,6 +111,11 @@ public class Attraction extends TableImpl<AttractionRecord> {
      */
     public final TableField<AttractionRecord, String> OPERATOR = createField(DSL.name("operator"), SQLDataType.VARCHAR(255), this, "");
 
+    /**
+     * The column <code>public.attraction.active</code>.
+     */
+    public final TableField<AttractionRecord, Boolean> ACTIVE = createField(DSL.name("active"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field(DSL.raw("true"), SQLDataType.BOOLEAN)), this, "");
+
     private Attraction(Name alias, Table<AttractionRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

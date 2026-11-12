@@ -27,6 +27,7 @@ public class Attraction implements Serializable {
     private String youtube;
     private String externalId;
     private String operator;
+    private Boolean active;
 
     public Attraction() {}
 
@@ -41,6 +42,7 @@ public class Attraction implements Serializable {
         this.youtube = value.youtube;
         this.externalId = value.externalId;
         this.operator = value.operator;
+        this.active = value.active;
     }
 
     public Attraction(
@@ -53,7 +55,8 @@ public class Attraction implements Serializable {
         String facebook,
         String youtube,
         String externalId,
-        String operator
+        String operator,
+        Boolean active
     ) {
         this.id = id;
         this.type = type;
@@ -65,6 +68,7 @@ public class Attraction implements Serializable {
         this.youtube = youtube;
         this.externalId = externalId;
         this.operator = operator;
+        this.active = active;
     }
 
     /**
@@ -207,6 +211,20 @@ public class Attraction implements Serializable {
         this.operator = operator;
     }
 
+    /**
+     * Getter for <code>public.attraction.active</code>.
+     */
+    public Boolean getActive() {
+        return this.active;
+    }
+
+    /**
+     * Setter for <code>public.attraction.active</code>.
+     */
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -276,6 +294,12 @@ public class Attraction implements Serializable {
         }
         else if (!this.operator.equals(other.operator))
             return false;
+        if (this.active == null) {
+            if (other.active != null)
+                return false;
+        }
+        else if (!this.active.equals(other.active))
+            return false;
         return true;
     }
 
@@ -293,6 +317,7 @@ public class Attraction implements Serializable {
         result = prime * result + ((this.youtube == null) ? 0 : this.youtube.hashCode());
         result = prime * result + ((this.externalId == null) ? 0 : this.externalId.hashCode());
         result = prime * result + ((this.operator == null) ? 0 : this.operator.hashCode());
+        result = prime * result + ((this.active == null) ? 0 : this.active.hashCode());
         return result;
     }
 
@@ -310,6 +335,7 @@ public class Attraction implements Serializable {
         sb.append(", ").append(youtube);
         sb.append(", ").append(externalId);
         sb.append(", ").append(operator);
+        sb.append(", ").append(active);
 
         sb.append(")");
         return sb.toString();

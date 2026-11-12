@@ -55,7 +55,8 @@ public class AttractionFileService {
                          .from(ATTRACTION_FILE)
                          .join(ATTRACTION).on(ATTRACTION_FILE.ATTRACTION_ID.eq(ATTRACTION.ID))
                          .where(ATTRACTION_FILE.ID.eq(id),
-                                ATTRACTION.EXTERNAL_ID.eq(attractionExternalId))
+                                ATTRACTION.EXTERNAL_ID.eq(attractionExternalId),
+                                ATTRACTION.ACTIVE.isTrue())
                          .fetchOptionalInto(AttractionFile.class);
     }
 
