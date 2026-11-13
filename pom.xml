@@ -10,16 +10,16 @@
     <properties>
         <java.version>25</java.version>
 
-        <vaadin.version>25.3.2</vaadin.version>
+        <vaadin.version>25.3.5</vaadin.version>
         <line-awesome.version>2.1.0</line-awesome.version>
         <archunit-junit5.version>1.5.1</archunit-junit5.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <commonmark.version>0.30.1</commonmark.version>
-        <firebase-admin.version>9.11.0</firebase-admin.version>
+        <commonmark.version>0.32.0</commonmark.version>
+        <firebase-admin.version>9.12.0</firebase-admin.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 
         <sonar-maven-plugin.version>5.8.0.7211</sonar-maven-plugin.version>
-        <typescript-generator-maven-plugin.version>4.1.1</typescript-generator-maven-plugin.version>
+        <typescript-generator-maven-plugin.version>4.2.1</typescript-generator-maven-plugin.version>
         <testcontainers-jooq-codegen-maven-plugin.version>0.0.4</testcontainers-jooq-codegen-maven-plugin.version>
 
         <jooq-codegen-skip>true</jooq-codegen-skip>
@@ -32,7 +32,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.1</version>
+        <version>4.1.2</version>
         <relativePath/>
     </parent>
 
