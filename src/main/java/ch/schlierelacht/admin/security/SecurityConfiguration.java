@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.time.Duration;
 import java.util.List;
@@ -58,6 +59,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain configurePublicApi(HttpSecurity http) throws Exception {
         return http.securityMatcher(pathPattern("/api/**"))
                    .cors(Customizer.withDefaults())
+                   // after the CORS filter, so the website can read a 429
+                   .addFilterAfter(new ApiWriteGuardFilter(new RateLimiter()), CorsFilter.class)
                    .csrf(AbstractHttpConfigurer::disable)
                    .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
                    .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

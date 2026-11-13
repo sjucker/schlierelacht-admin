@@ -27,7 +27,8 @@ Root package: `ch.schlierelacht.admin`
     - `mapper/`: MapStruct mappers (e.g. `EnumMapper`).
     - `rest/`: Public, stateless REST endpoints (`*Endpoint.java`, mapped under `/api/v<n>/**` — see "Public API
       versioning" below).
-    - `security/`: Authentication and authorization logic.
+    - `security/`: Authentication and authorization logic, plus `ApiWriteGuardFilter` — the rate and body-size limits
+      on every `POST /api/**` (rules in its `RULES` list; give a new write endpoint its own rule).
     - `service/`: Business logic and external service integrations (e.g. Cloudflare).
     - `util/`: Shared helpers.
     - `views/`: Vaadin views, organized by feature. `MainLayout` is the parent layout for authenticated views.
