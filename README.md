@@ -35,11 +35,11 @@
 
 ### Database Backup
 
-* Prod:  
-  `heroku pg:backups:schedule DATABASE_URL --at '04:00 CET' --app schlierelacht-admin`
-  `heroku pg:backups --app schlierelacht-admin`
-  `heroku pg:backups:capture --app schlierelacht-admin`  
-  `heroku pg:backups:download --app schlierelacht-admin`
+* Prod:
+    * `heroku pg:backups:schedule DATABASE_URL --at '04:00 CET' --app schlierelacht-admin`
+    * `heroku pg:backups --app schlierelacht-admin`
+    * `heroku pg:backups:capture --app schlierelacht-admin`
+    * `heroku pg:backups:download --app schlierelacht-admin`
 
 * Restore locally:
     * Drop all tables
